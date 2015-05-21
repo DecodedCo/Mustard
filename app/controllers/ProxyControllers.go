@@ -117,19 +117,23 @@ func HTTPSInterceptor() net.Listener {
 	log.Println("making it to here!")
 	proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 		
-		log.Println(resp.Header)
-		// if ctx.Req.URL.Scheme == "https" {
-			// resp.URL.Scheme = "http"
-			//go to https address ourselves and collect the body
-			if strings.Contains(ctx.Req.URL.Path, "js") || strings.Contains(ctx.Req.URL.Path, "css") {//get the Path out of the object
+		// status := resp.Status
+		// location := resp.Header.Get("Location")
+		log.Println("URL: ", resp.Request.URL)
+		// log.Println(resp.Request.Header)
+		contentType := resp.Header.Get("Content-Type")
+		//log.Println("location: ", location, " status", status, " type: ", contentType )
+		// resp.Header.Set("Host", "bbc.co.uk")
+			if !strings.Contains(contentType, "html") {
+				// log.Println("returning: ", location)
 				return resp	
 			}
-			log.Println("Https request intercepted")
+			// log.Println("URL: ", ctx.Req.URL)
 			tr := &http.Transport{
 		        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		    }
 		    client := &http.Client{Transport: tr}
-		    response, err := client.Get("https://pres.decoded.co")
+		    response, err := client.Get("http://www.bbc.co.uk")
 		    if err != nil {
 		        log.Println(err)
 		    }
@@ -138,8 +142,6 @@ func HTTPSInterceptor() net.Listener {
                log.Println("inject error: ", err)
             }
             body := string(bs) //needs to be a string for reading
-            log.Println(body)
-            // body = strings.Replace(body, "Golog", "Alex Walker", -1)
 			cpy := &http.Response{
 				Status: resp.Status,
 				StatusCode: resp.StatusCode,
@@ -150,8 +152,7 @@ func HTTPSInterceptor() net.Listener {
 				ContentLength: int64(len(body)),
 			}
 		    return cpy
-		// }
-		// return resp
+
 	})
 	
 	go http.Serve(listener, proxy) // you can probably ignore this error
