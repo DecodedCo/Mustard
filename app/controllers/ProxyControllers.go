@@ -128,7 +128,6 @@ func HTTPSInterceptor() net.Listener {
 				// log.Println("returning: ", location)
 				return resp	
 			}
-			// log.Println("URL: ", ctx.Req.URL)
 			tr := &http.Transport{
 		        TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		    }
@@ -165,7 +164,9 @@ func InjectScript(replace string, result string) net.Listener {
 	
 		proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 
-			if strings.Contains(ctx.Req.URL.Path, "css") {//get the Path out of the object
+		log.Println("URL: ", resp.Request.URL)
+		contentType := resp.Header.Get("Content-Type")
+			if !strings.Contains(contentType, "html") {
 				return resp	
 			}
 			//start reading the response for editing
