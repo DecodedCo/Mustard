@@ -1,14 +1,15 @@
 package controllers
 
 import (
-	"github.com/elazarl/goproxy"
-	"github.com/elazarl/goproxy/ext/image"
+	// "github.com/elazarl/goproxy"
+	"github.com/abourget/goproxy"
+	// "github.com/elazarl/goproxy/ext/image"
 	"image"
 	"image/jpeg"
 	"log"
 	"net"
 	"net/http"
-	"strings"
+	// "strings"
 	"bytes"
 	"os"
 	"io"
@@ -50,12 +51,13 @@ func ReplacePage() net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
 
-	proxy.OnRequest(goproxy.ReqHostIs(replace...)).DoFunc(
+	/*proxy.OnRequest(goproxy.ReqHostIs(replace...)).DoFunc(
 		func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 
 			s := getBuffer(strings.Split(r.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
 			return nil,goproxy.NewResponse(r,goproxy.ContentTypeHtml,http.StatusUnauthorized,s)
 		})
+	*/
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
@@ -64,12 +66,13 @@ func ReplacePage() net.Listener {
 func BlockWebsites() net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
-	proxy.OnRequest(goproxy.ReqHostIs(banned...)).DoFunc(
+	/*proxy.OnRequest(goproxy.ReqHostIs(banned...)).DoFunc(
 		func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 				return r, goproxy.NewResponse(r,
 					goproxy.ContentTypeText, http.StatusForbidden,
 					"Blocked Website!")
 		})
+		*/
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
@@ -81,7 +84,7 @@ func ReplaceImages() net.Listener {
 	decoded, _ := os.Open("public/ReplacementImages/decoded.jpg")
 	defer decoded.Close()
 	proxy := goproxy.NewProxyHttpServer()
-	proxy.OnResponse().Do(goproxy_image.HandleImage(func(img image.Image, ctx *goproxy.ProxyCtx) image.Image {
+	/*proxy.OnResponse().Do(goproxy_image.HandleImage(func(img image.Image, ctx *goproxy.ProxyCtx) image.Image {
 
 		ReplacementImage, str, err := image.Decode(decoded)
 
@@ -90,48 +93,72 @@ func ReplaceImages() net.Listener {
 		}
 		return ReplacementImage
 	}))
+	*/
 	proxy.Verbose = false
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
-
-// func CheckForHTTPS() net.Listener {
-// 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
-// 	proxy := goproxy.NewProxyHttpServer()
-// 	// proxy.OnRequest().HandleConnect(goproxy.AlwaysMitm)
-// 	proxy.OnRequest().DoFunc(func (req *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-// 		if req.URL.Scheme == "https" {
-// 			// req.URL.Scheme = "http"
-// 			HTTPSInterceptor()
-// 		}
-// 		return req, nil
-// 	})
-
-// 	go http.Serve(listener, proxy) // you can probably ignore this error
-//     return listener
-// }
-
-
-
 
 func HTTPSInterceptor() net.Listener {
 	// Create the listener on the connection and start the proxy server.
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
 	log.Println("HTTPS Proxy setup and we are listening...")
-	proxy.OnRequest().DoFunc(
-	func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
 
-	    	bs, err := ioutil.ReadAll(r.Body)
-	    	if err != nil {
-           		log.Println(err)
-        	}
-        	body := string(bs)
-        	log.Println("body: ", body)
-        	return r, nil
 
+catchPost := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+log.Println("SNI URL: ", ctx.SNIHost())
+        	log.Println("Request URL: ", ctx.Req.URL)
+        	return goproxy.NEXT
 	})
-	proxy.OnResponse().DoFunc( func( resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
+interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+		// Check if the response from the server is a 301-moved-permanently and redirects to https.
+		if ctx.Resp.Status == "301 Moved Permanently" {
+			if ctx.Resp.Header.Get("Location")[0:5] == "https" {
+				log.Println("...")
+				log.Println("...")
+				log.Println("---->>> CLIENT Requested URL: ", ctx.Resp.Request.URL)
+				log.Println("<<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
+
+				tr := &http.Transport{
+		        	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+		    	}
+		    	client := &http.Client{Transport: tr}
+		    	// There we go
+		    	log.Println("---->>> REQUESTING 301 redirect from SERVER: ", ctx.Resp.Header.Get("Location"))
+		    	server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
+		    	if err != nil {
+		        	log.Println(err)
+		    	}
+		    	log.Println("        TLS for: ", server_ssl_response.Header.Get("Location"))
+		    	//cType := server_ssl_response.Header.Get("Content-Type")
+		    	log.Println(server_ssl_response.TLS)
+		    	// Read the server server_ssl_response.
+		    	log.Println(server_ssl_response.Header)
+		    	bs, err := ioutil.ReadAll(server_ssl_response.Body)
+		    	if err != nil {
+               		log.Println(err)
+            	}
+            	body := string(bs)
+            	log.Println("301: body: ", body)	
+				ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))	
+			    return goproxy.NEXT
+
+			} else if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
+				// Redirecting to some HTTP page. Not interested...
+				log.Println("Response is HTTP")
+				log.Println("HTTP: body: ", ctx.Resp.Header)
+				return goproxy.NEXT
+			}
+		}
+		log.Println("neither of the above, we are forwarding data")
+		return goproxy.NEXT
+	}) // end of the proxy OnResponse.
+
+
+	proxy.HandleRequest((catchPost))
+	proxy.HandleResponse((interceptResponse))
+/*	proxy.OnResponse().DoFunc( func( resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 		
 		// Check if the response from the server is a 301-moved-permanently and redirects to https.
 		if resp.Status == "301 Moved Permanently" {
@@ -220,7 +247,7 @@ func HTTPSInterceptor() net.Listener {
 		return resp
 
 	}) // end of the proxy OnResponse.
-	
+*/	
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
@@ -233,7 +260,7 @@ func InjectScript(replace string, result string) net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
 	
-		proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
+	/*	proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 
 		log.Println("URL: ", resp.Request.URL)
 		contentType := resp.Header.Get("Content-Type")
@@ -259,7 +286,7 @@ func InjectScript(replace string, result string) net.Listener {
 			}
 		    return cpy
 		})
-
+	*/
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
@@ -267,7 +294,7 @@ func InjectScript(replace string, result string) net.Listener {
 func FlipImages() net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
-	proxy.OnResponse().Do(goproxy_image.HandleImage(func(img image.Image, ctx *goproxy.ProxyCtx) image.Image {
+	/*proxy.OnResponse().Do(goproxy_image.HandleImage(func(img image.Image, ctx *goproxy.ProxyCtx) image.Image {
 		dx, dy := img.Bounds().Dx(), img.Bounds().Dy()
 
 		nimg := image.NewRGBA(img.Bounds())
@@ -278,6 +305,7 @@ func FlipImages() net.Listener {
 		}
 		return nimg
 	}))
+	*/
 	proxy.Verbose = false
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
