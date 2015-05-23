@@ -119,8 +119,18 @@ func HTTPSInterceptor() net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
 	log.Println("HTTPS Proxy setup and we are listening...")
-	// First request is not shown anywhere. The first thing we will see is the response from the server.
-	// proxy.OnRequest().HandleConnect(goproxy.AlwaysMitm)
+	proxy.OnRequest().DoFunc(
+	func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
+
+	    	bs, err := ioutil.ReadAll(r.Body)
+	    	if err != nil {
+           		log.Println(err)
+        	}
+        	body := string(bs)
+        	log.Println("body: ", body)
+        	return r, nil
+
+	})
 	proxy.OnResponse().DoFunc( func( resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 		
 		// Check if the response from the server is a 301-moved-permanently and redirects to https.
