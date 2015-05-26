@@ -105,14 +105,16 @@ func HTTPSInterceptor() net.Listener {
 	proxy := goproxy.NewProxyHttpServer()
 	log.Println("HTTPS Proxy setup and we are listening...")
 
-
-catchPost := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-log.Println("SNI URL: ", ctx.SNIHost())
-        	log.Println("Request URL: ", ctx.Req.URL)
-        	return goproxy.NEXT
+	//handle SNI headers and print them out
+	proxy.HandleConnectFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+		log.Println("SNI: ", ctx.SNIHost())
+		// log.Println("")
+		return goproxy.NEXT
 	})
+
 interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 		// Check if the response from the server is a 301-moved-permanently and redirects to https.
+		
 		if ctx.Resp.Status == "301 Moved Permanently" {
 			if ctx.Resp.Header.Get("Location")[0:5] == "https" {
 				log.Println("...")
@@ -156,7 +158,7 @@ interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Nex
 	}) // end of the proxy OnResponse.
 
 
-	proxy.HandleRequest((catchPost))
+	// proxy.HandleRequest((catchPost))
 	proxy.HandleResponse((interceptResponse))
 /*	proxy.OnResponse().DoFunc( func( resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 		
