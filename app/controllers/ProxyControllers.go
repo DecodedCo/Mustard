@@ -9,7 +9,7 @@ import (
 	"log"
 	"net"
 	"net/http"
-	// "strings"
+	"strings"
 	"bytes"
 	"os"
 	"io"
@@ -106,17 +106,47 @@ func HTTPSInterceptor() net.Listener {
 	log.Println("HTTPS Proxy setup and we are listening...")
 
 	//handle SNI headers and print them out
-	proxy.HandleConnectFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-		log.Println("SNI: ", ctx.SNIHost())
-		// log.Println("")
-		return goproxy.NEXT
-	})
+	// proxy.HandleConnectFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+	// 	log.Println("Host: ", ctx.Req.Host)
+	// 	ctx.ResponseWriter.Header().Set("Response", "201")
+	// 	ctx.ResponseWriter.Write([]byte("Hello world"))
+	// 	return goproxy.DONE
+	// })
+
+
+	// proxy.HandleRequestFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+	// // if ctx.Host() == "example.com" {
+	// 	log.Println("REQUEST: logging to "+ctx.Host()+".har")
+	// 	ctx.LogToHARFile(true)
+	// 	proxy.FlushHARToDisk("public/hars/"+ctx.Host()+".har")
+	// // }
+	// return goproxy.NEXT
+	// })
+	// proxy.HandleResponseFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+	// // if ctx.Host() == "example.com" {
+	// 	log.Println("RESPONSE: logging to "+ctx.Host()+".har")
+	// 	ctx.LogToHARFile(true)
+	// 	proxy.FlushHARToDisk("public/hars/"+ctx.Host()+".har")
+	// // }
+	// return goproxy.NEXT
+	// })
+	// //if you want to flush the HARs manually
+	// proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	// 	if r.URL.Path == "/har" {
+	// 		log.Println("NON PROXY: flushing HAR")
+	// 		proxy.FlushHARToDisk("public/hars/forced.har")
+	// 		w.WriteHeader(201)
+	// 		w.Write([]byte("hello world!\n"))
+	// 	}
+	// })
 
 interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 		// Check if the response from the server is a 301-moved-permanently and redirects to https.
-		
+		log.Println("URL: ", ctx.Resp.Request.URL)
 		if ctx.Resp.Status == "301 Moved Permanently" {
-			if ctx.Resp.Header.Get("Location")[0:5] == "https" {
+			log.Println(ctx.Resp.Header.Get("Location"))
+			if strings.Contains(ctx.Resp.Header.Get("Location"), "https") {
+			// if ctx.Resp.Header.Get("Location")[0:5] == "https" {
 				log.Println("...")
 				log.Println("...")
 				log.Println("---->>> CLIENT Requested URL: ", ctx.Resp.Request.URL)
@@ -127,16 +157,12 @@ interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Nex
 		    	}
 		    	client := &http.Client{Transport: tr}
 		    	// There we go
-		    	log.Println("---->>> REQUESTING 301 redirect from SERVER: ", ctx.Resp.Header.Get("Location"))
+		    	// log.Println("---->>> REQUESTING 301 redirect from SERVER: ", ctx.Resp.Header.Get("Location"))
 		    	server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
 		    	if err != nil {
 		        	log.Println(err)
 		    	}
-		    	log.Println("        TLS for: ", server_ssl_response.Header.Get("Location"))
-		    	//cType := server_ssl_response.Header.Get("Content-Type")
-		    	log.Println(server_ssl_response.TLS)
-		    	// Read the server server_ssl_response.
-		    	log.Println(server_ssl_response.Header)
+
 		    	bs, err := ioutil.ReadAll(server_ssl_response.Body)
 		    	if err != nil {
                		log.Println(err)
@@ -144,112 +170,32 @@ interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Nex
             	body := string(bs)
             	log.Println("301: body: ", body)	
 				ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))	
-			    return goproxy.NEXT
+			    return goproxy.FORWARD
 
 			} else if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
 				// Redirecting to some HTTP page. Not interested...
 				log.Println("Response is HTTP")
-				log.Println("HTTP: body: ", ctx.Resp.Header)
+		    	bs, err := ioutil.ReadAll(ctx.Resp.Body)
+		    	if err != nil {
+	           		log.Println(err)
+	        	}
+		        log.Println("BODY: ", string(bs))
 				return goproxy.NEXT
 			}
 		}
 		log.Println("neither of the above, we are forwarding data")
+    	// bs, err := ioutil.ReadAll(ctx.Resp.Body)
+	    // 	if err != nil {
+     //       		log.Println(err)
+     //    	}
+        // log.Println("HTTP: ", string(bs))
 		return goproxy.NEXT
 	}) // end of the proxy OnResponse.
 
 
 	// proxy.HandleRequest((catchPost))
 	proxy.HandleResponse((interceptResponse))
-/*	proxy.OnResponse().DoFunc( func( resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
-		
-		// Check if the response from the server is a 301-moved-permanently and redirects to https.
-		if resp.Status == "301 Moved Permanently" {
-			if resp.Header.Get("Location")[0:5] == "https" {
-				log.Println("...")
-				log.Println("...")
-				log.Println("---->>> CLIENT Requested URL: ", resp.Request.URL)
-				log.Println("<<<---- SERVER Response 301 to location: ", resp.Header.Get("Location"))
-				// We know we are now being asked to redirect to HTTPS
-				// Obviously all HTTPS are belong to us, so we are going to request that page,
-				// decrypt it and pass it on over HTTP.
-				
-				// Setup the transport layer.
-				tr := &http.Transport{
-		        	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-		    	}
-		    	client := &http.Client{Transport: tr}
-		    	// There we go
-		    	log.Println("---->>> REQUESTING 301 redirect from SERVER: ", resp.Header.Get("Location"))
-		    	server_ssl_response, err := client.Get( resp.Header.Get("Location") )
-		    	if err != nil {
-		        	log.Println(err)
-		    	}
-		    	log.Println("        TLS for: ", server_ssl_response.Header.Get("Location"))
-		    	//cType := server_ssl_response.Header.Get("Content-Type")
-		    	log.Println(server_ssl_response.TLS)
-		    	// Read the server server_ssl_response.
-		    	log.Println(server_ssl_response.Header)
-		    	bs, err := ioutil.ReadAll(server_ssl_response.Body)
-		    	if err != nil {
-               		log.Println(err)
-            	}
-            	body := string(bs)
 
-            	client_response_header := make(http.Header)
-            	client_response_header.Add("Content-Type", server_ssl_response.Header.Get("Content-Type") )
-            	// client_response_header.Add("Content-Type",cType)
-            	client_response := &http.Response{
-					Status: "200 OK", //resp.Status,
-					StatusCode: 200, //resp.StatusCode,
-				  	Proto: "HTTP/1.1", //resp.Proto,
-					ProtoMajor: 1, //resp.ProtoMajor,
-					ProtoMinor: 1, //resp.ProtoMinor,
-					Body: ioutil.NopCloser(bytes.NewBufferString(body)),
-					Header: client_response_header,
-					ContentLength: int64(len(body)),
-				}
-							
-			    log.Println( client_response.Header )
-			    return client_response
-
-			} else if resp.Header.Get("Location")[0:5] == "http:" {
-				// Redirecting to some HTTP page. Not interested...
-				return resp
-			}
-		}
-
-		//log.Println(resp.Request.URL)
-		// if resp.Request.URL.String() == "http://www.nytimes.com/" {
-		// 	log.Println(resp)
-		// 	log.Println(resp.ProtoMajor)
-		// 	log.Println(resp.ProtoMinor)
-		// }
-		
-
-		// status := resp.Status
-		// location := resp.Header.Get("Location")
-		// log.Println(resp.Request.Header)
-		
-		// Get the content-type of the response header. This is needed for filtering on HTML.
-		contentType := resp.Header.Get("Content-Type")
-		//log.Println("CONTENT: ", contentType)
-		// For HTML show the response
-		if strings.Contains(contentType, "html") {
-			// Log everything.
-			// log.Println("\n\nClient Requested URL: ", resp.Request.URL)
-			// log.Println("\t\tServer Response status: ", resp.Status)
-			// log.Println("\t\tServer Response location: ", resp.Header.Get("Location"))
-			// log.Println("\t\tServer Response Header", resp.Header)
-		}
-		// If the page is not HTML let it straight through.
-		if !strings.Contains(contentType, "html") {
-			//return resp	
-		}
-
-		return resp
-
-	}) // end of the proxy OnResponse.
-*/	
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }

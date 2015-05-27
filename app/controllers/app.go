@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/revel/revel"
 	"log"
+	"io/ioutil"
 )
 
 type App struct {
@@ -80,6 +81,15 @@ func (c App) InterceptHTTPS() revel.Result {
 // 	//needs to get the response and render html
 // 	c.Render()
 // }
+func (c App) GetHars() revel.Result {
+	var fileNames []string
+	files,_ := ioutil.ReadDir("public/hars")
+	for _, f := range files {
+        fileNames = append(fileNames, f.Name())
+    }
+	return c.RenderJson(fileNames)
+}
+
 func (c App) Index() revel.Result {
 	return c.Render()
 }
