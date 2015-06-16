@@ -1,18 +1,12 @@
 {{set . "title" "Home"}}
 {{template "header.html" .}}
 
-<header class="hero-unit" style="background-color:#BC4728">
-  <div class="container">
-    <div class="row">
-      <div class="hero-text">
-        <h1>Shakespeare Dashboard</h1>
-        <h4 class="attackType">disabled...</h4>
-        <p></p>
-      </div>
-    </div>
-  </div>
+<header class="row">
+  <h1 class="col-md-4">Shakespeare Dashboard</h1>
+  <h4 class="col-md-8 attackType">disabled...</h4>
+  <p></p>
 </header>
-<div class="main">
+<div class="main row">
   <section class="col-md-4 proxy-controls">
     <div class="panel panel-default">
       <!-- Default panel contents -->
@@ -128,39 +122,41 @@
       </ul>
     </div>
   </section>
-  <section class="col-md-8">
-      <div class="btn-group">
-        <div class="btn-primary">Dashboard</div>
-          <div class="btn-group">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the hars collected for each client">
-            View Hars <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-              <button class="btn btn-info" id="gethars">Get Hars</button>
-              <button class="btn btn-danger" id="deletehars">Delete current data</button>
-              <div class="btn-group" id="clients">
-              </div>
-            </ul>
-          </div>
-          <button id="getKeyLogs" class="btn btn-default">View Key logging</button>
-          <button id="getWifi" class="btn btn-default" title="this is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks"><s>Discover Local Wifi Requests</s></button>
+  <section class="col-md-8 dashboard">
 
-          <div class="btn-group">
-            <button id="createAccessPoint" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Create an access point"><s>Create access point</s><span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+  <div role="tabpanel">
 
-            </ul>
-          </div>
-      </div> <!-- end button-group -->
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
+        <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
+        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab"><s>Create Access Points</s></a></li>
+      </ul>
 
-      <div class="col-md-4"><h2>Key logs</h2></div>
-      <div class="col-md-8"><h2>Har viewer</h2></div>
-      <div class="col-md-4" id='userLogs'></div>
-      <div class="col-md-8" id='har-view'></div> <!-- har viewer here -->
-      <div class="col-md-12"><h2><s>Wifi Requests</s></h2></div>
-      <div class="col-md-12" id='wifi-requests'></div> <!-- har viewer here -->
+      <!-- Tab panes -->
+      <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane active" id="hars">
+          <button class="btn btn-info" id="gethars">Get Hars</button>
+          <button class="btn btn-danger" id="deletehars">Delete current data</button>
+          <p>See the hars collected for each client</p>
+          <div id='har-view'></div> <!-- har viewer here -->
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="logs">
+          <div id='userLogs'></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="wifiRequests">
+          <p>This is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks</p>
+          <div id='wifi-requests'></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="CreateAP">
+          <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+        </div>
+      </div>
+
+    </div>
 
   </section>
 </div>
