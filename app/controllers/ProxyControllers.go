@@ -303,25 +303,26 @@ func InjectScript(replace string, result string) net.Listener {
 	log.Println("replace: ", replace)
 	log.Println("result: ", result)
 	//inject jquery always...
-	result = "<script src=\"http://127.0.0.1:9000/public/js/jquery-1.9.1.min.js\"></script>"+result
+	// result = "<script src=\"http://127.0.0.1:9000/public/js/jquery-1.9.1.min.js\"></script>"+result
 	interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 
 		// proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
 
 		// log.Println("URL: ", ctx.Resp.Request.URL)
-		contentType := ctx.Resp.Header.Get("Content-Type")
-			if !strings.Contains(contentType, "html") {
-				return goproxy.NEXT
-			}
-			//start reading the response for editing
-			bs, err := ioutil.ReadAll(ctx.Resp.Body)
-			if err != nil {
-			   log.Println("inject error: ", err)
-			}
-			body := string(bs) //needs to be a string for reading
-			body = injector(body, replace, result)
-
-			ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+			// log.Println("page: ", ctx.Req.URL.Path)
+			// if strings.Contains(ctx.Req.URL.Path, "/") {
+				log.Println("found: ", ctx.Req.URL.Path)
+				//start reading the response for editing
+				bs, err := ioutil.ReadAll(ctx.Resp.Body)
+				if err != nil {
+				   log.Println("inject error: ", err)
+				}
+				body := string(bs) //needs to be a string for reading
+				body = injector(body, replace, result)
+				
+				ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+			// }
+			
 		    return goproxy.NEXT
 		})
 	proxy.HandleResponse(interceptResponse)
@@ -330,6 +331,7 @@ func InjectScript(replace string, result string) net.Listener {
 }
 func injector(body string, replace string, result string) string {
 	body = strings.Replace(body, replace, result, -1)
+	// log.Println("injected: ", body)
 	return body
 }
 

