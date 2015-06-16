@@ -71,7 +71,7 @@ func (c App) BlockWebsites() revel.Result {
 
 func KillProxy() {
 	if listener != nil {
-		listener.Close()		
+		listener.Close()
 	}
 }
 
@@ -90,7 +90,7 @@ func (c App) AppendData() revel.Result {
 		k.Content = d
 		data = append(data, k)
 		return c.RenderJson("updated")
-	}	
+	}
 	return c.RenderJson("null")
 }
 
@@ -103,11 +103,11 @@ func (c App) InterceptHTTPS() revel.Result {
 }
 
 //annoying cant use the file walker here - seems to have different header if I do
-//which means it gets downloaded rather than displayed														
+//which means it gets downloaded rather than displayed
 func (c App) GetHars() revel.Result {
 	var fileNames []string
 	log.Println("reading hars")
-	files, err := ioutil.ReadDir("/Users/alex/go/src/mitm/public/hars/")
+	files, err := ioutil.ReadDir(SOURCE+"/hars/")
 	if err != nil {
 		log.Println("error: ", err)
 	}
@@ -138,5 +138,5 @@ func (c App) Index() revel.Result {
 
  	//put this back in when you actually do want to clear the currently collected list
  	// os.Remove(path)
- 	return 
+ 	return
  }

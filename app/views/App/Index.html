@@ -10,7 +10,8 @@
   <section class="col-md-4 proxy-controls">
     <div class="panel panel-default">
       <!-- Default panel contents -->
-      <div class="panel-heading">Proxy Controls</div>
+      <div class="panel-heading">Proxy Controls
+      </div>
       <!-- <div class="panel-body">
         <small>Configure your smallroxy. Checked Setting will be activated.</small>
       </div>
@@ -138,9 +139,22 @@
       <div class="tab-content">
 
         <div role="tabpanel" class="tab-pane active" id="hars">
-          <button class="btn btn-info" id="gethars">Get Hars</button>
-          <button class="btn btn-danger" id="deletehars">Delete current data</button>
-          <p>See the hars collected for each client</p>
+          <nav>
+            <div class="btn-group">
+              <button class="btn btn-info" id="gethars">Refresh Hars</button>
+              <div class="btn-group harList">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  Select Har to Display <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" id="clients">
+                  <li><a href="#">None, yet. Please Refresh Hars</a></li>
+                </ul>
+              </div>
+            </div>
+            <button class="btn btn-danger" id="deletehars">Delete current data</button>
+            <!-- dropdown button -->
+          </nav>
+
           <div id='har-view'></div> <!-- har viewer here -->
         </div>
 
@@ -253,9 +267,9 @@
     $(".attackType").html("Injected - Get Har Files")
     $.each(data, function(i, j) {
       var descr = j.split("_", -1)
-      var listItem = $('<button class=" har btn btn-default" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</button>').click(function() {
+      var listItem = $('<li><a href="#" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</a></li>').click(function() {
         $.getJSON( "/public/hars/"+j, function( data ) {
-            var har = $('#har-view').data('HarView');
+            initHarView();
             har.render(data);
         });
       })
@@ -271,20 +285,35 @@
         console.log(this.checked, this.id);
 
         // switch by id, then check if checked is true
+        switch(this.id) {
+            case "takePhoto":
+                console.log(this.checked, "taking the photo");
+                if(this.checked){
+                  // inject!
+                } else {
+                  // deject
+                }
+                break;
+            default:
+                console.log("toggled option that doesn't exist.")
+        }
+
     });
   });
 
+var har;
+function initHarView(){
+   $('#har-view').data('HarView', null);
+   // har = null;
+   $('#hars-discovered').empty()
+   $('#har-view').html('');
+   $('#har-view').HarView();
+   har = $('#har-view').data('HarView');
 
-</script>
-
-
-<script type='text/javascript'>
+}
 //get the latest hars that are available
 $(document).ready(function() {
- $('#hars-discovered').empty()
- $('#har-view').html();
- $('#har-view').HarView();
-
+  initHarView();
 })
 
 </script>
