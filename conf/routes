@@ -10,7 +10,7 @@ GET     /ReplaceImages                              App.ReplaceImages
 GET     /FlipImages                              App.FlipImages
 GET     /PassThrough                              App.PassThrough
 GET     /BlockWebsites                              App.BlockWebsites
-GET     /ReplacePage                              App.ReplacePage
+GET     /RedirectPage                              App.RedirectPage
 GET     /InterceptHTTPS                              App.InterceptHTTPS
 # Ignore favicon requests
 GET     /favicon.ico                            404
