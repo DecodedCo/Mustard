@@ -31,7 +31,7 @@ header {
   box-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
   .attackType:before{
-    content: "Status: ";
+    content: "Client: ";
     color: #AAA;
   }
 

