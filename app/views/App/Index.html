@@ -264,9 +264,17 @@
   })
   })
 
+  // bootstrap for toggle insted of click as above
   $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('.onoffswitch :checkbox').change(function() {
+        // checked true or false, id of toggle
+        console.log(this.checked, this.id);
+
+        // switch by id, then check if checked is true
+    });
   });
+
+
 </script>
 
 
