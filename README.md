@@ -2,6 +2,9 @@
 
 * A proxy server for demonstrating MITM attacks and the kinds of things possible
 
+* Uses `gopm` package manager (although not well tested as only I have used it...)
+	* To use it, navigate to `app/controllers` and run `gopm get`. This should pull in the required libraries to your go path
+	* See [gopm on github](https://github.com/gpmgo/gopm)
 ### Current Features
 
 * Simple Proxy
