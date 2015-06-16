@@ -1,0 +1,7 @@
+[deps]
+github.com/abourget/goproxy = 
+github.com/revel/revel = 
+
+[res]
+include = 
+

@@ -107,7 +107,7 @@ func (c App) InterceptHTTPS() revel.Result {
 func (c App) GetHars() revel.Result {
 	var fileNames []string
 	log.Println("reading hars")
-	files, err := ioutil.ReadDir(SOURCE+"/hars/")
+	files, err := ioutil.ReadDir(os.Getenv("HOME")+SOURCE+"/hars/")
 	if err != nil {
 		log.Println("error: ", err)
 	}
@@ -119,11 +119,15 @@ func (c App) GetHars() revel.Result {
 }
 func (c App) DeleteHars() revel.Result {
 	var w Walker
-	filepath.Walk(SOURCE+"/hars", w.deletefiles)
+	filepath.Walk(os.Getenv("HOME")+SOURCE+"/hars", w.deletefiles)
 	return c.RenderJson(w.files)
 }
 
 func (c App) Index() revel.Result {
+
+	log.Println(os.Getenv("HOME"))
+
+
 	initializeBlockReplaceLists()
 	return c.Render()
 }

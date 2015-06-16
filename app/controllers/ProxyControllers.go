@@ -23,7 +23,7 @@ const (
     CONN_HOST = "localhost"
     CONN_PORT = "8080"
     CONN_TYPE = "tcp"
-    SOURCE = "/Users/jonas/dev/go/src/mitm/public"
+    SOURCE = "/go/src/mitm/public"
 )
 // var listOfUsers map[string]struct{}
 var listener net.Listener
@@ -33,7 +33,7 @@ var banned  []string
 var replace []string
 
 func initializeBlockReplaceLists(){
-	file, err := ioutil.ReadFile(SOURCE+"/blocked.json")
+	file, err := ioutil.ReadFile(os.Getenv("HOME")+SOURCE+"/blocked.json")
     if err != nil {
         log.Fatal(err)
     }
@@ -42,7 +42,7 @@ func initializeBlockReplaceLists(){
         log.Fatal(err)
     }
     log.Println("Banning: ", banned)
-    file, err = ioutil.ReadFile(SOURCE+"/redirect.json")
+    file, err = ioutil.ReadFile(os.Getenv("HOME")+SOURCE+"/redirect.json")
     if err != nil {
         log.Fatal(err)
     }
@@ -57,7 +57,7 @@ func initializeBlockReplaceLists(){
 func getBuffer(site string) string {
 	buf := bytes.NewBuffer(nil)
 	var s string
-	  f, err := os.Open(SOURCE+"/ReplacementPages/"+site+".html") // Error handling elided for brevity.
+	  f, err := os.Open(os.Getenv("HOME")+SOURCE+"/ReplacementPages/"+site+".html") // Error handling elided for brevity.
 	  if err != nil {
 	  	log.Println("read error: ", err)
 	  	s = "<html><body><br><br><h1>This site is currently unavailable</h1></body></html>"
@@ -176,7 +176,7 @@ func HTTPSInterceptor() net.Listener {
 		ctx.LogToHARFile(true)
 		t := time.Now().Local()
 		timestamp := t.Format("20060102150405")
-		proxy.FlushHARToDisk(SOURCE+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
+		proxy.FlushHARToDisk(os.Getenv("HOME")+SOURCE+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
 
 		// When doing MITM, if we've rewritten the destination host, let,s sync the
 		// `Host:` header so the remote endpoints answers properly.
@@ -194,7 +194,7 @@ func HTTPSInterceptor() net.Listener {
 		t := time.Now().Local()
 		timestamp := t.Format("20060102150405")
 		// log.Println("timestamp: ", timestamp)
-		proxy.FlushHARToDisk(SOURCE + "/hars/res_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
+		proxy.FlushHARToDisk(os.Getenv("HOME")+SOURCE + "/hars/res_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
 
 		//if its a redirect
 		if ctx.Resp != nil && (strings.Contains(ctx.Resp.Status, "301") || strings.Contains(ctx.Resp.Status, "302")) {
@@ -366,14 +366,14 @@ func PassThrough() net.Listener {
 		// log.Println("REQUEST: logging to "+ctx.Host()+".har")
 		ctx.LogToHARFile(true)
 
-		proxy.FlushHARToDisk(SOURCE+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+".har")
+		proxy.FlushHARToDisk(os.Getenv("HOME")+SOURCE+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+".har")
 		// addUser(ctx.Req.RemoteAddr)
 		return goproxy.NEXT
 	})
 	proxy.HandleResponseFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
 		// log.Println("RESPONSE: logging to "+ctx.Host()+".har")
 		ctx.LogToHARFile(true)
-		proxy.FlushHARToDisk(SOURCE+"/hars/res_"+ctx.Host()+".har")
+		proxy.FlushHARToDisk(os.Getenv("HOME")+SOURCE+"/hars/res_"+ctx.Host()+".har")
 		return goproxy.NEXT
 	})
 
