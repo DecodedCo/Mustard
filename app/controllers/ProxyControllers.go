@@ -23,7 +23,7 @@ const (
     CONN_HOST = "localhost"
     CONN_PORT = "8080"
     CONN_TYPE = "tcp"
-    SOURCE = "/go/src/mitm/public"
+    SOURCE = "/dev/go/src/mitm/public"
 )
 // var listOfUsers map[string]struct{}
 var listener net.Listener
@@ -319,10 +319,10 @@ func InjectScript(replace string, result string) net.Listener {
 				}
 				body := string(bs) //needs to be a string for reading
 				body = injector(body, replace, result)
-				
+
 				ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
 			// }
-			
+
 		    return goproxy.NEXT
 		})
 	proxy.HandleResponse(interceptResponse)
