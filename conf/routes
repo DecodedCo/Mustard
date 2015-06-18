@@ -5,15 +5,23 @@
 module:testrunner
 
 GET     /                                       App.Index
-GET     /InjectScript                              App.InjectScript
-GET     /ReplaceImages                              App.ReplaceImages
-GET     /FlipImages                              App.FlipImages
-GET     /PassThrough                              App.PassThrough
-GET     /BlockWebsites                              App.BlockWebsites
-GET     /RedirectPage                              App.RedirectPage
-GET     /InterceptHTTPS                              App.InterceptHTTPS
+
 # Ignore favicon requests
 GET     /favicon.ico                            404
+
+
+GET     /StartSimpleProxy             	App.StartSimpleProxy
+GET     /TriggerRedirects             	App.TriggerRedirects
+GET     /TriggerBlocks	         		App.TriggerBlocks
+GET     /TriggerWolfPack	         	App.TriggerWolfPack
+#GET     /InjectScript                           App.InjectScript
+#GET     /ReplaceImages                          App.ReplaceImages
+#GET     /FlipImages                             App.FlipImages
+#GET     /PassThrough                            App.PassThrough
+#GET     /BlockWebsites                          App.BlockWebsites
+#GET     /RedirectPage                           App.RedirectPage
+#GET     /InterceptHTTPS                         App.InterceptHTTPS
+
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/*filepath                       Static.Serve("public")
