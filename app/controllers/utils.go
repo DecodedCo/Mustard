@@ -3,6 +3,7 @@ package controllers
 import (
     "log"
     "bytes"
+    "github.com/abourget/goproxy"
     "strings"
     "os"
     "io"
