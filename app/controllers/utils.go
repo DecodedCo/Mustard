@@ -35,6 +35,14 @@ func utilsGetBuffer( site string ) string {
     return s
 }
 
+//function removes headers that block cross site loading
+func utilsModifyHeadersForInjection(ctx *goproxy.ProxyCtx) {
+        ctx.Resp.Header.Del("X-Frame-Options")
+        ctx.Resp.Header.Add("X-Frame-Options", "*" )
+        ctx.Resp.Header.Del("X-Content-Type-Options")
+        ctx.Resp.Header.Del("X-Xss-Protection")
+        ctx.Resp.Header.Add("Access-Control-Allow-Origin", "*" )
+} 
 
 func utilsInjector( body string, replace string, result string ) string {
     body = strings.Replace(body, replace, result, -1)
