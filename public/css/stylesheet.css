@@ -5,6 +5,13 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
+.accesspoint {
+  margin: 10px;
+}
+.wifi {
+  padding: 10px;
+  margin: 10px;
+}
 
 html, body {
   width: 100%;

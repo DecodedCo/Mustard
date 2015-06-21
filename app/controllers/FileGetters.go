@@ -26,48 +26,75 @@ func setFileStorageLocation() {
 }
 //pulls the urls to redirect from the url
 func getRedirectUrls() {
-	log.Println("redirect check: ", redirect)
-	if redirect != nil {
+	if len(redirect) > 0 {
 		return
 	}
 	url := "http://komodobank.com/_admin/mitm/redirect.json"
 
 	res, err := http.Get(url)
 	if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
+        return
     }
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
     }
     err = json.Unmarshal(body, &redirect)
     if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
     }
 }
 //pulls the urls to block access to from the url
 func getBannedUrls() {
-	log.Println("banned check: ", banned)
-	if banned != nil {
+	if len(banned) > 0 {
 		return
 	}
 	url := "http://komodobank.com/_admin/mitm/blocked.json"
 
 	res, err := http.Get(url)
 	if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
+        return
     }
     body, err := ioutil.ReadAll(res.Body)
     if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
     }
     err = json.Unmarshal(body, &banned)
     if err != nil {
-        panic(err.Error())
+        log.Println("Error: ", err.Error())
     }
 }
+
+func CheckIfFilesAlreadyExist() bool {
+	d, err := os.Open(fileLocation)
+	if err != nil {
+		log.Println("Error: ", err)
+	}
+	defer d.Close()
+
+	files, err := d.Readdir(-1)
+	if err != nil {
+		log.Println("Error: ", err)
+		return false
+	}
+
+	log.Println("Reading "+ fileLocation)
+
+	log.Println("length: ", len(files))
+	if len(files) > 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
 //gets any pages that are required from the url
 func getPages() {
+	if CheckIfFilesAlreadyExist() {
+		return
+	}
 	url := "http://komodobank.com/_admin/mitm/mitmfiles.zip"
 	urlReader, err := getReaderFromUrl(url)
 	if err != nil {

