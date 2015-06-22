@@ -42,10 +42,6 @@ so that can return it to the user.
 type Walker struct {
     files []string
 }
-
-
-
-
 // -----------------------------------------------------------------------------------------
 
 
@@ -55,7 +51,8 @@ func utilsGetBuffer( site string ) string {
         f, err := os.Open(fileLocation+"/"+site+".html") // Error handling elided for brevity.
         if err != nil {
             log.Println("read error: ", err)
-            s = "<html><body><br><br><h1>This site is currently unavailable</h1></body></html>"
+            // oooh recursive!
+            s = utilsGetBuffer("notfound")
         } else {
             io.Copy(buf, f)           // Error handling elided for brevity.
             s = string(buf.Bytes())

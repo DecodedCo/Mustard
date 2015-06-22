@@ -2,6 +2,8 @@ package app
 
 import (
 	"github.com/revel/revel"
+	"mitm/app/controllers"
+	// "mitm/app/listeners"	
 )
 
 func init() {
@@ -20,10 +22,8 @@ func init() {
 		revel.CompressFilter,          // Compress the result.
 		revel.ActionInvoker,           // Invoke the action.
 	}
-	// register startup functions with OnAppStart
-	// ( order dependent )
-	// revel.OnAppStart(InitDB)
-	// revel.OnAppStart(FillCache)
+	revel.OnAppStart(controllers.InitiateProxy)
+	revel.OnAppStart(controllers.InitializeListeners)
 }
 
 // TODO turn this into revel.HeaderFilter

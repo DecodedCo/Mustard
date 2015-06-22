@@ -8,22 +8,49 @@ import (
 	"path/filepath"
 	"time"
 	"strings"
+	"net"
 )
-
-
-// -----------------------------------------------------------------------------------------
-
 
 const (
     PASSWORD = "whitesilence"
     SECURE = false
 )
 
-//the temporary object that stores the logged data.
-//probably should store to file for persistence
-
 type App struct {
 	*revel.Controller
+}
+
+
+func InitiateProxy() {
+    //set the location for files
+    log.Println("loading storage location")
+    setFileStorageLocation()
+    //get the redirect pages from server
+    log.Println("downloading files")
+    getPages()
+    //get a list of urls to redirect
+    log.Println("creating redirections...")
+    getRedirectUrls()
+    //get a list of urls to block
+    log.Println("blocking urls...")
+    getBannedUrls()
+
+    //reset all parameters for the proxy
+	globalStoreHAR = false			
+	globalProxyStandard = false
+	globalRedirects = false
+	globalBlocks = false
+	globalWolfPack = false
+	
+	//reset scripts
+	globalInjectKeyLogger = false
+	globalInjectGetLocation  = false
+	globalInjectGetPhoto = false
+	globalInjectGetLogin = false
+	globalInjectLastpass = false
+
+	//turn on the basic proxy
+	globalProxyStandard = true
 }
 
 func (c App) Login() revel.Result {
@@ -39,52 +66,12 @@ func (c App) Login() revel.Result {
 
 //
 func (c App) Index() revel.Result {
-	
-	// if !SECURE { //for debugging set to false
-		// simple password checker
-		// if password == PASSWORD {
-			// Set proxy off by default
-			KillProxy()
-			
-			//reset proxy style
-			globalStoreHAR = false		
-			globalProxyStandard = false
-			globalRedirects = false
-			globalBlocks = false
-			globalWolfPack = false
-			
-			//reset scripts
-			globalInjectKeyLogger = false
-			globalInjectGetLocation  = false
-			globalInjectGetPhoto = false
-			globalInjectGetLogin = false
-			globalInjectLastpass = false
 
-			//set basic proxy to true
-			globalProxyStandard = true
-			log.Println("Initialising 'globalProxyStandard' as ", globalProxyStandard )
-			log.Println("Initialising 'globalRedirects' as ", globalRedirects )
-			
-			StartSimpleProxy()
+	StartSimpleProxy()
+	return c.Render()
 
-			//set the location for files
-			setFileStorageLocation()
-			//get the redirect pages from server
-			getPages()
-			//get a list of urls to redirect
-			getRedirectUrls()
-			//get a list of urls to block
-			getBannedUrls()
-			return c.Render()
-	// 	} else {
-	// 		return c.Redirect("/App/Login")	
-	// 	}
-	// } else {
-	// 	return c.Render()
-	// }
 }
 
-// 
 func (c App) StartSimpleProxy() revel.Result {
 	// Kill the proxy anyways.
 	KillProxy()
@@ -99,16 +86,23 @@ func (c App) StartSimpleProxy() revel.Result {
 	}
 	// Return 
 	log.Println("Proxy shutting down")
-	return c.RenderJson("{Proxy:'Shutdown'}")
+	return c.RenderJson("{Proxy:'restarted}")
 }
 
 // Function to kill the proxy.
 func KillProxy() {
-	if listener != nil {
-		listener.Close()
+	// if stoppableListener != nil {
+	var err error
+		stoppableListener.Close()
 		log.Println("waiting for socket to close")
-		time.Sleep(2 * time.Second)
-	}
+
+	    wg.Wait()
+        listener, err = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT) 
+	    if err != nil {
+	        log.Println("error here: ", err)
+	    }   
+		// time.Sleep(3 * time.Second) //allow socket to close first!
+	// }
 }
 
 // Function that redirects specific domains.
@@ -291,66 +285,3 @@ func (c App) DeleteHars() revel.Result {
 	filepath.Walk(fileLocation+"/hars", w.utilsDeletefiles)
 	return c.RenderJson(w.files)
 }
-
-
-
- // -----------------------------------------------------------------------------------------
-
-
-
-// func (c App) FlipImages() revel.Result {
-// 	KillProxy()
-// 	listener = FlipImages()
-// 	return c.RenderJson("")
-// }
-// func (c App) ReplaceImages() revel.Result {
-// 	KillProxy()
-// 	listener = ReplaceImages()
-// 	return c.RenderJson("")
-// }
-// func (c App) InjectScript() revel.Result {
-// 	var replace string
-// 	var result string
-// 	c.Params.Bind(&replace, "replace")
-// 	c.Params.Bind(&result, "result")
-
-// 	KillProxy()
-// 	listener = InjectScript(replace, result)
-// 	return c.RenderJson("")
-// }
-
-// func (c App) GetLocations() revel.Result {
-// 	return c.RenderJson(locations)
-// }
-// func (c App) CatchLocation() revel.Result {
-// 	var lat string
-// 	var lon string
-// 	c.Params.Bind(&lat, "latitude")
-// 	c.Params.Bind(&lon, "longitude")
-// 	var l Location
-// 	l.Latitude = lat
-// 	l.Longitude = lon
-// 	t := time.Now().Local()
-// 	l.Timestamp = t.Format("20060102150405")
-// 	s := strings.Split(c.Request.RemoteAddr, ":")
-// 	ip := s[0]
-// 	l.IP = ip
-// 	locations = append(locations, l)
-// 	return c.RenderJson("location updated")
-// }
-
-// func (c App) InterceptHTTPS() revel.Result {
-// 	KillProxy()
-// 	log.Println("interceptor")
-// 	listener = HTTPSInterceptor()
-// 	return c.RenderJson("")
-
-// }
-
-// //annoying cant use the file walker here - seems to have different header if I do
-// //which means it gets downloaded rather than displayed
-
-
-
-
-
