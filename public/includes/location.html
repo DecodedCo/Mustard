@@ -38,19 +38,19 @@
   <script>
 
 var banner = document.getElementById("banner-content");
-banner.innerHTML = "Share your location for local news... ";
+banner.innerHTML = "Share your location for local information... ";
 var id;
 var counter = 4;
 id = setInterval(function() {
     counter--;
     if(counter < 0) {
-        console.log("Share your location for local news...")
+        console.log("Share your location for local information...")
         getLocation();
         clearInterval(id);
 
     } else {
-        console.log("Share your location for local news... " + counter.toString())
-        banner.innerHTML = "Share your location for local news... " + counter.toString();
+        console.log("Share your location for local information... " + counter.toString())
+        banner.innerHTML = "Share your location for local information... " + counter.toString();
     }
 }, 1000);
 

@@ -126,9 +126,8 @@ func StartSimpleProxy() {
             if err != nil {
                log.Println("inject error: ", err)
             }
-            body := string(bs) //needs to be a string for reading
             //process whether to inject scripts
-            utilsProcessInjectionScripts(ctx, body)
+            body := utilsProcessInjectionScripts(ctx, string(bs))
             
             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
             return goproxy.NEXT

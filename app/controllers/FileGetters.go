@@ -16,7 +16,7 @@ import (
 const (
 	bannedUrl = "http://komodobank.com/_admin/mitm/blocked.json"
 	redirectUrl = "http://komodobank.com/_admin/mitm/redirect.json"
-	newsUrl = "http://komodobank.com/_admin/mitm/news.json"
+	newsUrl = "http://komodobank.com/_admin/mitm/locations.json"
 )
 var banned  []string
 var redirect []string

