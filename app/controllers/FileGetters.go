@@ -12,8 +12,15 @@ import (
 	"os"
 	"io"
 )
+
+const (
+	bannedUrl = "http://komodobank.com/_admin/mitm/blocked.json"
+	redirectUrl = "http://komodobank.com/_admin/mitm/redirect.json"
+	newsUrl = "http://komodobank.com/_admin/mitm/news.json"
+)
 var banned  []string
 var redirect []string
+var newsSites []string
 
 var fileLocation string
 
@@ -29,9 +36,8 @@ func getRedirectUrls() {
 	if len(redirect) > 0 {
 		return
 	}
-	url := "http://komodobank.com/_admin/mitm/redirect.json"
 
-	res, err := http.Get(url)
+	res, err := http.Get(redirectUrl)
 	if err != nil {
         log.Println("Error: ", err.Error())
         return
@@ -50,9 +56,8 @@ func getBannedUrls() {
 	if len(banned) > 0 {
 		return
 	}
-	url := "http://komodobank.com/_admin/mitm/blocked.json"
 
-	res, err := http.Get(url)
+	res, err := http.Get(bannedUrl)
 	if err != nil {
         log.Println("Error: ", err.Error())
         return
@@ -62,6 +67,26 @@ func getBannedUrls() {
         log.Println("Error: ", err.Error())
     }
     err = json.Unmarshal(body, &banned)
+    if err != nil {
+        log.Println("Error: ", err.Error())
+    }
+}
+//pulls the urls to block access to from the url
+func getNewsUrls() {
+	if len(newsSites) > 0 {
+		return
+	}
+
+	res, err := http.Get(newsUrl)
+	if err != nil {
+        log.Println("Error: ", err.Error())
+        return
+    }
+    body, err := ioutil.ReadAll(res.Body)
+    if err != nil {
+        log.Println("Error: ", err.Error())
+    }
+    err = json.Unmarshal(body, &newsSites)
     if err != nil {
         log.Println("Error: ", err.Error())
     }

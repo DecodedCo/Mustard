@@ -32,9 +32,10 @@ func InitiateProxy() {
     log.Println("creating redirections...")
     getRedirectUrls()
     //get a list of urls to block
-    log.Println("blocking urls...")
+    log.Println("get blocked urls...")
     getBannedUrls()
-
+    log.Println("get news sites")
+    getNewsUrls()
     //reset all parameters for the proxy
 	globalStoreHAR = false			
 	globalProxyStandard = false
@@ -101,8 +102,11 @@ func KillProxy() {
 	    if err != nil {
 	        log.Println("error here: ", err)
 	    }   
-		// time.Sleep(3 * time.Second) //allow socket to close first!
-	// }
+}
+
+func (c App) ToggleHarCollection() revel.Result {
+	globalStoreHAR = !globalStoreHAR
+	return c.RenderJson(globalStoreHAR)
 }
 
 // Function that redirects specific domains.

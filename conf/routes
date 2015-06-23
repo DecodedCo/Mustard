@@ -20,7 +20,7 @@ GET     /TriggerWolfPack	         	App.TriggerWolfPack
 GET     /TriggerInjection	         	App.TriggerInjection
 GET     /CreateAccessPoint	         	App.CreateAccessPoint
 GET     /GetHar	         				App.GetHar
-
+GET 	/ToggleHarCollection			App.ToggleHarCollection
 
 
 

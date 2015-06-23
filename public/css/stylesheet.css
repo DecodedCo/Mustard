@@ -12,7 +12,13 @@ html {
   padding: 10px;
   margin: 10px;
 }
-
+#map-canvas {
+    height: 400px;
+    margin: 0px;
+    padding: 0px;
+    width: 50%;
+    display: none;
+}
 .website {
   background: #BC4728;
   padding: 5px;
