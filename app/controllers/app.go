@@ -239,8 +239,10 @@ func (c App) GetKeylogs() revel.Result {
 func (c App) CatchKeyLog() revel.Result {
 	var d string
 	var p string
+	var o string
 	c.Params.Bind(&d, "data")
 	c.Params.Bind(&p, "page")
+	c.Params.Bind(&o, "object")
 	if d != "" {
 		var k KeyLog
 		k.Page = p
@@ -248,6 +250,7 @@ func (c App) CatchKeyLog() revel.Result {
 		t := time.Now().Local()
 		k.Timestamp = t.Format("20060102150405")
 		s := strings.Split(c.Request.RemoteAddr, ":")
+		k.DomObject = o
 		ip := s[0]
 		k.IP = ip
 		keylogs = append(keylogs, k)

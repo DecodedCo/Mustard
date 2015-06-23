@@ -13,6 +13,15 @@ html {
   margin: 10px;
 }
 
+.website {
+  background: #BC4728;
+  padding: 5px;
+}
+.user {
+  background: #31B0D5;
+  padding: 20px;
+  width: 50%;
+}
 html, body {
   width: 100%;
   height: 100%;
