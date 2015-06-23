@@ -106,6 +106,7 @@ func KillProxy() {
 
 func (c App) ToggleHarCollection() revel.Result {
 	globalStoreHAR = !globalStoreHAR
+	log.Println(" --- OPTION: Toggling har collection: ", globalStoreHAR)
 	return c.RenderJson(globalStoreHAR)
 }
 

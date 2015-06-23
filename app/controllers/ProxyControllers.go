@@ -143,7 +143,6 @@ func StartSimpleProxy() {
 
 }
 
-
 //
 func TriggerRedirect() goproxy.HandlerFunc {
     // Create a new pageRedirect handler function to pass back later on.
