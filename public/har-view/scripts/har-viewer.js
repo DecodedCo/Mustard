@@ -292,12 +292,34 @@
                 _updateHeaders(id, false, response.headers);
             }
             if(response.content && response.content.text) {
-                _updateField('#' + id + '-resp-body', response.content.text);
+                $.each(response.headers, function(i, j) {
+                    // console.log(i, " ", j)
+                    if (j.name === "Content-Type") {
+                        console.log(j)
+                        if (j.value === "image/png") {
+                            displayPNG('#' + id + '-resp-body', response.content.text)
+                        } else {
+                            _updateField('#' + id + '-resp-body', response.content.text);
+                        }
+                        return false
+                    }
+                })
                 _updateField('#' + id + '-bodySize', response.bodySize);
             }
             else {
                 $('#' + id + '-tabs').tabs('disable', 3);
             }
+        }
+
+        var displayPNG = function(id, response) {
+            // convert to Base64
+            var b64Response = btoa(encodeURI(response));
+            // create an image
+            var outputImg = document.createElement('img');
+            outputImg.src = 'data:image/png;base64,'+b64Response;
+
+            // append it to your page
+            $(id).prepend(outputImg);
         }
 
         var _updateField = function (id, field) {

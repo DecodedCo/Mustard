@@ -5,7 +5,29 @@ html {
 *, *:before, *:after {
   box-sizing: inherit;
 }
-
+.accesspoint {
+  margin: 10px;
+}
+.wifi {
+  padding: 10px;
+  margin: 10px;
+}
+#map-canvas {
+    height: 400px;
+    margin: 0px;
+    padding: 0px;
+    width: 50%;
+    display: none;
+}
+.website {
+  background: #BC4728;
+  padding: 5px;
+}
+.user {
+  background: #31B0D5;
+  padding: 20px;
+  width: 50%;
+}
 html, body {
   width: 100%;
   height: 100%;

