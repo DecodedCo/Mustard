@@ -71,7 +71,7 @@ func utilsModifyHeadersForInjection(ctx *goproxy.ProxyCtx) {
 } 
 
 func utilsInjector(ctx *goproxy.ProxyCtx,  body string, replace string, result string ) string {
-    if !strings.Contains(ctx.Req.URL.Host, "127.0.0.1") {
+    if !strings.Contains(ctx.Req.URL.Host, "192.168.99.1") {
         body = strings.Replace(body, replace, result, -1)
     }
     return body

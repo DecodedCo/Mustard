@@ -206,12 +206,27 @@ func (c App) TriggerInjection() revel.Result {
 	return c.RenderJson("")
 }
 
+func (c App) ConnectToWifi() revel.Result {
+	var wifiName string
+	var wifiPassword string
+	c.Params.Bind(&wifiName, "wifiName")
+	c.Params.Bind(&wifiPassword, "wifiPassword")
+	log.Println("/srv/wifi/setupwifi.sh", " ", wifiName, " ", wifiPassword)
+	cmd := exec.Command("/srv/wifi/setupwifi.sh", wifiName, wifiPassword)
+	output, err := cmd.CombinedOutput()
+	log.Println(string(output), " errors: ", err)
+	return c.RenderJson(output)
+}
+
 func (c App) CreateAccessPoint() revel.Result {
 	var apName string
+	var connection string
+	c.Params.Bind(&connection, "connection")
 	c.Params.Bind(&apName, "name")
-
-	cmd := exec.Command("sudo", "/srv/wifi/beagleattach.sh", "eth0", apName)
-	output, _ := cmd.CombinedOutput()
+	log.Println("/srv/wifi/setupEvilAP.sh", " ", connection, " ", apName)
+	cmd := exec.Command("/srv/wifi/setupEvilAP.sh", connection, apName)
+	output, err := cmd.CombinedOutput()
+	log.Println(string(output), " errors: ", err)
 	return c.RenderJson(output)
 }
 

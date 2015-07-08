@@ -21,6 +21,7 @@ GET     /TriggerInjection	         	App.TriggerInjection
 GET     /CreateAccessPoint	         	App.CreateAccessPoint
 GET     /GetHar	         				App.GetHar
 GET 	/ToggleHarCollection			App.ToggleHarCollection
+Get 	/ConnectToWifi 					App.ConnectToWifi
 
 
 

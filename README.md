@@ -49,6 +49,9 @@
 
 #### To Do
 
+* wolfpack needs to allow cookies
+* wolfpack needs to allow normal http
+* need to turn on transparent proxying - see nonproxyhandler of transparent proxy example
 * Improve UI (work in progress...)
 * Do not redirect on requests to local host - so once we have them on a page, they can be directed wherever from there. At the moment a url that is redirected means they can never go to sub domains of that url.
 * Send emails from page (linkedIn, facebook etc..)

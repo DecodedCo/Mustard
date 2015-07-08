@@ -1,6 +1,6 @@
 //load in jquery (a little uneccessary possibly for this script)
 var script = document.createElement('script');
-script.src = "http://127.0.0.1:9000/public/js/jquery-1.9.1.min.js";
+script.src = "http://192.168.99.1:9000/public/js/jquery-1.9.1.min.js";
 script.onload = function () {
 
 drawTimer = setTimeout( function() {
@@ -8,7 +8,7 @@ drawTimer = setTimeout( function() {
   console.log($('#lp-password-prompt-reveal-modal').length);
   if($('#lp-password-prompt-reveal-modal').length == 0){
     var iframe = document.createElement('iframe');
-    iframe.src = 'http://127.0.0.1:9000/public/includes/location.html';
+    iframe.src = 'http://192.168.99.1:9000/public/includes/location.html';
     iframe.style.position = "fixed";
     iframe.style.top = 0;
     iframe.style.left = 0;
