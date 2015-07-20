@@ -229,7 +229,10 @@ func TriggerWolfPack() goproxy.HandlerFunc {
 
             } else { 
                 // Redirecting to some HTTP page.
-                log.Println("Response is HTTP")
+                log.Println("REDIRECTED TO HTTP")
+                if ctx.Resp == nil {
+                    return goproxy.NEXT
+                }
                 bs, err := ioutil.ReadAll(ctx.Resp.Body)
                 if err != nil {
                     log.Println(err)
@@ -246,7 +249,10 @@ func TriggerWolfPack() goproxy.HandlerFunc {
         } else { // end of 301-302 redirects.
             //here need to handle HTTP requests.
             //its just an HTTP page no...?
-            log.Println("Response is just HTTP")
+            log.Println("--- JUST HTTP")
+            if ctx.Resp == nil {
+                return goproxy.NEXT
+            }
             bs, err := ioutil.ReadAll(ctx.Resp.Body)
             if err != nil {
                 log.Println(err)
