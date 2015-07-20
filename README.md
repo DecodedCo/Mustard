@@ -1,4 +1,14 @@
-# MITM Proxy
+### Using MITM software
+
+##### Transparent proxy
+
+* The basic proxy can only currenty allow http requests through. This is a reestriction because you have to define what to do if it is HTTPS.
+* The wolfpack hack handles both HTTP and HTTPS situations. If it is HTTPS it allows it through as it can't do anything about it. this prevents interception of HSTS and direct requests to HTTPS
+* HTTP that gets redirected to HTTPS will get stripped
+* HTTP will be allowed through.
+* The problem with pages that are already http for the wolfpack hack is there is not interception etc, so scripts have to be used in this situation.
+
+##### things....
 
 * A proxy server for demonstrating MITM attacks and the kinds of things possible
 

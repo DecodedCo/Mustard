@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"path/filepath"
 	"archive/zip"
-	"strings"
 	"bytes"
 	"log"
 	"os"
@@ -23,12 +22,14 @@ var redirect []string
 var newsSites []string
 
 var fileLocation string
-
+var proxyAddress string
 func setFileStorageLocation() {
 	if os.Getenv("STATE") == "PRODUCTION" {
 		fileLocation = "/srv/mitmfiles"
+        proxyAddress = "192.168.99.1"
 	} else {
 		fileLocation = os.Getenv("HOME")+"/mitmfiles"
+        proxyAddress = "127.0.0.1"
 	}
 }
 //pulls the urls to redirect from the url
@@ -122,16 +123,52 @@ func getPages() {
 	}
 	url := "http://komodobank.com/_admin/mitm/mitmfiles.zip"
 	urlReader, err := getReaderFromUrl(url)
-	if err != nil {
-		log.Fatalf("Unable to get <%s>: %s", url, err)
-	}
-	zr, err := zip.NewReader(urlReader, int64(urlReader.Len()))
-	if err != nil {
-		log.Fatalf("Unable to read zip: %s", err)
-	}
-	for _, zf := range zr.File {
-			writeFileToDisk(zf)
-	}
+    if err != nil {
+            log.Fatalf("Unable to get <%s>: %s", url, err)
+    }
+    reader, err := zip.NewReader(urlReader, int64(urlReader.Len()))
+    if err != nil {
+             log.Println(err)
+             os.Exit(1)
+     }
+     // defer reader.Close()
+
+     for _, f := range reader.File {
+
+             zipped, err := f.Open()
+             if err != nil {
+                     log.Println(err)
+                     // os.Exit(1)
+             }
+
+             defer zipped.Close()
+
+             // get the individual file name and extract the current directory
+             
+             path := filepath.Join(fileLocation, f.Name)
+
+             if f.FileInfo().IsDir() {
+                     os.MkdirAll(path, f.Mode())
+                     log.Println("Creating directory", path)
+             } else {
+                     writer, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, f.Mode())
+
+                     if err != nil {
+                             log.Println(err)
+                             // os.Exit(1)
+                     }
+
+                     defer writer.Close()
+
+                     if _, err = io.Copy(writer, zipped); err != nil {
+                             log.Println(err)
+                             // os.Exit(1)
+                     }
+
+                     log.Println("Decompressing : ", path)
+
+             }
+     }
 }
 //a URL reader - returns a byte reader. Used for pulling zip files and extracting the contents
 func getReaderFromUrl(url string) (*bytes.Reader, error) {
@@ -149,38 +186,6 @@ func getReaderFromUrl(url string) (*bytes.Reader, error) {
 	}
 
 	return bytes.NewReader(buf.Bytes()), nil
-}
-//writes files to disk after extracting from a zip file
-func writeFileToDisk(zf *zip.File) {
-		fr, err := zf.Open()
-		if err != nil {
-			log.Printf("Unable to read file: %s", zf.Name)
-			return
-		}
-		defer fr.Close()
-
-		path := strings.Replace(filepath.Join(fileLocation, zf.Name), `/`, string(filepath.Separator), -1)
-		dir, _ := filepath.Split(path)
-		log.Printf("path: %s, dir: %s", path, dir)
-		err = os.MkdirAll(dir, 0777)
-		if err != nil {
-			log.Printf("Unable to create directory: %s", dir)
-			return
-		}
-
-		f, err := os.Create(path)
-		if err != nil {
-			log.Printf("Unable to create file: %s", path)
-			return
-		}
-		defer f.Close()
-
-		_, err = io.Copy(f, fr)
-		if err != nil {
-			log.Printf("Issue writing file <%s>: %s", path, err)
-			return
-		}
-		return
 }
 
 

