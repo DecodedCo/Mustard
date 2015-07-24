@@ -187,6 +187,6 @@ function deg2rad(deg) {
 
 // Pull in jQuery
   var script = document.createElement('script');
-  script.src = '//code.jquery.com/jquery-1.11.0.min.js';
+  script.src = '/public/js/jquery-1.9.1.min.js';
   script.type = 'text/javascript';
   document.getElementsByTagName('head')[0].appendChild(script);
