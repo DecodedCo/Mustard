@@ -459,9 +459,9 @@ function pingTest() {
 
 //get the latest hars that are available
 $(document).ready(function() {
-  initHarView();
+  
   setTimeout(captureKeyLogs, 5000);
-  // pingTest() //test if we have an internet connection
+  setTimeout(pingTest(), 5000); //test if we have an internet connection
   console.log(spinner)
   target = document.getElementById('spinner');
   spinner = new Spinner(opts);
@@ -474,7 +474,7 @@ $(document).ready(function() {
     connectionType = this.innerHTML;
     $('#connectionButton').html(this.innerHTML + " <span class=\"caret\"></span>");
   });
-
+  initHarView();
 
 })
 
