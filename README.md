@@ -53,13 +53,3 @@
 
 #### To Do
 
-* wolfpack needs to allow cookies
-* wolfpack needs to allow normal http
-* Do not redirect on requests to local host - so once we have them on a page, they can be directed wherever from there. At the moment a url that is redirected means they can never go to sub domains of that url.
-* handle 'login with facebook...'
-* users in a list rather than all users at the same place
-* Click on users (i.e have a list of unique users IPs (MITM they will all get one...))
-	* add users' HARs to the harviewer.
-	* add users key logging to the key logs
-* user tracking UUIDs and IP address
-
