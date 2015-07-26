@@ -3,7 +3,10 @@
 
 <header class="row">
   <h1 class="col-md-4">Shakespeare Dashboard</h1>
-  <h4 class="col-md-8 attackType">none selected</h4>
+  <button class="btn btn-success" id="getdata">Fetch All Data</button>
+  <svg height="30" width="30">
+  <circle id="internetconnected" cx="15" cy="15" r="10" stroke="black" stroke-width="3" fill="red" />
+</svg>
   <p></p>
 </header>
 <div class="main row">
@@ -295,6 +298,8 @@ var opts = {
         console.log(data)
       })
   }
+  $("#getdata").click( function () { handleGetRequest("FetchAllData")});
+
   $("#toggleHarCollection").click( function () { handleGetRequest("ToggleHarCollection")});
 
   $("#startSimpleProxy").click( function () { handleGetRequest("StartSimpleProxy")});
@@ -436,15 +441,32 @@ function captureKeyLogs() {
    setTimeout(captureKeyLogs, 5000);
 }
 
+function pingTest() {
+  console.log("ping test")
+  $.get("/Pinger", function( ping ) {
+    console.log(ping)
+    if (ping.Response != "") {
+      $("#getdata").prop('disabled', false);
+      $("#internetconnected").attr("fill", "green");
+    } else {
+      $("#getdata").prop('disabled', true);
+      $("#internetconnected").attr("fill", "red");
+    }
+  })
+  setTimeout(pingTest, 2000); //test if we have an internet connection
+}
+
 //get the latest hars that are available
 $(document).ready(function() {
   initHarView();
   setTimeout(captureKeyLogs, 5000);
+  pingTest() //test if we have an internet connection
   console.log(spinner)
   target = document.getElementById('spinner');
   spinner = new Spinner(opts);
 
   connectionType = "";
+
   //handle when a connection type is selected from the drop down, to create dodgy access points...
   $('#connectiontype li > a').click(function(e){
     console.log("selected: ", this.innerHTML);

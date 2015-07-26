@@ -81,7 +81,7 @@ func StartSimpleProxy() {
         proxy.HandleRequest( goproxy.RequestHostContains(redirect...)(pageRedirect) )
     } // end of redirect.
 
-    if globalWolfPack {
+    // if globalWolfPack {
         // Catch HSTS and direct https:// (i.e it immediately puts an SNI header in place)
         proxy.HandleConnectFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
             // Potentially best to REJECT so that MITM is not detected. detection of MITM could cause suspicion
@@ -92,7 +92,7 @@ func StartSimpleProxy() {
             }
             return goproxy.FORWARD
         })
-    }
+    // }
 
     // Handle the CLIENT-REQUEST.
     proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {

