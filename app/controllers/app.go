@@ -53,7 +53,7 @@ func InitiateProxy() {
 	}
 	defer f.Close()
 	
-	// log.SetOutput(f)
+	log.SetOutput(f)
 
     log.Println("location: ", fileLocation, " address: ", proxyAddress)
     //reset all parameters for the proxy
