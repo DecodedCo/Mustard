@@ -206,7 +206,19 @@
             <!-- <button class="btn btn-danger" id="deletehars">Delete current data</button> -->
             <!-- dropdown button -->
           </nav>
-          <table class="table table-striped">
+
+          </ul>
+          <div id='har-view'></div> <!-- har viewer here -->
+        </div>
+        <div role="tabpanel" class="tab-pane" id="locations">
+          <div id="map-canvas"></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="logs">
+          <div id='userLogs'></div>
+        </div>
+        <div role="tabpanel" class="tab-pane" id="wifiRequests">
+          <p>Page in place for seeing who is connected and what SSID's devices are trying to connect to. Will come in v2.0</p>
+            <table class="table table-striped">
               <thead>
                 <tr>
                   <th>IP</th>
@@ -220,18 +232,6 @@
               <tbody id="currentusers">
               </tbody>
             </table>
-          </ul>
-          <div id='har-view'></div> <!-- har viewer here -->
-        </div>
-        <div role="tabpanel" class="tab-pane" id="locations">
-          <div id="map-canvas"></div>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="logs">
-          <div id='userLogs'></div>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="wifiRequests">
-          <p>This is to discover the SSIDs that devices are trying to connect to. Useful for creating hotspots for targetted attacks</p>
-          <div id='wifi-requests'></div>
         </div>
         <div role="tabpanel" class="tab-pane" id="CreateAP">
           <div class="accesspoint">
