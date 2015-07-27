@@ -1,0 +1,66 @@
+{
+	"ImportPath": "mitm/app/controllers",
+	"GoVersion": "go1.3",
+	"Deps": [
+		{
+			"ImportPath": "github.com/abourget/goproxy",
+			"Comment": "v1.0-71-gc317094",
+			"Rev": "c317094741c6e7087589e2c9e914e08597ad9c15"
+		},
+		{
+			"ImportPath": "github.com/agtorre/gocolorize",
+			"Rev": "f42b554bf7f006936130c9bb4f971afd2d87f671"
+		},
+		{
+			"ImportPath": "github.com/google/gopacket",
+			"Comment": "v1.1.10-82-g22636c3",
+			"Rev": "22636c35d6ae1dcce5b5804418fa99e7f2cf4e39"
+		},
+		{
+			"ImportPath": "github.com/inconshreveable/go-vhost",
+			"Rev": "8cbc5089df5ba3e44644d39e8d1ec375d6d842f9"
+		},
+		{
+			"ImportPath": "github.com/revel/revel",
+			"Comment": "v0.12.0-1-g83c6204",
+			"Rev": "83c62046c726f36daec7a28a335521f94b2561a6"
+		},
+		{
+			"ImportPath": "github.com/robfig/config",
+			"Rev": "09efbd4617d1beb41b72f6668403b1e383b6a4cf"
+		},
+		{
+			"ImportPath": "github.com/robfig/pathtree",
+			"Rev": "41257a1839e945fce74afd070e02bab2ea2c776a"
+		},
+		{
+			"ImportPath": "github.com/tatsushid/go-fastping",
+			"Rev": "5bf6f7ec592f53ccd7bf999496eee4a09020e93c"
+		},
+		{
+			"ImportPath": "golang.org/x/net/icmp",
+			"Rev": "b71143c25f0aad5f54981684b715686d34c56d25"
+		},
+		{
+			"ImportPath": "golang.org/x/net/internal/iana",
+			"Rev": "b71143c25f0aad5f54981684b715686d34c56d25"
+		},
+		{
+			"ImportPath": "golang.org/x/net/ipv4",
+			"Rev": "b71143c25f0aad5f54981684b715686d34c56d25"
+		},
+		{
+			"ImportPath": "golang.org/x/net/ipv6",
+			"Rev": "b71143c25f0aad5f54981684b715686d34c56d25"
+		},
+		{
+			"ImportPath": "golang.org/x/net/websocket",
+			"Rev": "b71143c25f0aad5f54981684b715686d34c56d25"
+		},
+		{
+			"ImportPath": "gopkg.in/fsnotify.v1",
+			"Comment": "v1.0.4",
+			"Rev": "ca50e738d35a862c379baf8fffbc3bfd080b3cff"
+		}
+	]
+}

@@ -1,0 +1,13 @@
+{
+	"ImportPath": "mitm",
+	"GoVersion": "go1.3",
+	"Packages": [
+		"."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/hydrogen18/stoppableListener",
+			"Rev": "2eebd04b47ff393f4bc50b7fcacf8f048994c6fd"
+		}
+	]
+}
