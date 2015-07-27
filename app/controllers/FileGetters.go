@@ -23,8 +23,8 @@ var newsSites []string
 
 var fileLocation string
 var proxyAddress string
-
-func setFileStorageLocation() {
+var logLocation string 
+func setFileStorageLocation() (string, string) {
 	if os.Getenv("STATE") == "PRODUCTION" {
 		fileLocation = "/srv/mitmfiles"
         proxyAddress = "192.168.99.1"
@@ -32,6 +32,12 @@ func setFileStorageLocation() {
 		fileLocation = os.Getenv("HOME")+"/mitmfiles"
         proxyAddress = "127.0.0.1"
 	}
+    //there is a bug so these need to be set manually for now
+    fileLocation = "/srv/mitmfiles"
+    proxyAddress = "192.168.99.1"
+    
+    logLocation = os.Getenv("HOME")
+    return fileLocation, proxyAddress
 }
 //pulls the urls to redirect from the url
 func getRedirectUrls() {

