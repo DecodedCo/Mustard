@@ -103,7 +103,7 @@ func StartSimpleProxy() {
             timestamp := t.Format("20060102150405")
             if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
             } else {
-                proxy.FlushHARToDisk(fileLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
+                proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
             }
             
         } 
@@ -136,7 +136,7 @@ func StartSimpleProxy() {
                 //dont catch hars that are to the proxy
                 if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
                 } else {
-                    proxy.FlushHARToDisk(fileLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
+                    proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
                 }
             } else {
                 //log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )

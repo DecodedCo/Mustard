@@ -117,10 +117,8 @@ func (c App) Login() revel.Result {
 
 //
 func (c App) Index() revel.Result {
-
 	StartSimpleProxy()
 	return c.Render()
-
 }
 
 func (c App) StartSimpleProxy() revel.Result {
@@ -353,8 +351,8 @@ func (c App) CatchKeyLog() revel.Result {
 
 func (c App) GetHars() revel.Result {
 	var fileNames []string
-	log.Println("reading hars from: ", fileLocation+"/hars/")
-	files, err := ioutil.ReadDir(fileLocation+"/hars/")
+	log.Println("reading hars from: ", harLocation+"/hars/")
+	files, err := ioutil.ReadDir(harLocation+"/hars/")
 	if err != nil {
 		log.Println("error: ", err)
 	}
@@ -368,8 +366,8 @@ func (c App) GetHars() revel.Result {
 func (c App) GetHar() revel.Result {
 	var harName string
 	c.Params.Bind(&harName, "harname")
-    data, err := ioutil.ReadFile(fileLocation+"/hars/"+harName)
-    log.Println("location: ", fileLocation+"/hars/"+harName)
+    data, err := ioutil.ReadFile(harLocation+"/hars/"+harName)
+    log.Println("location: ", harLocation+"/hars/"+harName)
     if err != nil {
     	return c.RenderJson("The file may not exist...")
     }
@@ -390,6 +388,6 @@ func (c App) Pinger() revel.Result {
 }
 func (c App) DeleteHars() revel.Result {
 	var w Walker
-	filepath.Walk(fileLocation+"/hars", w.utilsDeletefiles)
+	filepath.Walk(harLocation+"/hars", w.utilsDeletefiles)
 	return c.RenderJson(w.files)
 }

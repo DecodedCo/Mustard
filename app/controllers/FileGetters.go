@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+    "fmt"
 	"io/ioutil"
 	"encoding/json"
 	"path/filepath"
@@ -22,18 +23,23 @@ var redirect []string
 var newsSites []string
 
 var fileLocation string
+var harLocation string
 var proxyAddress string
 var logLocation string 
+
 func setFileStorageLocation() (string, string) {
 	if os.Getenv("STATE") == "PRODUCTION" {
-		fileLocation = "/srv/mitmfiles"
+		// fileLocation = "/srv/mitmfiles"
+        fileLocation = "/root/mitm/src/mitm/public/pages"
+        harLocation = "/srv/mitmfiles"
         proxyAddress = "192.168.99.1"
 	} else {
-		fileLocation = os.Getenv("HOME")+"/mitmfiles"
+		fileLocation = os.Getenv("HOME")+"/go/src/mitm/public/pages"
         proxyAddress = "127.0.0.1"
 	}
     //there is a bug so these need to be set manually for now
     // fileLocation = "/srv/mitmfiles"
+    fmt.Println("location: ", fileLocation)
     proxyAddress = "192.168.99.1"
     
     logLocation = os.Getenv("HOME")

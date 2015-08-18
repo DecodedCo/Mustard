@@ -1,7 +1,7 @@
 package controllers
 
 import (
-    _"log"
+    "fmt"
     "bytes"
     "github.com/abourget/goproxy"
     "strings"
@@ -54,6 +54,7 @@ type Walker struct {
 func utilsGetBuffer( site string ) string {
     buf := bytes.NewBuffer(nil)
     var s string
+    fmt.Println(site)
         f, err := os.Open(fileLocation+"/"+site+".html") // Error handling elided for brevity.
         if err != nil {
             //log.Println("read error: ", err)
