@@ -27,14 +27,15 @@ var harLocation string
 var proxyAddress string
 var logLocation string 
 
+//this all needs work for productisation
 func setFileStorageLocation() (string, string) {
 	if os.Getenv("STATE") == "PRODUCTION" {
-		// fileLocation = "/srv/mitmfiles"
-        fileLocation = "/root/mitm/src/mitm/public/pages"
+		fileLocation = "/srv/mitmfiles"
         harLocation = "/srv/mitmfiles"
         proxyAddress = "192.168.99.1"
 	} else {
-		fileLocation = os.Getenv("HOME")+"/go/src/mitm/public/pages"
+		fileLocation = "/home/hacker/go/src/Mustard/public/pages"
+        harLocation = "/home/hacker/go/src/Mustard/public"
         proxyAddress = "127.0.0.1"
 	}
     //there is a bug so these need to be set manually for now

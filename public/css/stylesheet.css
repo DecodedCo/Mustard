@@ -20,7 +20,7 @@ html {
     display: none;
 }
 .website {
-  background: #BC4728;
+  background: #f0b61e;
   padding: 5px;
 }
 .user {
@@ -44,7 +44,7 @@ html, body {
   overflow: hidden;
 }
 header {
-  background: #BC4728;
+  background: #f0b61e;
   color: #FFF;
   padding: 0.5em 1em;
   position: absolute;

