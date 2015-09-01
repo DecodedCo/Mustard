@@ -24,6 +24,7 @@ var newsSites []string
 
 var fileLocation string
 var harLocation string
+var usersLocation string
 var proxyAddress string
 var logLocation string 
 
@@ -32,10 +33,12 @@ func setFileStorageLocation() (string, string) {
 	if os.Getenv("STATE") == "PRODUCTION" {
 		fileLocation = "/srv/mitmfiles"
         harLocation = "/srv/mitmfiles"
+        usersLocation = "/srv/users"
         proxyAddress = "192.168.99.1"
 	} else {
 		fileLocation = "/home/hacker/go/src/Mustard/public/pages"
-        harLocation = "/home/hacker/go/src/Mustard/public"
+        harLocation = "/home/hacker"
+        usersLocation = "/home/hacker"
         proxyAddress = "127.0.0.1"
 	}
     //there is a bug so these need to be set manually for now

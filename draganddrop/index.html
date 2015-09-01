@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+
+    <script type='text/javascript' src='http://s3u.github.io/har-view/scripts/jquery.min.js'></script>
+    <script type='text/javascript' src='http://s3u.github.io/har-view/scripts/jquery-ui.min.js'></script>
+    <script type='text/javascript' src='http://s3u.github.io/har-view/scripts/humanize.min.js'></script>
+    <script type='text/javascript' src='http://s3u.github.io/har-view/scripts/har-viewer.js'></script>
+    <script type='text/javascript' src='http://s3u.github.io/har-view/scripts/mustache.js'></script>
+    <link rel='stylesheet' href='http://s3u.github.io/har-view/css/jquery-ui.css'/>
+    <link rel='stylesheet' href='http://s3u.github.io/har-view/css/har-viewer.css'/>
+    <style type="text/css">
+        body {
+            font-family: Lucida Grande, Tahoma, sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<h1>HAR View</h1>
+
+<p>Drop har file in this window. Use latest Chrome or Firefox.</p>
+
+<div id='har-view'></div>
+
+<script type='text/javascript'>
+
+    window.ondragover = function () {
+        return false;
+    };
+    window.ondragend = function () {
+        return false;
+    };
+
+    window.ondrop = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        $('#har-view').empty();
+
+        var file = e.dataTransfer.files[0];
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var data = event.target.result;
+            try {
+                data = JSON.parse(data);
+
+                $('#har-view').HarView();
+                var har = $('#har-view').data('HarView');
+                har.render(data);
+            }
+            catch(e) {
+                alert(e);
+            }
+            
+        };
+        reader.readAsText(file);
+        return false;
+    };
+</script>
+</body>
+</html>

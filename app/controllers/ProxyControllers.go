@@ -96,8 +96,8 @@ func StartSimpleProxy() {
 
     // Handle the CLIENT-REQUEST.
     proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-        if globalStoreHAR {
-            log.Println(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
+        // if globalStoreHAR {
+            // log.Println(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
             ctx.LogToHARFile(true)
             t := time.Now().Local()
             timestamp := t.Format("20060102150405")
@@ -106,7 +106,7 @@ func StartSimpleProxy() {
                 proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
             }
             
-        } 
+        // } 
         // Check if this is HTTPS connection via MITM.
         if ctx.IsThroughMITM {
             ctx.Req.Host = ctx.Host()

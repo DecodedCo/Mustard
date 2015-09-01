@@ -1,1 +1,0 @@
-var csaHSBCtargetElement = document.getElementById('csaHSBCScriptElement');if(csaHSBCtargetElement)csaHSBCtargetElement.responseReceived = true;

@@ -9,7 +9,7 @@ import (
 	"net"
 	"sync"
 	"time"
-
+	"os"
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -71,6 +71,8 @@ func scan(iface *net.Interface) error {
 		return fmt.Errorf("skipping localhost")
 	} else if addr.Mask[0] != 0xff || addr.Mask[1] != 0xff {
 		return fmt.Errorf("mask means network is too large")
+	} else if addr.IP[2] != 99 {
+		return fmt.Errorf("address is not in correct range 192.168.99.x")
 	}
 	log.Printf("Using network range %v for interface %v", addr, iface.Name)
 
@@ -124,6 +126,17 @@ func readARP(handle *pcap.Handle, iface *net.Interface, stop chan struct{}) {
 			// all information is good information :)
 
 			//here we want to add to a list
+			f, err := os.OpenFile(usersLocation + "/users.log", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
+			if err != nil {
+			    panic(err)
+			}
+
+			defer f.Close()
+			currenttime := time.Now().Local()
+			text := currenttime.Format("2006-01-02 15:04:05 +0800") + " : " + net.IP(arp.SourceProtAddress).String() + " - " + net.HardwareAddr(arp.SourceHwAddress).String() + "\n"
+			if _, err = f.WriteString(text); err != nil {
+			    panic(err)
+			}
 			users[net.IP(arp.SourceProtAddress).String()] = net.HardwareAddr(arp.SourceHwAddress).String()
 			log.Printf("IP %v is at %v", net.IP(arp.SourceProtAddress), net.HardwareAddr(arp.SourceHwAddress))
 		}

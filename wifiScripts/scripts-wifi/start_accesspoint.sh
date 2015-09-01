@@ -90,8 +90,10 @@ iptables --table nat --append PREROUTING --protocol udp --dport 53 -j DNAT --to 
 
 
 # Configure the IPTables
-#iptables -t nat -A PREROUTING --protocol tcp --dport 80 -j REDIRECT --to-ports 8080
-#iptables -t nat -A PREROUTING --protocol tcp --dport 443 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING --protocol tcp --dport 80 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING --protocol tcp --dport 443 -j REDIRECT --to-ports 8080
+iptables -t nat -A PREROUTING --protocol tcp --dport 9000 -j REDIRECT --to-ports 8080
+
 
 
 echo 1 > /proc/sys/net/ipv4/ip_forward

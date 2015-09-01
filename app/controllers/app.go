@@ -49,7 +49,7 @@ func InitiateProxy() {
 
     log.Println("location: ", fileLocation, " address: ", proxyAddress)
     //reset all parameters for the proxy
-	globalStoreHAR = false			
+	globalStoreHAR = true			
 	globalProxyStandard = false
 	globalRedirects = false
 	globalBlocks = false
