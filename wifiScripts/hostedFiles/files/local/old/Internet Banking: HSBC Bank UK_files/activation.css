@@ -1,0 +1,367 @@
+
+ul.activationstepslist{
+	clear:both;
+	float:left;
+	display:block;
+	padding:0 0 21px 0;
+	margin:0;
+	width:100%;
+}
+
+ul.activationstepslist li{
+	display:inline;
+	float:left;	
+	height:47px;
+	background-repeat:no-repeat;
+	text-indent:-3000em;
+	display:inline;
+}
+
+ul.activationstepslist li.highlight {
+	font-weight:bold;
+}
+
+ul.activationstepslist li.hdr_pt1_1{
+	width:125px;
+	height:47px;
+	background:url("../images/hdr_activation_pt1_1.png") no-repeat;
+}
+
+
+ul.activationstepslist li.hdr_pt1_2{
+	width:125px;
+	height:47px;
+	background:url("../images/hdr_activation_pt1_2.png") no-repeat;
+}
+
+ul.activationstepslist li.hdr_pt1_3{
+	width:125px;
+	height:47px;
+	background:url("../images/hdr_activation_pt1_3.png") no-repeat;
+}
+
+
+ul.activationstepslist li.hdr_pt2_1{
+	width:125px;
+	background:url("../images/hdr_activation_pt2_1.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt2_2{
+	width:125px;
+	background:url("../images/hdr_activation_pt2_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+ul.activationstepslist li.hdr_pt2_3{
+	width:125px;
+	background:url("../images/hdr_activation_pt2_3.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+ul.activationstepslist li.hdr_pt3_1{
+	width:125px;
+	background:url("../images/hdr_activation_pt3_1.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt3_2{
+	width:125px;
+	background:url("../images/hdr_activation_pt3_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt3_3{
+	width:125px;
+	background:url("../images/hdr_activation_pt3_3.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt4_1{
+	width:125px;
+	background:url("../images/hdr_activation_pt4_1.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+ul.activationstepslist li.hdr_pt4_2{
+	width:125px;
+	background:url("../images/hdr_activation_pt4_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+ul.activationstepslist li.hdr_pt4_3{
+	width:125px;
+	background:url("../images/hdr_activation_pt4_3.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+ul.activationstepslist li.hdr_pt5_1{
+	width:125px;
+	background:url("../images/hdr_activation_pt5_1.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt5_2{
+	width:125px;
+	background:url("../images/hdr_activation_pt5_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt5_3{
+	width:125px;
+	background:url("../images/hdr_activation_pt5_3.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt6_1{
+	width:117px;
+	background:url("../images/hdr_activation_pt6_1.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt6_2{
+	width:117px;
+	background:url("../images/hdr_activation_pt6_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+ul.activationstepslist li.hdr_pt6_3{
+	width:125px;
+	background:url("../images/hdr_activation_pt6_3.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+
+
+
+
+
+
+
+
+/* step 1 */ 
+
+.act_stp1_leftPanel{
+	float:left;
+	width:460px;
+	margin-top:22px;
+}
+
+.act_stp1_rightPanel{
+	float:left;
+	display:inline;
+	margin-left:33px;
+}
+
+.act_stp1_rightPanel #securityimg{
+	padding:22px 0 11px 33px;             
+}
+
+div.indentHolder a.unl {
+	font-weight:normal;
+	text-decoration:underline;
+}
+
+
+
+
+
+
+
+
+/* step 4 */
+
+
+.indentHolder h4{
+	font-size:150%;
+	font-weight:normal;
+	margin:21px 0 17px 0 ;
+}
+
+
+.act_stp4_leftPanel{
+	float:left;
+	display:inline;
+	width:473px;
+}
+
+.act_stp4_rightPanel{
+	float:left;
+	display:inline;
+}
+
+
+.indentHolder  ul.aclne{
+	float:left;
+	display:inline;
+	width:100%;
+}
+
+
+
+
+.indentHolder  ul.aclne li{
+	float:left;
+	display:inline;
+	width:33%;
+}
+
+.wdth1{
+	width: 215px;/* 227px; */
+}
+
+.wdth2{
+	width: 205px      /* 230px; */
+}
+
+.wdth3{
+	width:215px; /* was 205px */
+}
+
+
+.wdth4{
+	width:452px;
+}
+
+
+
+
+.divider1{
+	background:url("../images/divider_activation_vert.gif") right top no-repeat;
+	text-align:center;
+}
+
+.divider2{
+	text-align:center;
+}
+
+
+div.containerMain .indentHolder  .step2 p{
+	font-size:100%;
+	margin:10px;
+	padding:0;
+	float:left;
+	display:inline;
+}
+div.containerMain .indentHolder  span.num{
+	margin-right:10px;
+	padding:0;
+	float:left;
+	display:inline;
+	width:5px;
+	font-size:100%;
+}
+
+div.containerMain .indentHolder .negIndent span.content{
+	padding:0;
+	margin:0;
+	text-align:left;
+	display:block;
+	float:left;
+	width:170px;
+}
+
+
+div.fragmentWrapper div.secde {
+	padding:22px 0 0 35px;
+	float:left;
+}
+
+
+div.secCodeArea{
+
+	width:450px;
+	margin:20px 0 0 0;
+}
+
+div.secCodeArea label{
+	margin:0px 5px 0 15px;
+}
+
+div.secCodeArea label a{
+	margin-top:5px;
+}
+
+#activation_step4Submit{
+	margin-left:326px;
+}
+
+#activation_step4Submit.btnImg{
+	float:left;
+	margin-top:10px;
+	margin-left:0px;
+	 margin-right:95px; /* margin-right:55px; used in migration_step_1 and activation_step_4 */
+}
+
+
+img.packshot5{
+	margin:23px 0 0 63px;
+}
+
+
+a.actStep4{
+	margin:7px 10px 0 5px;
+	float:left;
+}
+
+input.clearMargin{
+margin-top:0;
+}
+
+
+div.highlightBlock{
+	padding:10px;
+	background-color:#f5f5f5;
+	font-weight:bold;	
+	margin-top:20px;
+}
+
+div.containerMain .indentHolder .mgn-left1{
+	margin:0 0 0 137px;
+}
+
+div.containerMain .indentHolder .mgn-left2{
+	margin:0 0 0 40px;
+}
+
+
+
+/** step 6  */
+
+div.indentHolder  ul.successList {
+	/*margin-left:320px;*/
+}
+div.indentHolder  p.remId {
+	float:left;
+	padding-left:310px;
+	margin-top:10px;
+}
+div.indentHolder  p.remId span{
+	/*margin:0px 10px 0 308px;*/
+
+
+	float:left;
+	display:inline;
+	width:270px;
+
+}
+div.indentHolder  p.remId input{
+	height:15px;
+	width:15px;
+	display:inline;
+	float:left;
+	border:0;
+	margin:0;
+	padding:3px;
+
+}
+
+div.indentHolder  p.remId span{
+	padding:0 0 0 10px;
+}

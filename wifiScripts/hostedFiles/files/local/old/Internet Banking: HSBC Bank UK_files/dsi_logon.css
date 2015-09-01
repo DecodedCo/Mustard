@@ -1,0 +1,911 @@
+/* .csHideForSR {
+    display: none;
+}
+
+h2.reg1 { 
+    clear: both;
+    display: inline;
+    float: left;
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 2em;
+    margin: 0;
+    padding: 0 0;
+}
+
+.fr {
+    float: right;
+}
+
+ul.stepslist {
+    clear: both;
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0 0 21px;
+    width: 100%;
+}
+
+ul.stepslist li {
+    background-repeat: no-repeat;
+    display: inline;
+    float: left;
+    height: 47px;
+    text-indent: -3000em;
+}
+
+ul.stepslist li.hdr_pt1_1 {
+    background: url("../images/hdr_fm_registration_pt1_1.png") no-repeat scroll 0 0 transparent;
+    height: 47px;
+    width: 186px;
+}
+
+ul.stepslist li.hdr_pt2_2 {
+    background: url("../images/hdr_fm_registration_pt2_2.png") no-repeat scroll 0 0 transparent;
+    margin-left: -2px;
+    width: 186px;
+}
+
+ul.stepslist li.hdr_pt3_2 {
+    background: url("../images/hdr_fm_registration_pt3_2.png") no-repeat scroll 0 0 transparent;
+    margin-left: -2px;
+    width: 186px;
+}
+
+ul.stepslist li.hdr_pt4_2 {
+    background: url("../images/hdr_fm_registration_pt4_2.png") no-repeat scroll 0 0 transparent;
+    margin-left: -2px;
+    width: 180px;
+}
+
+div.indentHolder {
+    display: inline;
+    float: left;
+    margin-left: 25px;
+    width: 440px;
+    font-size: 80%;
+	padding-bottom: 50px;
+}
+div.collapsable-content .tr .indentHolder {
+    
+    width: 921px;
+	margin-left: 0;
+}
+div.collapsable-content .tr .indentHolder .f1 {
+    
+    width: 921px;
+	margin-left: 0;
+}
+
+.indentHolder h3 {
+    border-bottom: 1px solid #D2D2D2;
+    clear: both;
+    font-size: 20px;
+    font-weight: normal;
+    margin: 0 0 6px;
+    padding-bottom: 7px;
+}
+
+.regFormDiv, .acctHolderDiv, .acctNumber, .ccDtailsDiv {
+	margin-top: 10px;	
+}
+
+.acctDetails, .acctNumtitle, .ccTitle {
+    float: left;
+    width: 190px;
+    margin-right: 27px;
+    text-align: right;
+}
+
+div.containerMain p.eg {
+    width: 100%;
+    text-align: right;
+    margin-top: 0;
+    clear: both;
+    color: #767676;
+	font-size: 12px;
+}
+
+p.highlight1 {
+	text-align: right;
+	font-weight: bold;	
+	margin: 0px !important;
+}
+
+.ccInput input, .accNumberInput input {
+	padding: 4px 5px;	
+}
+
+
+.dobInputs {
+    float: left;
+}
+
+form.regForm fieldset legend {
+    display: none;
+}
+
+div.dobInputs input, .inpBx1 {
+    padding: 4px 5px;
+    width: 22px;
+}
+
+form.regForm .acctType {
+    color: #333333;
+    float: left;
+    font-size: 140%;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+fieldset#accountDetails, fieldset#ccDetails {
+    clear: both;
+    margin-top: 35px;
+}
+
+#main input {
+	border: 1px solid #A4A4A4;
+}
+
+input#radioAccount, input#radioCC {
+	float: left;
+	margin-right: 5px;	
+	border: none;
+}
+
+div.continueSpacer {
+    float: left;
+    padding-bottom: 6px;
+    padding-top: 7px;
+}
+
+span.regce {
+    float: left;
+    margin-left: 366px;
+}
+
+.inputStyleRed {
+    float: left;
+    font-size: 90%;
+    margin-top: 0;
+    padding-left: 10px;
+}
+
+.inputStyleRed input {
+	background: url("../images/bg_btn.gif") no-repeat scroll left top #DB0011;
+    border: medium none !important;
+    color: #FFFFFF;
+    cursor: pointer;
+    float: left;
+    font-weight: bold;
+    height: 33px;
+    padding: 9px 8px 10px 12px;
+}
+
+.inputStyleRed span {	
+    background: url("../images/bg_btn_left.gif") no-repeat scroll right top #DB0011;
+    float: left;
+    padding: 17px 2px 16px;
+}
+
+div.containerMainExpanded {
+    margin-left: 20px;
+    width: 960px;
+}
+
+#footermap a {
+	font-weight: normal;	
+}
+
+div.indentHolder a {
+	color: black;
+	text-decoration: underline;
+	font-weight: normal;	
+}
+
+div.indentHolder a:hover {
+	color: #FF0000;	
+}
+
+.buttonStyleRed2 {
+    background: url("../images/bg_btn_left.gif") no-repeat scroll right top #DB0011;
+    padding: 0 4px 0 0;
+}
+
+.buttonStyleRed2 a {
+    background: url("../images/bg_btn.gif") no-repeat scroll left top #DB0011;
+    padding: 10px 8px 11px 12px;
+    font-weight: bold;
+    border: none !important;
+    color: #FFF;
+    cursor: pointer;    
+}
+
+label.error {
+    background: url("../images/error_arrow_2.gif") no-repeat scroll left top transparent;
+    color: #333333;
+    display: inline-block;
+    float: none;
+    left: 135px;
+    margin-left: 2px;
+    padding: 0 2px 0 38px;
+    position: absolute;
+    top: 0;
+    vertical-align: top;
+    width: 170px;
+}
+
+label.error span {
+    background-color: #FCECED;
+    border-bottom: 1px solid #F2A7AD;
+    border-right: 1px solid #F2A7AD;
+    border-top: 1px solid #F2A7AD;
+    display: block !important;
+    padding: 2px 2px 2px 4px;
+}
+
+div.accNumberInput label.error, div.ccInput label.error {
+    left: 225px;
+}
+
+
+Activation
+.continue-sep.separator .buttonStyleRed2 {
+    float: right;
+}
+
+.continue-sep.separator .buttonStyleRed2 a {
+    float: left;
+    background: url("../images/bg_btn.gif") no-repeat scroll left top #DB0011;
+    padding: 10px 8px 10px 12px;
+    font-weight: bold;
+    border: none !important;
+    color: #FFF;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+div.egcontainer {
+    font-weight: normal;
+    text-align: left;
+}
+
+div.containerMain .indentHolder p.secForgotmarg1 a, div.containerMain .indentHolder p.secForgot a {
+    margin-left: 275px;
+}
+
+
+Logon page redesign
+.formContent {
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 0 10px #CCCCCC;
+    clear: both;
+    height: 201px;
+    margin: 0;
+    width: 940px;
+	background: url("../images/applyTwo.gif") no-repeat scroll left center transparent;
+	float:left;
+}
+
+.logonForm, #logonForm, .loginFormSec, #loginFormSec, #PC_7_0_16VB_inputForm, #PC_7_8_16VC_inputForm {
+    float: left !important;
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 25px !important;
+    width: 414px !important;
+	padding: 0 27px !important;
+}
+.login-step2-form-holder {
+    float: left !important;
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 25px !important;
+    width: 860px !important;
+	padding: 0 27px !important;
+	background:none !important;
+}
+
+fieldset#loginForm2 {
+    margin-top: 30px;
+}
+fieldset#loginForm2 p {
+    margin-bottom: 10px;
+}
+
+.controls {
+    clear: both;
+	padding-top: 30px;
+}
+span.question.needhelp {
+    float: left;
+    padding: 25px 0 0 0 !important;
+}
+div.containerMain .collapsable .collapsable-content .tr {
+    height: 75px;
+    width: 920px;
+}
+
+#PC_7_8_16VC_inputForm, #PC_7_0_16VC_inputForm {
+    float: left !important;
+    margin-bottom: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 5px !important;
+    width: 680px !important;
+	padding: 0 27px !important;
+}
+
+.logonForm legend, #logonForm legend, #PC_7_0_16VB_inputForm legend, #PC_7_8_16VC_inputForm legend {
+    float: left;
+    padding-left: 0;
+    padding-top: 10px;
+}
+#PC_7_8_16VC_inputForm legend, #PC_7_0_16VC_inputForm legend {
+    float: left;
+    padding-left: 0;
+    padding-top: 10px;
+}
+.logonForm legend, #logonForm legend, .loginFormSec legend, #loginFormSec legend, #PC_7_0_16VB_inputForm legend, #PC_7_8_16VC_inputForm legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+#PC_7_8_16VC_inputForm legend, #PC_7_0_16VC_inputForm legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+div.formContent legend {
+    color: #333333;
+}
+#personalLogonForm fieldset {
+    float: left;
+}
+.logonForm fieldset, #logonForm fieldset {
+    padding: 0 0 7px 0;
+}
+.logonForm fieldset, #logonForm fieldset, .loginFormSec fieldset, #loginFormSec fieldset {
+    border: medium none;
+    margin-bottom: 0;
+}
+div.fragmentWrapper fieldset {
+    margin: 0;
+}
+.logonForm .fieldcontent, #logonForm .fieldcontent, #PC_7_0_16VB_inputForm .fieldcontent, #PC_7_8_16VC_inputForm .fieldcontent {
+    clear: both;
+    display: inline;
+    float: left;
+    margin-bottom: 8px;
+    margin-left: 0;
+    margin-top: 8px;
+    padding-left: 0;
+    width: 380px;
+}
+#PC_7_8_16VC_inputForm .fieldcontent, #PC_7_0_16VC_inputForm legend .fieldcontent {
+    clear: both;
+    display: inline;
+    float: left;
+    margin-bottom: 8px;
+    margin-left: 0;
+    margin-top: 8px;
+    padding-left: 0;
+    width: 380px;
+}
+div.relative {
+    position: relative;
+}
+#personalLogonForm label {
+    color: #4C4C4C !important;
+}
+form fieldset label {
+    display: block;
+    float: left;
+}
+#innerPage form input {
+    border: 1px solid #A4A4A4;
+}
+input#intbankingID {
+    float: left;
+    width: 189px;
+}
+input#username {
+    float: left;
+    width: 189px;
+}
+div.fragmentWrapper input {
+    font-size: 100%;
+}
+input.inpBox3 {
+    margin: 0;
+	margin-top:4px;
+	width:217px;
+}
+#continue {
+    float: left;
+    margin-left: 10px;
+    margin-top: 0;
+    width: auto;
+}
+.inputStyleRed {
+    float: left;
+    font-size: 90%;
+    height: 21px;
+    margin-top: 0;
+}
+.clearfix {
+    display: inline-block;
+}
+#main input[type="checkbox"] {
+    background-color: transparent;
+    border-style: hidden;
+    border-width: 0;
+}
+form input[type="checkbox"] {
+    background-color: transparent;
+    border-style: hidden;
+    border-width: 0;
+}
+form input[type="checkbox"] {
+    float: left;
+    width: auto;
+}
+.logonForm .checkboxField.width6, #logonForm .checkboxField.width6 {
+    width: 130px;
+}
+#personalLogonForm label.checkboxField {
+    margin-left: 5px;
+}
+.logonForm .checkboxField, #logonForm .checkboxField {
+    margin-top: 0 !important;
+    width: auto;
+}
+#personalLogonForm label {
+    color: #4C4C4C !important;
+	font-size: 84% !important;
+}
+.fl {
+    display: inline;
+    float: left;
+}
+.helpInfo {
+    overflow: visible;
+    position: relative;
+    width: 30px;
+}
+#personalLogonForm a {
+    text-decoration: underline !important;
+}
+div.containerMain a:link {
+    color: #DB0011;
+}
+div.containerMain a {
+    font-weight: bold;
+}
+a.helpLink {
+    background: url("../images/icon_tooltip_table.gif") no-repeat scroll 0 0 transparent;
+    cursor: pointer;
+    display: block;
+    float: left;
+    height: 19px;
+    margin-left: 5px !important;
+	margin-top: -3px !important;
+    width: 18px;
+}
+span.hiddenTxt {
+    display: none;
+}
+#innerPage .info {
+    background-color: #FCECED;
+    border: 1px solid #F4B2B7;
+    color: #333333;
+    display: none;
+    font-weight: normal;
+    height: auto;
+    left: -63px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    top: 68px;
+    width: 144px;
+    z-index: 1000;
+}
+span.tipArrow {
+    background: url("../images/tip_arrow_up.gif") no-repeat scroll left top transparent;
+    height: 10px;
+    left: 72px;
+    position: absolute;
+    top: -8px;
+    width: 8px;
+}
+#wrapper a.size90 {
+    font-size: 100% !important;
+}
+#personalLogonForm a.pws {
+    color: #4C4C4C !important;
+	font-size: 100%;
+    line-height: 1.2em;
+}
+div.fieldcontent a.arrLink {
+    font-weight: normal;
+    margin-left: 10px;
+    padding: 0 10px 0 25px;
+	font-size: 84% !important;
+	vertical-align: top;
+}
+.formContent .asidecol {
+    display: inline;
+    float: left;
+    margin: 0;
+    padding-top: 35px;
+	padding-left: 27px;
+    width: 202px;
+}
+.formContent h2 {
+    margin: 0;
+}
+.formContent ul, .formContent li, .asideFooterBar ul, .asideFooterBar li {
+    list-style: none outside none;
+    margin: 0;
+    padding: 0;
+}
+.formContent ul {
+    margin-bottom: 10px;
+}
+.formContent li {
+    clear: left;
+    display: inline;
+    float: left;
+    font-size: 1em;
+    font-weight: bold;
+    margin-top: 10px !important;
+    padding: 0 10px 0 0;
+    width: 180px;
+}
+.formContent ul, .formContent li, .asideFooterBar ul, .asideFooterBar li {
+    list-style: none outside none;
+    margin: 0;
+}
+.gap {
+    padding-left: 0;
+}
+
+validation message
+div.noneBlock {
+    display: block;
+    float: none;
+}
+div.errorOutline {
+    background: url("../images/icon_exclamation_3.gif") no-repeat scroll 17px 10px #FCECED;
+    border: 1px solid #F2A7AD;
+    display: inline;
+    float: left;
+    margin-bottom: 20px;
+    min-height: 50px;
+    padding: 0;
+    text-align: left;
+    width: 940px;
+}
+div.errorOutline h2 {
+    font-size: 100%;
+    margin: 10px 0 0 65px;
+}
+div.errorOutline p {
+    margin: 10px 0 0 65px;
+	color: #4C4C4C;
+    font-size: 75%;
+}
+div.errorOutline ul {
+    margin: 20px 83px;
+    padding: 0;
+}
+div.errorOutline li {
+    list-style:disc outside none;
+	color: #4C4C4C;
+    font-size: 75%;
+}
+
+div.fragmentWrapper {
+    margin: 0;
+    padding-top: 20px;
+    width: 940px;
+}
+.migration-two .titleHolder {
+    margin: 0 0 20px;
+}
+div.titleHolder {
+    clear: both;
+    float: left;
+    width: 100%;
+}
+div.containerMain .indentHolder {
+    padding-bottom: 50px;
+}
+div.fragmentWrapper .marT20 {
+    margin: 10px 0 0;
+}
+div.regFormDob {
+    float: left;
+    margin-right: 27px;
+    width: 190px;
+}
+div.regFormDob label {
+    float: right;
+}
+.highlight1 {
+    font-weight: bold;
+    text-align: right;
+	float:right;
+}
+form fieldset label {
+    display: block;
+}
+div.regFormDob span {
+    float: right;
+	text-align:right;
+	font-weight:bold;
+}
+div.containerMain .indentHolder p {
+    margin: 0;
+    padding: 0;
+}
+.activation-step-2 p.eg, .migration-two p.eg {
+    width: 180px;
+}
+p.eg {
+    clear: both;
+    color: #767676;
+    float: right;
+    font-size: 12px;
+    text-align: right;
+}
+div.acctNumtitle {
+    clear: both;
+    float: left;
+    margin-right: 27px;
+    position: relative;
+    width: 190px;
+}
+.migration-two .actions {
+    margin: 8px 0 0;
+    padding: 0 0 40px;
+    width: 560px;
+}
+.migration-two div.acctNumtitle label {
+    margin-top: -2px;
+}
+.migration-two div.helpInfo {
+     top: -35px;
+    right: -190px;
+}
+.migration-two div.helpInfo, .forgotten-user-2 div.helpInfo {
+    display: block;
+}
+.poshelpinfo {
+    right: -30px;
+    top: 5px;
+}
+.pabs {
+    position: absolute;
+}
+
+.indentHolder p.secForgot {
+    margin-top:5px;
+}
+.migration-two .indentHolder p.secForgot a {
+    margin-left: 40px;
+}
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+#backLink.buttonStyleGrey {
+    background: url("../images/bg_darkgrey_btn_left.gif") no-repeat scroll left top transparent;
+    color: #000000;
+    display: block;
+    float: left;
+    font-weight: bold;
+    margin: 0 10px 0 0;
+    padding: 0 0 0 4px;
+	text-decoration:none;
+}
+#backLink.buttonStyleGrey a {
+     background: url("../images/bg_darkgrey_btn.gif") no-repeat scroll right top transparent;
+    display: block;
+    float: left;
+    font-size: 100%;
+    line-height: 14px;
+    padding: 9px 24px 10px 20px;
+	cursor:pointer;
+	color:#FFFFFF;
+	font-weight:bold;
+	text-decoration:none;
+}
+div.note {
+    padding: 8px 0;
+}
+div.separator {
+    border-top: 1px solid #D2D2D2;
+    float: left;
+    margin-top: 5px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    width: 610px;
+}
+
+CAM40 page styles
+.topbar {
+    background: none ;
+    padding-top: 13px;
+}
+#loginFormSec {
+    float: left;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+.login-step2-form-holder {
+    background: none;
+    height: 180px;
+    overflow: auto;
+}
+fieldset#loginForm2 {
+    padding-bottom: 0;
+}
+.collapsable {
+    border: 1px solid #CECECE;
+    border-radius: 5px 5px 5px 5px;
+    clear: both;
+    float: left;
+    margin: 10px 0;
+    padding: 0;
+    width: 740px;
+}
+.collapsable .controls {
+    background: url("../images/collapsable_bar_bg.gif") repeat-x scroll 0 0 transparent;
+    border-bottom: 1px solid #DDDDDD;
+    padding: 3px 8px;
+}
+.collapsable .controls h4 {
+    background: url("../images/collapsable.gif") no-repeat scroll 0 -14px transparent;
+    margin: 0;
+    padding: 0 27px;
+}
+div.containerMain .collapsable .indentHolder div.step2 {
+    float: left;
+    width: 100%;
+}
+.indentHolder ul.aclne {
+    display: inline;
+    float: left;
+    width: 100%;
+}
+div.indentHolder ul {
+    list-style: none outside none;
+    padding-left: 0;
+}
+.indentHolder ul.aclne li {
+    display: inline;
+    float: left;
+    width: 33%;
+}
+.divider1 {
+    background: url("../images/divider_activation_vert.gif") no-repeat scroll right top transparent;
+    text-align: center;
+}
+.wdth1 {
+    width: 215px;
+}
+.wdth2 {
+    width: 205px;
+}
+div.containerMain .indentHolder .step2 p {
+    display: inline;
+    float: left;
+    font-size: 100%;
+    margin: 10px;
+    padding: 0;
+}
+div.containerMain .indentHolder span.num {
+    display: inline;
+    float: left;
+    font-size: 100%;
+    margin-right: 10px;
+    padding: 0;
+    width: 5px;
+}
+div.containerMain .indentHolder .negIndent span.content {
+    display: block;
+    float: left;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    width: 170px;
+}
+.divider2 {
+    text-align: center;
+}
+.wdth3 {
+    width: 215px;
+}
+.regce .inputStyleRed {
+    padding-left: 5px;
+}
+
+.marginTop23 {
+    margin-top: 45px;
+}
+backLink {
+    margin-top: 60px;
+}
+div.acctDetails {
+    float: left;
+    margin-right: 40px;
+    margin-top: 5px;
+    width: 190px;
+}
+div.acctDetails {
+    float: left;
+    margin-right: 10px;
+    margin-top: 0;
+    width: 220px;
+}
+div.log2_secBlock2 {
+    width: 220px;
+}
+span.regce {
+    float: left;
+    margin-left: 100px;
+} */
+
+div.errorOutline {
+    background-color: #FCECED;
+    border: 1px solid #F2A7AD;
+    display: inline;
+    float: left;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: left;
+    width: 710px;
+
+}
+
+span.hiddenTxt {
+    display: none;
+}
+
+.info {
+    background-color: #FCECED;
+    border: 1px solid #F4B2B7;
+    color: #333333;
+    display: none;
+    font-weight: normal;
+    height: auto;
+    left: -60px;
+    padding: 10px;
+    position: absolute;
+    text-align: left;
+    top: 25px;
+    width: 144px;
+    z-index: 1000;
+}
+
+span.tipArrow {
+    background: url("../images/tip_arrow_up.gif") no-repeat scroll left top transparent;
+    height: 10px;
+    left: 72px;
+    position: absolute;
+    top: -8px;
+    width: 8px;
+}
+
+#sections .doormat .infoPanel div.info {
+	position: static;	
+	background: none;
+	border: none;
+	border-bottom:1px dotted #999;
+	margin:0 0 15px;
+	padding:3px 0 17px;
+	display: block;
+	width: 100%;
+}

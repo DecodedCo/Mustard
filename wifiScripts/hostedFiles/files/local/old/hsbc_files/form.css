@@ -1,0 +1,1270 @@
+div.fragmentWrapper {
+	margin:0;
+	padding:0;
+	/* width:733px; */
+	width:732px;
+}
+div.fragmentWrapper fieldset {
+	border:0;
+	padding:0;
+	margin:0;
+}
+div.fragmentWrapper a {
+	color:#000000;
+
+}
+div.fragmentWrapper input {
+	 font-size:100%;  
+}
+div.titleHolder {
+	clear:both;
+	float:left;
+	width:100%;
+}
+h2.reg1 {
+	font-size:220%; 
+	font-weight:500;
+	float:left;
+	display:inline;
+	padding:0px 0;
+	line-height:2em;
+	display:inline;
+	clear:both;
+	margin:0;
+}
+.indentHolder h3 {
+	clear:both;
+	font-size:180%;
+	font-weight:normal;
+	border-bottom:1px solid #cccccc;
+	padding-bottom:7px;
+}
+.indentHolder h3.sub {
+	font-weight:bold;
+	font-size:120%;
+	letter-spacing:-0.01em;
+}
+div.separator {
+	width:100%;	
+	float:left;
+	border-top:1px solid #cccccc;
+	padding-bottom:15px;
+	padding-top:15px;
+	margin-top:5px;
+}
+div.containerMain .indentHolder {
+	margin-bottom:20px;
+}
+div.containerMain .indentHolder p {
+	margin:0;
+	padding:0;
+}
+span.questlnk {
+	float:right;
+	padding:20px 0 0 25px;
+	/*background:url("../images/icon_helpinfo.gif") 0px 20px no-repeat; */
+	background:url("../images/icon_helpinfo.png") 0px 20px no-repeat; 
+	margin-right:10px;
+}
+span.questlnk a {
+	text-decoration:underline;
+}
+ul.stepslist {
+	clear:both;
+	float:left;
+	display:block;
+	padding:0 0 21px 0;
+	margin:0;
+	width:100%;
+}
+ul.stepslist li {
+	display:inline;
+	float:left;	
+	height:47px;
+	background-repeat:no-repeat;
+	text-indent:-3000em;
+	display:inline;
+}
+ul.stepslist li.highlight {
+	font-weight:bold;
+}
+ul.stepslist li.hdr_pt1_1 {
+	width:186px;
+	height:47px;
+	background:url("../images/hdr_fm_registration_pt1_1.png") no-repeat;
+}
+ul.stepslist li.hdr_pt1_2 {
+	width:186px;
+	height:47px;
+	background:url("../images/hdr_fm_registration_pt1_2.png") no-repeat;
+}
+ul.stepslist li.hdr_pt1_3 {
+	width:186px;
+	height:47px;
+	background:url("../images/hdr_fm_registration_pt1_3.png") no-repeat;
+}
+ul.stepslist li.hdr_pt2_1 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt2_1.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt2_2 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt2_2.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt2_3 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt2_3.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt3_1 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt3_1.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt3_2 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt3_2.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt3_3 {
+	width:186px;
+	background:url("../images/hdr_fm_registration_pt3_3.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt4_1 {
+	width:180px;
+	background:url("../images/hdr_fm_registration_pt4_1.png") no-repeat;
+	margin-left:-2px;
+}
+ul.stepslist li.hdr_pt4_2 {
+	width:180px;
+	background:url("../images/hdr_fm_registration_pt4_2.png") no-repeat;
+	margin-left:-2px;
+}
+
+
+
+
+
+
+
+/* stepslist used in migration */
+
+
+
+
+ul.migration{
+	/*clear:both;
+	float:left;
+	display:block;
+	padding:0 0 21px 0;
+	margin:0;
+	width:100%;*/
+}
+ul.migration li {
+	/*display:inline;
+	float:left;	
+	height:47px;
+	background-repeat:no-repeat;
+	text-indent:-3000em;
+	display:inline;*/
+}
+ul.migration li.highlight {
+	font-weight:bold;
+}
+ul.migration li.hdr_pt1_1 {
+	/*width:186px;
+	height:47px;*/
+	background:url("../images/hdr_fm_migration_pt1_1.png") no-repeat;
+}
+ul.migration li.hdr_pt1_2 {
+	/*width:186px;
+	height:47px;*/
+	background:url("../images/hdr_fm_migration_pt1_2.png") no-repeat;
+}
+ul.migration li.hdr_pt1_3 {
+	/*width:186px;
+	height:47px;*/
+	background:url("../images/hdr_fm_migration_pt1_3.png") no-repeat;
+}
+ul.migration li.hdr_pt2_1 {
+	/*width:186px;*/
+	background:url("../images/hdr_fm_migration_pt2_1.png") no-repeat;
+	/*margin-left:-2px;*/
+}
+ul.migration li.hdr_pt2_2 {
+	/*width:186px;*/
+	background:url("../images/hdr_fm_migration_pt2_2.png") no-repeat;
+	/*margin-left:-2px;*/
+}
+ul.migration li.hdr_pt2_3 {
+	/*width:186px;*/
+	background:url("../images/hdr_fm_migration_pt2_3.png") no-repeat;
+	/* margin-left:-2px; */
+}
+ul.migration li.hdr_pt3_1 {
+	/* width:186px; */
+	background:url("../images/hdr_fm_migration_pt3_1.png") no-repeat;
+	/* margin-left:-2px; */
+}
+ul.migration li.hdr_pt3_2 {
+	/* width:186px; */
+	background:url("../images/hdr_fm_migration_pt3_2.png") no-repeat;
+	/* margin-left:-2px; */
+}
+ul.migration li.hdr_pt3_3 {
+	/* width:186px; */
+	background:url("../images/hdr_fm_migration_pt3_3.png") no-repeat;
+	/* margin-left:-2px; */
+}
+ul.migration li.hdr_pt4_1 {
+	/* width:180px; */
+	background:url("../images/hdr_fm_migration_pt4_1.png") no-repeat;
+	/* margin-left:-2px; */
+}
+ul.migration li.hdr_pt4_2 {
+	/* width:180px; */
+	background:url("../images/hdr_fm_migration_pt4_2.png") no-repeat;
+	/* margin-left:-2px; */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+div.indentHolder {
+	margin-left:25px;
+	width:680px;
+	float:left;
+	display:inline;
+}
+div.containerMain .indentHolder a {
+	/* color:#000000; */
+	color:#db0011;
+}
+div.indentHolder ul {
+	list-style:none;
+	list-style-image:none;
+	padding-left:0; /* there is default padding on the UL */
+}
+form#regForm_step1 {
+	float:left;
+	width:100%;
+	margin-top:31px;
+}
+form#regForm fieldset {
+
+}
+ input#radioAccount,  input#radioCC {
+	border:0;
+}
+form#regForm_step1 fieldset legend {
+	font-size:140%;
+	color:#333333;
+}
+div.regFormDob {
+	float:left;
+	width:190px;
+	margin-right:40px;
+}
+div.regFormDob label {
+	float:right;
+}
+div.regFormDob label p {
+	clear:both;
+	display:block;
+}
+div.regFormDob label#labelDay {
+	float:right;
+	width:150px;
+	text-align:right;
+	clear:both;	
+}
+div.regFormDob span {
+	float:right;	
+}
+div.dobInputs {
+	float:left;
+}
+div.dobInputs  input, .inpBx1 {
+	width:22px;
+	/*height:25px;*/
+	padding:5px;
+	margin:0;
+}
+div.dobInputs input#year, .inpBx2 {
+	width:35px;
+	/*height:22px; */
+}
+
+.inpBx3{
+	width:53px;
+	/*height:22px; */
+}
+
+
+
+.inpBx4{
+	width:9px;
+	/*height:22px; */
+}
+
+div.dobInputs  input{
+	/* color:#cccccc; */
+}
+.highlight1 {
+	font-weight:bold;
+	text-align:right;
+	float:right;
+}
+p.eg {
+	clear: both;
+	width:150px;
+	text-align:right;
+	float:right;
+	font-size:90%;
+	color:#666666;
+	font-style:italic;
+}
+fieldset#accountDetails {
+	clear:both;
+	margin-top:45px;
+}
+div.acctHolderDiv {
+	margin-top:14px;
+}
+
+/* used on activation_step_4 */
+div.acctDetails{
+	float:left;
+	width:190px; 
+	 margin-right: 40px; /* was margin-right:40px; */
+	 margin-top:5px;
+}
+
+/** used on activation_step_4 **/
+div.acctHolderDiv2{
+	margin: 64px 44px 0px 30px;
+	padding-left: 20px;
+	padding-bottom:30px;
+	/*float:left;
+	display:inline;*/
+}
+
+
+div.migrationDiv{
+	margin-top:64px;
+	margin-bottom:20px;
+	padding:0 0 20px 0;
+	margin-left:40px;
+	width:380px;
+}
+
+div.activationDivSpacer{
+	/*margin-top:77px;
+	margin-bottom:20px;
+	margin-left:0px;*/
+	padding:0;
+	margin:77px 0 20px 40px;
+	width:380px;
+}
+
+div.acDls3{
+
+	width:auto;
+	margin-right:5px;
+	float:left;
+
+
+}
+
+div#serInputsDiv{
+
+	text-align:left;
+	/*float:left;
+	display:inline;*/
+	
+}
+
+
+div.regsortCodeInputs{
+	float:left;
+}
+div.acctNumtitle {
+	float:left;
+	width:190px;
+	clear:both;
+	margin-right:40px;
+}
+
+div.acctNumtitleNewMarg {
+	margin-right:0;
+}
+
+div.acctNumber {
+	clear:both;
+	padding-top:19px;
+}
+div.accNumberInput {
+	float:left;
+}
+div.accNumberInput input#accNumberInput {
+	
+} 
+input.inpBox3 {
+	width: 217px;
+	margin:0;
+}
+.width5 {
+	width:229px;
+}
+div.ccDtailsDiv {
+	margin-top:15px;
+}
+div.ccInput {
+	float:left;
+}
+fieldset#ccDetails {
+	margin-top:46px;
+}
+div.ccTitle {
+	float:left;
+	width:190px;
+	margin-right:40px;
+}
+span.regce {
+	float:left;
+	margin-left:375px;
+}
+div.continueSpacer {
+	float:left;
+	padding-top:7px;
+	padding-bottom:6px;
+	clear: both;
+}
+
+/* validation */
+div.relative {
+	position:relative;
+	/* margin-top:5px; */ /* tweak to bring the form inputs down in line with the text */
+}
+.fail {
+	display:none;
+	position:absolute;
+	padding-left:40px;
+	background:url("../images/bkgd_alert_validate_1_5_trans.gif") no-repeat 0 0;
+	border-right:1px solid #f2a7ad;
+	left:235px;
+	top:3px;
+	width:200px;
+}
+.stepfail {
+	left:482px; 
+	width:173px; 
+	top:6px	
+}
+.fail .excMark {
+	padding:0 10px;
+}
+
+div.containerMain p.failp{
+	margin:0;
+	padding: 0px 5px 0 5px;
+	height:23px;
+	line-height:23px;
+	text-align:left;
+}
+div.containerMain .indentHolder .fail p {
+	line-height:23px;
+	padding-left:8px;
+	padding-right:10px;	
+	height:23px;	
+	font-size:89%; /* has been amended to fit in the one line alert text box */
+}
+
+/* fail 2 this displays on two lines overrides fail */
+.fail2 {
+	display:none;
+	position:absolute;
+	padding-left:40px;
+	background:url("../images/bkgd_alert_validate_1_5.gif") no-repeat 0 0;
+	border-right:1px solid #f2a7ad;
+	left:235px;
+	top:-3px;
+	width:200px;	
+}
+.stepfail2 {
+	left:482px; 
+	width:173px; 
+	top:6px	
+}
+.fail2 .excMark {
+	padding:0 10px;
+}
+div.containerMain .indentHolder .fail2 p {
+	line-height:17px;
+	padding-left:8px;
+	padding-right:10px;	
+	height:37px;
+	font-size:89%; /* has been amended to fit in the one line alert text box */
+}
+
+.passDob, .failDob {
+}
+
+/* labels */
+label#labelDay {
+	text-indent:-3000em;
+}
+input#registerStep1Submit, .submitButton{
+	border:0;
+}
+
+/* step 2 */
+.mrgTop3 {
+	margin-top:10px;
+}
+
+
+
+
+
+
+fieldset#securityNum {
+
+}
+div.secFormDiv {
+	margin-top:20px;
+	float:left;
+	display:inline;
+	width:100%;
+}
+label.secNumberLabel {
+	float:left;
+	width:200px;
+	display:inline;
+	margin:0 2px 0 0;
+	padding:0;
+}
+input.secNumberInput {
+	float:left;
+	width:216px; /*too large in firefox */
+	/*width:212px;	
+	height:22px;*/
+	padding:5px;
+	margin-top:5px;
+	display:inline;
+}
+a#helpSecNumber {	
+	float:left;
+	height:5px;
+	width:20px;
+	display:inline;
+	margin:0 10px;
+	margin-top:7px;
+}
+div.containerMain .indentHolder p.secForgot {
+	/*clear:both;*/
+	/*width:100%;*/
+	margin:0;
+	padding:0;
+	float:left;
+	display:inline;
+}
+div.containerMain .indentHolder p.secForgot a {
+	/*margin-left:275px; */
+	/*color:#666666;*/
+	/* font-size:90%; was 90% reduced because titling was a bit large */ 
+	font-size:97%;
+	letter-spacing:-0.01em;
+	text-decoration:underline;
+	float:left;
+	display:inline;
+}
+
+div.containerMain .indentHolder p.secForgotmarg1 a {
+	margin-left:329px;
+}
+
+div.containerMain .indentHolder p.forgotabsolute1{
+	position:absolute;
+	top:50px;
+	left:0px;
+	/*margin-left:0;*/
+}
+
+/* step 2 validation */
+div.passSecNumber {
+	left:470px;
+}
+div.failSecNumber {
+	left:470px;
+	display:none;
+	width:173px;
+	top:5px;
+}
+div.failSecNumber p {
+	font-size:	81%;
+}
+input#step2Submit{
+	float:left;
+	margin:20px 0 20px 387px;
+	padding:0;
+	border:0;
+	display:inline;
+}
+div.relative  p.helpInfo {
+	/*margin-top:5px;
+	padding-left:12px; 
+	padding-right:12px; */
+	padding:9px;
+	display:inline;
+	float:left;
+	/*margin:10px; do not use margin - causes IE7 bug to move the helpinfo button when the form is submitted */
+	/*border:1px solid orange;*/
+	position:relative;
+}
+
+/*
+div.relative .helpInfo{
+
+}
+*/
+
+
+
+/*
+.info{
+	background: url(../images/tooltip_background.png) no-repeat;
+	display:block;
+	height:123px;
+ 
+	padding:10px;
+	position:absolute;
+	top:-123px;	
+	width:144px;
+}
+*/
+
+
+.helpInfo {
+	position:relative;
+	width:26px;  /* was 8px set to 26px to include image width and margin */ 
+	/*margin-top:8px;  included to bring help button down on reg_step2.html. Checked in FF */
+}
+.info {
+	background-color:#fceced;
+	border:1px solid #F4B2B7;
+	color:#333333;
+	font-weight:normal;
+	height:auto;
+	left:-60px;
+	padding:10px;
+	position:absolute;
+	text-align:left;
+	top:25px; /* was 12px - but this caused the tooltip to go behind elements */
+	width:144px;
+	z-index:1000;
+}
+#alertUnder.failAlert {
+	background:url("../images/icon_warning.png") no-repeat 4px 4px #FCECED;
+	border:1px solid #F4B2B7;
+	color:#333333;
+	font-weight:normal;
+	height:auto;
+	margin-top:10px;
+	padding:2px 23px;
+	position:relative;
+	width:100px;
+	display:none;
+}
+#alertUnder span.tipArrow {
+	background:url("../images/tip_arrow_up.gif") no-repeat scroll left top transparent;
+	height:10px;
+	left:60px;
+	position:absolute;
+	top:-8px;
+	width:8px;
+}
+.secForm span.helpInfo {
+	float:left;
+	margin:7px;
+	position:relative;
+}
+/*
+span.tipArrow{
+	background:url("../images/tip_arrow_left.gif") no-repeat left top transparent;
+	height:10px;
+	left:-7px;
+	position:absolute;
+	top:39px;
+	width:8px;	
+}
+*/
+span.tipArrow {
+	background:url("../images/tip_arrow_up.gif") no-repeat left top transparent;
+	height:10px;
+	left:72px;
+	position:absolute;
+	top:-8px;
+	width:8px;	
+}
+
+
+/* step 3 */
+div.confirmAddress {
+	margin-left:228px;
+}
+
+div.addressLinks a#addBack {
+	float:left; 
+	display:inline;
+}
+div.addressLinks a#addFor {
+	float:right;
+	display:inline;
+}
+div.indentHolder p.confAddressp {
+	padding-top:10px;
+}
+
+/* step 4 */
+/* standard list used across other pages */
+div.indentHolder  ul.successList, div.indentHolder  ul.genericList {
+	list-style: disc outside none;
+	font-weight: bold;
+	margin: 23px 0 23px 40px;
+}
+div.indentHolder  ul.successList li, div.indentHolder  ul.genericList li {
+	margin: 13px 0;
+}
+div.indentHolder  ul.genericList {
+	list-style-type: none;
+}
+div.indentHolder ul.genericList li {
+	background: #fff url('../images/bullet_point.gif') no-repeat 0 6px;
+	display: inline-block;
+	margin: 15px 0 0 10px;
+	padding: 0 0 0 20px;
+}
+div.indentHolder ul.genericList li div .helpInfo {
+	/*margin: 0;*/
+}
+div.successOutline {
+	border:1px solid #a3cf42;
+	width:730px;   /* 100%; */		
+	background-color:#ecf5d9;
+	height:40px;
+	/*text-align:center;*/
+	margin-bottom:15px;
+	float:left;
+	display:inline;
+}
+a#successBack {
+	float:right;
+}
+div.successOutline p {
+	background:url("../images/icon_tick_large.gif") no-repeat 10px 5px;
+	padding:0 58px;
+	line-height:40px;
+	font-size:145%;
+	float:left;
+	display:inline;
+	margin:0;
+}
+
+/* use to display static errors returned from server. set inline style of required error area to block */
+div.errorOutline {
+	/*margin-top:20px;*/
+	background-color:#fceced;
+	border:1px solid #f2a7ad;
+	/*width:100%;*/
+	width:730px;	
+	text-align:left;
+	margin-bottom:20px;
+	padding:0;
+	float:left;
+	display:inline;
+}
+div.errorOutline ul {
+	margin:20px 40px;
+	padding:0;
+	font-weight:bold;	
+}
+div.indentHolder p.successp {
+	margin-top:18px;	
+}
+
+
+/* this is requuired to override the default colour styles set in style.css */
+div.formContent legend {
+	color:#333333;
+}
+div.containerMain a {
+	/*color:#333333;  was #cccccc */
+	color:#db0011;
+}
+div.containerMainExpanded div.hsbcMainContent {
+	padding-left:10px;
+	padding-right:10px;	
+	padding-top:12px;  
+	width:740px; 
+}
+.formContent {
+	background: url(../images/box_gradient_bkgrd.gif) repeat-x;
+	height:187px;
+	width:720px;
+	padding:0px 10px;
+	margin:0;
+}
+#formContent {
+	background: url(../images/box_gradient_bkgrd2.gif) repeat-x;
+	height:187px;
+	width:720px;
+	padding:0px 10px;
+	margin:0;
+}
+.login-step2-form-holder {
+	background: url("../images/box_gradient_bkgrd2.gif") repeat-x scroll 0 0 transparent;
+	overflow: auto;
+	height: 160px;
+}
+.formContent h2 {
+	font-size:0.9375em;
+	margin:0;
+}
+.formContent ul, .formContent li, .asideFooterBar ul, .asideFooterBar li {
+	list-style:none outside none;
+	margin:0;
+	padding:0;	
+}
+.asideFooterBar ul {
+	margin-top:6px;
+}
+.asideFooterBar li {
+	background:url("../images/red_arrow.gif") no-repeat scroll 0 4px transparent;
+	display:inline;
+	font-size:0.85em;
+	font-weight:bold;
+	margin-top:6px;
+	padding:0 10px 0 15px;
+}
+.formContent li {
+	background:url("../images/red_arrow.gif") no-repeat scroll 0 4px transparent;
+	display:inline;
+	float:left;
+	font-size:0.85em;
+	font-weight:bold;
+	margin-top:6px;
+	padding:0 10px 0 15px;
+}
+.formContent .asidecol {
+display:inline;
+	float:left;
+	margin:0;
+	padding-top:10px;
+	width:340px;	
+}
+.asideFooterBar {
+	background:url(../images/footer_panel.gif) no-repeat;
+	float:left;
+	height:32px;
+	padding-left:10px;
+	width:730px;
+}
+.gap {
+	padding-left:40px;
+}
+.asidecol li a, .asideFooterBar li a {
+	color:#696764;
+	font-weight:normal;
+	text-decoration:none;
+}
+.topbar {
+	background: url(../images/box_top.gif) no-repeat top left;
+	padding-top:13px;
+}
+.bottombar {
+	background: url(../images/box_bot.gif) no-repeat bottom left;	
+	padding-bottom:13px;
+}
+
+/* Form layout*/
+form fieldset label {
+	display:block;
+	float:left;
+}
+form input, form select {
+	border:1px solid #d6d6d6;	
+	padding: 2px;
+}
+form input[type=checkbox] {
+	float:left;
+	width:auto;
+}
+#logonForm,
+#loginFormSec {
+	float:left;
+	margin-top:0px;
+	margin-bottom:0px;
+}
+#logonForm fieldset, 
+#loginFormSec fieldset {
+	border:none;
+	margin-bottom:0px;
+	padding:0px 0px 20px;
+}
+#loginFormSec fieldset {
+	position:relative;
+}
+#logonForm legend,
+#loginFormSec legend {
+	font-size:1.2em;
+	font-weight:bold;	
+	margin-bottom:25px;
+}
+#loginFormSec legend {
+	margin-bottom:0px;
+}
+#logonForm .fieldcontent {
+	float:left;
+	margin-left:254px;
+	margin-bottom:5px;
+	width:380px;
+
+}
+
+#logonForm .fieldcontent input#rememberMe{
+	border:0;
+	margin:2px 10px 0 0;
+	padding:0;
+	width:13px;
+	height:13px;
+}
+
+#loginFormSec .fieldcontent{
+	float:left;
+	margin:10px 0px;
+	width:100%;
+}
+#loginFormSec .fieldcontent label {
+	margin-left: 4px;
+	/* width:505px; this has been commented out to make it more specific - test across browsers */
+}
+.fieldcontent label span.inputSample {
+	display:block;
+	font-weight:lighter;
+	font-style:italic;
+}
+.fieldcontent span.fieldLabel {
+	display:block;
+	float:left;
+	font-weight:bold;
+	margin-right:10px;
+	text-align:right;
+	width:250px;
+}
+#loginFormSec .formSapcer {
+	margin-bottom:12px;
+}
+#loginFormSec span.removeSpace {
+	margin-top:-5px;
+}
+#logonForm .checkboxField {
+	margin-top:1px;
+	width:auto;
+}
+#logonForm .btnImg {
+	margin-left:10px;
+	margin-top:2px;
+}
+#logonForm .checkboxField.width6 {
+	width:130px;
+}	
+
+div.containerMain a.arrLink{
+	background:url("../images/red_arrow.gif") no-repeat scroll 0 4px transparent;
+	padding:0 10px 0 12px;
+	margin-left:10px;
+	font-weight:normal;
+	color:#333333;
+}
+
+input#loginSecNum,
+input#intbankingID,
+input#memorableAnswer,
+input#loginSecNumAnswer,
+input#secNumberInput {
+	float:left;
+	width:230px;
+}
+#loginFormSec span.forgottenCol {
+	display:block;
+	float:right;
+	margin-right:217px;	
+}
+#loginFormSec span.forgottenCol a {
+	color:#333;
+	font-size:0.95em;
+	font-weight:normal;
+	text-decoration:none;
+}
+#loginFormSec span.button {
+	bottom:-12px;
+	margin:0;
+	padding:0;
+	position:absolute;
+	right:0;	
+}
+#loginFormSec span.button a {
+	display: block;
+}
+a.helpLink {
+	background: url('../images/icon_helpInfo.png') no-repeat;
+	display:block;
+	float:left;
+	height:16px;
+	margin-left:5px;
+	width:17px;
+	/*display:inline;
+	width:17px;
+	float:left;
+	padding:0;
+	margin:0;
+	height:17px;
+	position:absolute; */
+	/*
+	z-index:1;	
+	width:15px;
+	height:15px;
+	display:inline;
+	float:left;
+	position:relative
+	*/
+}
+#loginFormSec a.helpLink {
+	float:right;
+	margin-top:2px;
+}
+span.hiddenTxt {
+	display:none;
+}
+.featuredContent {
+	float:left;
+	margin:15px 0;
+}
+.logonTeaser {
+	background: url(../images/login_teaser_box1.jpg) no-repeat;
+	float:left;
+	margin:0;
+	padding:0;
+	height:212px;
+	position:relative;
+	width:365px;
+}
+.logonTeaser h3 {
+	border:medium none;
+	color:#E52520;
+	font-size:110%;
+	font-weight:bold;
+	margin-left:10px;
+	margin-top:118px;
+	padding-bottom:0;
+	
+}
+ul.teaserList {
+	list-style:disc;
+	margin-top:0;
+	padding-left:22px;
+	padding-top:0;	
+}
+ul.teaserList li {
+	margin-left:0;
+	padding-left:0;	
+}
+span.btn {
+	bottom:15px;
+	display:block;
+	position:absolute;
+	right:10px;	
+}
+.logonFlashTeaser {
+	float:left;
+	margin:0 0 0 10px;
+	padding:0;
+	height:212px;
+	width:365px;
+}
+.fl {
+	float:left;
+	display:inline;
+}
+
+
+
+
+/* login page 2 */
+
+
+.login2  .acctHolderDiv{
+	margin-top:0;
+}
+
+div.login2   fieldset{
+	padding-bottom:0;
+}
+
+
+fieldset#loginForm2 {
+	padding-bottom:0;
+}
+
+fieldset#loginForm2_2 {
+	padding-bottom:0;
+}
+
+
+div.login2  #login2cont{
+	right:-252px;
+	bottom:-2px;
+}
+
+
+label.memans1{width:160px; text-align:right;font-weight:bold; margin-left:18px}
+div.log2_secBlock2{width:164px;}
+div.memBlock1{width:220px;}
+div.secBlock2{width:180px;  }
+div.acctDetails2{width:220px; padding-left:0px; margin-right:0px;}
+label.labsecNum1{float:right; font-weight:bold;}
+div.containerMain  p.labsec{margin:0; padding:0;}
+
+div.egcontainer{
+	text-align:right;
+	font-weight:normal;
+
+	width:242px;
+}
+div.egcontainer a{
+	
+	font-weight:normal;
+}
+
+
+span.submit2 {
+float:right;
+
+margin-top:-15px;
+
+}
+
+.act_stp4_leftPanel div.scode {
+	width: 700px;
+	margin: 108px 0 0 0;
+}
+/* collapsible element */
+
+.collapsable {
+	border: 1px solid #cecece;
+	border-radius: 5px;
+	float: left;
+/*	overflow: auto;*/
+	padding: 0;
+	margin: 10px 0;
+	clear:both;
+	width: 740px;
+}
+.collapsable .controls {
+	background: transparent url(../images/collapsable_bar_bg.gif) repeat-x 0 0;
+	border-bottom: 1px solid #ddd;
+	padding: 3px 8px;
+}
+.collapsable .controls h4 {
+	background: transparent url(../images/collapsable.gif) no-repeat 0 -14px;
+	padding: 0 27px;
+	margin: 0;
+}
+.collapse .controls h4 {
+	background-position: 0 1px;
+}
+div.containerMain .collapsable .indentHolder {
+	float: none;
+	display: block;
+	margin: 0 auto;
+	width: 678px;
+}
+div.containerMain .collapsable .indentHolder div.step2 {
+	float: left;
+	margin: 5px 0 0;
+	padding: 15px 0;
+	width: 100%;
+}
+
+#sidebar #login {
+	background-color: transparent;
+}
+/* Quick Help */
+#sidebar #quick-help {
+/*	background-color: #fff;*/
+	float: left;
+	margin: 0 0 0 2px;
+	padding: 30px 0 0 0;
+}
+#sidebar #quick-help .section {
+	display: inline-block;
+	width: 238px;
+}
+#sidebar #quick-help .section h3.head {
+	background: transparent url(../images/accordian_module_bg.gif) repeat-x 0 0;
+	line-height: 100%;
+	padding: 0;
+}
+#sidebar #quick-help .section h3.head a {
+	background: transparent url(../images/accordian_plus_minus.gif) no-repeat 6px 10px;
+	color: #3f3e3c;
+	display: block;
+	padding: 8px 8px 8px 26px;
+}
+#sidebar #quick-help .expanded h3.head a {
+	background-position: 6px -27px;
+}
+#sidebar #quick-help .section h3.head a:hover {
+	text-decoration: none;
+}
+#quick-help .body {
+	background-color: #fff;
+	float: left;
+	width: 235px;
+}
+#sidebar #quick-help .body p {
+	color: #3f3e3c;
+	font-weight: normal;
+	padding: 7px 10px;
+	width: auto;
+}
+
+
+
+
+
+
+/** generic styles used across all pages **/
+
+
+div.containerMain .indentHolder .marB20{
+	margin:0 0 20px 0 ;
+}
+

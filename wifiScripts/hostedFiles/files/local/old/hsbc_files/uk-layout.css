@@ -1,0 +1,534 @@
+A #tabs li.skipLink a
+{
+    padding:11px 12px;
+    line-height:13px;
+}
+#tabs li.on
+{
+    background:url("../images/uk-layout/bg_arrow.gif") no-repeat center bottom;
+}
+#tabs li.currentBreadcrumb a
+{
+    background:url("../images/uk-layout/toptab_darkgrey_arrow.gif") 6px center no-repeat;
+    padding:11px 12px 11px 24px;
+    line-height:13px;
+}
+#tabs a
+{
+    line-height:13px;
+    padding:11px 12px;
+}
+#tabs li.last a
+{
+    padding:11px 12px 11px 13px;
+}
+ul#tabs li.on a:hover,
+ul#tabs li.on a:active,
+ul#tabs li.on a:focus
+{
+    background:#333 url("../images/uk-layout/bg_arrow.gif") no-repeat center bottom;
+}
+ul#tabs li.currentBreadcrumb a:hover,
+ul#tabs li.currentBreadcrumb a:active,
+ul#tabs li.currentBreadcrumb a:focus
+{
+    background:#333 url("../images/uk-layout/toptab_darkgrey_arrow.gif") 6px center no-repeat;
+}
+#locale a.dropDownLink,
+#locale a.on
+{
+    padding:11px 0 11px 30px;
+}
+#locale a.dropDownLink span,
+#locale a.on span
+{
+    line-height:13px;
+}
+/*
+.search input.qtext
+{
+        background-color:transparent;
+}
+.search input.qtext:active,
+.search input.qtext:focus
+{
+        color:#626469;
+        background-color:#FFF;
+}
+*/
+#onlineBanking ul span
+{
+    line-height:13px;
+    padding:4px 4px 4px 24px;
+}
+#onlineBanking ul.legacy span
+{
+    padding:4px 2px 4px 24px;
+}
+#onlineBanking ul.legacy li.regLink a
+{
+    padding:11px 12px 11px 13px;
+    line-height:13px;
+}
+#onlineBanking ul.legacy li a.greyBtn
+{
+    color:#000;
+}
+#onlineBanking ul.legacy li a.greyBtn:hover,
+#onlineBanking ul.legacy li a.greyBtn:active,
+#onlineBanking ul.legacy li a.greyBtn:focus
+{
+    color:#db0011;
+}
+#onlineBanking ul.on li a.redBtn
+{
+    padding:4px 0 4px;
+}
+#onlineBanking ul li a.redBtn span,
+#onlineBanking ul.legacy li a.redBtn span
+{
+    padding:4px 6px 4px 10px;
+    background-color:transparent;
+}
+#onlineBanking ul.legacy li a.greyBtn span
+{
+    padding:4px 4px 4px 29px;
+}
+#logo
+{
+    padding:20px 34px 18px 13px;
+}
+#sections, #sections ul#topLevel
+{
+    width:817px;
+}
+#sections li a.mainTopNav
+{
+    padding:15px 13px 19px;
+}
+#sections ul li.focused
+{
+    background:#626469 url("../images/layout/bg_main_nav_on.gif") left top repeat-x;
+    color:#fff;
+}
+#sections li a.single
+{
+    padding:27px 20px 28px;
+}
+#sections li a.mainTopNav strong
+{
+    font-size:133.33%;
+    line-height:22px;
+}
+#sections li a.small strong
+{
+    font-size:125%;
+    line-height:22px;
+}
+.doormat {
+    background:#626469;
+    display: none;
+    left: -9999px;
+    padding: 0 !important;
+    position: absolute;
+    top: 80px;
+    width: 980px !important;
+    z-index: 200;
+}
+
+#sections li:hover .doormat {
+	/* left: 0 !important; */
+	left: 0;
+}
+
+
+#sections li.nohover:hover .doormat,
+#sections ul li.level1.nohover:hover .doormat
+{
+	left: -9999px;
+}
+
+#sections li .showdoormat {
+    left: 0 !important;
+}
+
+#sections .doormat .productLink p, #sections .doormat .doormatLeft p {
+    font-size: 82%;
+    font-weight: bold;
+    line-height: 20px;
+    padding: 4px 0 4px 15px;
+}
+
+#sections .doormat .productLink p a, #sections .doormat .doormatLeft p a {
+	font-size: 105%;
+}
+
+#sections .doormat a {
+    color: #FFFFFF !Important;
+    
+}
+#sections .doormat .info a {
+    border: 2px solid #626469;
+    display: block;
+}
+#sections .doormat a:hover, #sections .doormat a:active, #sections .doormat a:focus {
+    text-decoration: underline;
+    color: #000000;
+}
+#sections .doormat .info a:active, #sections .doormat .info a:focus {
+    border-color: #DB0011;
+    text-decoration: none;
+}
+#sections .doormat .productLink {
+    background-color: #626469;
+    width: 920px;
+}
+#sections .doormat .productLink p a {
+    background: url("../images/layout/lrg_white_arrow.gif") no-repeat scroll right center transparent;
+    padding-right: 11px;
+}
+#sections .doormat div.doormatLeft {
+    background-color: #626469;
+    border-top: medium none;
+}
+#sections .doormat div.third, #sections .doormat div.third ul {
+    float: left;
+    width: 660px;
+}
+#sections .doormat div.full, #sections .doormat div.full ul {
+    float: left;
+    width: 920px;
+}
+#sections .doormat .doormatRight {
+    background-color: #626469;
+    float: right;
+    padding: 0 0 0 25px;
+    width: 235px;
+}
+#sections div.doormat .infoPanel {
+    float: left;
+    padding: 10px 0 0;
+    width: 235px;
+}
+#sections .doormat .infoPanel div.info {
+    color: #FFFFFF;
+    font-size: 75%;
+    font-weight: bold;
+    line-height: 16px;
+    padding: 10px 0 20px;
+}
+#sections .doormat div.full li {
+    width: 205px;
+}
+#sections .doormat div.doormatLeft ul li ul {
+    width: auto;
+}
+#sections .doormat ul li ul li {
+    float: none;
+    font-size: 75%;
+    line-height: 16px;
+    line-height: 13px !important;
+    padding: 4px 0;
+	padding: 0;
+    width: 147px;
+    padding-left: 15px;
+   
+    
+}
+#sections .doormat ul li ul li a {
+	display: block;
+	padding: 4px 0;
+}
+
+#sections .doormat li.doormatCol > p > a {
+	display: inline;
+	padding: auto;
+}
+
+
+#sections .doormat ul li ul li:hover {
+    background-color: #DDDDDD;
+}
+
+#sections .doormat ul li ul li:hover a {
+   color: #000000 !important;
+}
+
+#sections .doormat ul li ul li a:hover {
+    color: #000000 !important;
+}
+#sections .doormat ul li ul li.viewAll:hover {
+    background-color: #626469;
+    
+}
+#sections .doormat img {
+    vertical-align: bottom;
+}
+#sections .doormat p {
+    color: #FFFFFF;
+    font-size: 75%;
+    line-height: 15px;
+    padding: 0 0 10px;
+}
+#sections .doormatRight p a, #sections .doormat li.doormatCol {
+    padding: 10px 0 0 0;
+    width: 163px;
+}
+#sections .doormat li.doormatCol.hasImages {
+    padding: 0;
+    width: 163px;
+}
+#sections .doormat li.doormatCol.third {
+    padding: 10px 7px 0 20px;
+    width: 300px;
+}
+#sections .doormat li.doormatCol.third.hasImages {
+    padding: 0px;
+	height: auto;
+    width: 327px;
+}
+#sections .doormat li.doormatCol div.doormatBannerImgBgnd {
+    padding: 10px;
+}
+#sections .doormat li.doormatCol .doormatBannerImgContent {
+    background: url("../images/layout/white_semi_1px.png");
+    color: #000000;
+    display: block;
+    margin: 0;
+    padding: 5px;
+	font-weight: normal;
+}
+#sections .doormat li.doormatCol .doormatBannerImgContent * {
+    color: #000000;
+}
+#sections .doormat li.doormatCol .doormatBannerImgCopy {
+  	font-weight: normal;
+	line-height: 18px;
+}
+#sections .doormat li.doormatCol .doormatBannerGreyBtn {
+  	background:url("../images/content/bg_lightgrey_btn_left.gif") left top no-repeat;
+	display:block;
+	font-weight:bold;
+	float:left;
+	padding:0 0 0 4px;
+	color: #000000;
+	margin:10px 10px 0 0;
+}
+#sections .doormat li.doormatCol .doormatBannerGreyBtn:focus, #sections .doormat li.doormatCol .doormatBannerGreyBtn:hover, #sections .doormat li.doormatCol .doormatBannerGreyBtn:active {
+	color:#FF0000 !important;
+}
+
+#sections .doormat li.doormatCol .doormatBannerRedBtn {
+  	background: url("../images/content/bg_lightgrey_btn.gif") no-repeat scroll right top transparent;
+    display: block;
+    float: left;
+    font-size: 80%;
+    line-height: 14px;
+    padding: 9px 23px 10px 2px;
+}
+#sections .doormat li.doormatCol .doormatBannerImgDisclaimerCopy1 {
+    font-weight: bold;
+	font-size: 75%;
+	line-height: 18px;
+}
+#sections .doormat li.doormatCol .doormatBannerImgDisclaimerCopy2 {
+    font-weight: bold;
+	font-size: 55%;
+	line-height: 15px;
+}
+
+
+#sections .doormat li.doormatCol .textBlock {
+	height:145px;
+	padding-right: 5px;
+	margin-bottom: 5px;
+}
+
+
+#sections .doormat .closeButton {
+   float:left;
+   margin:-40px 0 0 5px;
+   display: none;
+}
+
+.touch #sections .doormat .closeButton {
+	display: block;
+}
+
+#sections .doormat div.closeButton.absolute-pos {
+   float: none;
+   bottom: 70px;
+   left: 5px;
+   position: absolute;
+   position: absolute !important;
+}
+
+#sections .doormat div.closeButton.noText {
+   left: 5px;
+   margin-left: 0px;
+   width: 40px;
+}
+
+
+
+#sections .doormat .closeButton a {
+    background: url("../images/layout/icon_close_trans.png") no-repeat scroll 93% center transparent;
+    color: #fff;
+    display: block;
+    font-size: 87.5%;
+    font-weight: bold;
+    line-height: 30px;
+	height: 30px;
+	min-height: 30px;
+    padding: 5px 40px 5px 5px;
+	text-decoration: none;
+}
+
+#sections .doormat .closeButton:hover {
+	color: #000;
+	background-color: #ddd;
+}
+
+#sections .doormat .closeButton  a:hover,
+#sections .doormat .closeButton  a:active {
+    text-decoration: underline;
+	background:url("../images/layout/icon_close_trans.png") no-repeat scroll 93% center #ddd;
+	color: #000  !important;
+}
+
+
+#sections .doormat div.closeButton.noText a {
+   padding-left: 0;
+   margin-left: 0;
+	background: url("../images/layout/icon_close_trans.png") no-repeat scroll center center transparent;
+    
+}
+
+.doormat #mortgageDoormatInfo {
+	display: block;
+	font-size: 87.5%;
+	left: 50px;
+	width: 680px;
+	bottom: 8px;
+	position: absolute;
+	text-align: center;
+}
+
+/* css for tablet version of the doormat */
+
+#sections .tabletdoormat #mortgageDoormatInfo {
+	margin-left: 50px;
+	width: 680px;
+	position: static;
+	text-align: center;
+	float:left;
+}
+
+#sections .tabletdoormat a, #sections .tabletdoormat span{
+	font-size: 16px;
+	line-height:1.1em;	
+}
+
+#sections .tabletdoormat .productLink p a, #sections .tabletdoormat .doormatLeft p a {
+	font-size: 16px;
+}
+
+#sections .tabletdoormat li.doormatCol .textBlock {
+	height: 120px;
+}
+
+#sections .tabletdoormat .closeButton {
+	position: absolute;
+	left:0px;
+	bottom:5px;
+}
+
+/* END OF css for tablet version of the doormat */
+
+#supportLinks .contact
+{
+    background:url("../images/uk-layout/contact.gif") left center no-repeat;
+}
+#supportLinks .branch
+{
+    background:url("../images/uk-layout/branch.gif") left center no-repeat;
+}
+#supportLinks .chat
+{
+    background:url("../images/uk-layout/chat.gif") left center no-repeat;
+}
+
+#supportLinks .feedback {
+    background: url("../images/uk-layout/feedback.gif") no-repeat scroll left center transparent;
+}
+
+div#globalFooter
+{
+    width:940px;
+    padding:0 10px;
+}
+#supportLinks
+{
+    width:900px;
+    padding:10px 20px;
+}
+#supportLinks li
+{
+    font-size:112.5%;
+    padding:10px 125px 10px 35px;
+}
+#supportLinks li a {
+	white-space: nowrap;
+}
+div#footerMap
+{
+    width:900px;
+    padding:20px 20px 30px;
+}
+#footerMap div.column
+{
+    padding:0 12px 0 0;
+    width:140px;
+}
+#footerMap div.last
+{
+    padding:0;
+}
+#footerMap h2
+{
+    font-size:87.5%;
+    line-height:18px;
+}
+#footerMap li
+{
+    font-size:75%;
+    line-height:16px;
+    padding:0 0 8px 2px;
+}
+#footerMap li a
+{
+    line-height:15px;
+}
+#meta
+{
+    padding:15px 0 15px 30px;
+    width:930px;
+}
+#meta li
+{
+    padding:0 15px 0 0;
+    font-size:75%;
+    line-height:18px;
+}
+
+.invisible {
+	position: absolute;
+	left: -50000px;
+}
+
+#logoMob {
+
+padding: 20px 35px 18px 13px;
+}
+
+}

@@ -1,0 +1,343 @@
+/* 1.0.7 */
+
+form.eucookie_prefs_form{
+	width: 940px;
+	display:block;
+	float:left;
+	clear:right;
+}
+
+form.eucookie_prefs_form h6{
+	font-size:78%;
+	margin-bottom:0.3em;
+}
+/* additional K */
+form.eucookie_prefs_form h5{
+	font-size:90%;
+	padding-bottom: 5px;
+}
+
+form.eucookie_prefs_form p{
+	line-height: 18px;
+    /*padding: 0 0 10px;*/
+}
+
+.formContent.containsCookieMessage{
+	background: url("../images/uk-content/eucookie/pib_log_on_box_large.jpg") no-repeat;
+	height:245px;
+}
+
+div.eucookie_btn_container a.redBtn {
+	background: url("../images/uk-content/eucookie/bg_btn_left.gif") no-repeat scroll left top transparent;
+    	color: #FFFFFF;
+	display: block;
+    	float: left;
+    	padding: 0 0 0 4px;
+	text-decoration: none;
+	
+	}
+
+div.eucookie_btn_container a.redBtn  span{
+	background: url("../images/uk-content/eucookie/bg_btn.gif") no-repeat scroll right top #DB0011;
+	display: block;
+    float: left;
+    padding: 9px;	
+	}
+
+
+div.eucookie_btn_container a.redBtn:hover {
+    background: url("../images/uk-content/eucookie/bg_btn_left_hover.gif") no-repeat scroll left top transparent;
+}
+
+
+div.eucookie_btn_container a.redBtn:hover span {
+	/*background: url("../images/uk-content/eucookie/bg_btn_hover.gif") no-repeat scroll left top transparent !important;*/
+	background-image: url("../images/uk-content/eucookie/bg_btn_hover.gif");    
+	color: #FFFFFF;
+}
+
+#disclaimer_banner:empty {
+	display:none;
+}
+
+/* END additional K */
+
+form.eucookie_prefs_form legend{
+	color:#000;
+	padding: 0 0 5px 0;
+    font-size:112.5%;
+    line-height:24px;
+	margin: 0px;
+}
+
+fieldset{
+	border:none;
+	padding:0px;
+	margin:0px;
+}
+
+input#remember_disable {
+
+    width: 13px;
+    height: 13px;
+    padding: 0;
+    margin:0;
+    margin-right: 5px;
+    vertical-align: bottom;
+    position: relative;
+    top:1px;
+    *overflow: hidden;
+}
+
+div.eucookie_disclaimer{
+	border: 3px solid #F5DFA0;
+	border-radius:2px;
+	-moz-border-radius:2px;
+	padding: 10px 10px 10px 67px;
+	background: url("../images/uk-content/eucookie/eu_disclaimer_med.png") no-repeat scroll 13px 12px white;
+	clear:both;
+	margin: 10px 0px 20px 0px;
+	font-size: 90%;
+	width: 858px;
+	min-height: 40px;
+}
+
+div.eucookie_disclaimer a{
+    text-decoration:underline !important;
+}
+
+div.eucookie_disclaimer_logon{
+	background:url("../images/uk-content/eucookie/cookies_implied.png") no-repeat left;
+	padding: 10px 25px 15px 180px;
+	/*padding: 15px 20px 15px 180px;
+	width: 475px !important;
+	margin-left: 16px;*/
+	float: left;
+}
+
+div.eucookie_disclaimer_logon a{
+	text-decoration:underline !important;
+}
+
+div.eucookie_status{
+    border: 1px solid #F0F0F0;
+    clear: both;
+    color: #4C4C4C;
+    font-size: 90%;
+    margin: 0px 0 10px;
+    padding: 10px 17px 10px 64px;
+    vertical-align: middle;
+    width: 878px;
+}
+
+div.eucookie_status.eucookie_enabled{
+	background: url("../images/uk-content/eucookie/eprivacy_icon_enabled.gif") no-repeat scroll 25px 10px #F0F0F0;
+}
+
+div.eucookie_status.eucookie_disabled{
+	background:#F9E5E7 url("../images/uk-content/eucookie/eprivacy_icon_disabled_on_pink.gif") no-repeat scroll 25px 10px;
+	border: 0;
+}
+
+
+div.enabledBannerCloseButton{
+	background:url("../images/uk-content/eucookie/icon_close_trans.png") no-repeat scroll 50% 50%;
+	border: 0;
+	width:25px;
+	height: 25px;
+	float: right;
+	margin: -2px 10px 10px 0;
+}
+
+
+div.enabledBannerCloseButton a {
+	display: block;
+	width: 25px;
+	height: 25px;
+}
+
+div.eucookie_status.slim{
+    font-size:77%;
+}
+
+div.eucookie_prefs{
+	font-size: 100%;
+	margin:10px 20px 10px 0;
+	padding: 15px 20px 15px 90px;
+	width: 37%;
+	float:left;
+	min-height: 10.5em;
+	border: 1px solid #CACACA;
+}
+
+div.eucookie_btn_container{
+	display: block;
+	float: right;
+	padding: 0px 0px 0px 10px;
+	width: 26%;
+	margin: 0px;
+	clear: right;
+}
+
+div.eucookie_status.eucookie_disabled .eucookie_btn_container{
+	width: 13%;
+	margin: 0;
+	padding: 3px 10px 3px 10px;
+}
+
+div.eucookie_status .eucookie_btn_container.single{
+	width: 124px;
+	padding: 0px;
+}
+
+div.eucookie_status .eucookie_btn_container.double{
+	width: 180px;
+	margin:-8px 0 0 0;
+}
+
+div.eucookie_status.eucookie_disabled.slim .eucookie_btn_container{
+	padding: 0 10px;
+}
+
+div.eucookie_btn_container a{
+	color:#fff 
+}
+
+div.eucookie_prefs.eucookie_enable{
+	background:url("../images/uk-content/eucookie/cookies_enabled.png") no-repeat scroll 15px 15px #fff;
+}
+
+div.eucookie_prefs.eucookie_disable{
+	background:url("../images/uk-content/eucookie/cookies_disabled.png") no-repeat scroll 15px 15px #fff;
+	clear:right;
+}
+
+div.eucookie_disclaimer p, div.eucookie_status p, div.eucookie_prefs p{
+	margin: 0.2em 0;
+	font-size: 12px !important;
+	line-height: 18px;
+}
+
+
+div.eucookie_disclaimer p.one-liner {
+	margin-top: 12px;
+} 
+
+
+div.eucookie_status_innertext{
+	float:left;
+	display:block;
+}
+
+div.eucookie_disclaimer a, div.eucookie_disclaimer a:visited, div.eucookie_disclaimer a:hover, div.eucookie_status a, div.eucookie_status a:visited, div.eucookie_status a:hover, div.eucookie_disclaimer_logon a, div.eucookie_disclaimer_logon a:hover, div.eucookie_disclaimer_logon a:focus{
+	color:#4c4c4c;
+	font-weight:bold;
+}
+
+
+div.cookieformrow{
+    width:100%;
+    display:inline-block;
+    margin-top: 10px;
+}
+
+div.cookieformrow .floatLeft{
+    margin:0 3px;
+}
+
+div.cookieformrow label{
+    font-size:90%;
+}
+
+form.eucookie_prefs_form span.help{
+	display: inline;
+	background: url("../images/uk-content/eucookie/tooltip_icon.gif") left top no-repeat;
+	/*float: left;*/
+	width: 18px;
+	height: 18px;
+	float: left;
+	position: relative;
+	margin : 0 0 0 6px;
+}
+
+form.eucookie_prefs_form span.help a{
+    width:18px;
+    height:18px;
+    display:block;
+}
+
+form.eucookie_prefs_form .helpText{
+	display: block;
+	background-color: #FFF;
+	border: 1px solid #888;
+	position: absolute;
+	top: 200px;
+	left: 570px;
+	width: 200px;
+	padding: 10px;
+	/*margin: 30px 0px 0px 20px;
+	font-size: 90%
+	top: 175px;*/
+	clear: left;
+	-moz-box-shadow: 0px 5px 10px #888;
+    -webkit-box-shadow: 0px 5px 10px #888;
+    box-shadow: 0px 5px 10px #888;
+	/*IE8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=180, Color='#888888')";
+	/*IE7*/        
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10 Direction=180, Color='#888888');
+	z-index:5;
+	font-weight: normal;
+}
+form.eucookie_prefs_form .helpText2{
+	display: block;
+	background-color: #FFF;
+	border: 1px solid #888;
+	position: absolute;
+	top: 110px;
+	left: 650px;
+	width: 200px;
+	padding: 10px;
+	/*margin: 30px 0px 0px 20px;
+	font-size: 90%
+	top: 175px;*/
+	clear: left;
+	-moz-box-shadow: 0px 5px 10px #888;
+    -webkit-box-shadow: 0px 5px 10px #888;
+    box-shadow: 0px 5px 10px #888;
+	/*IE8*/
+	-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=10, Direction=180, Color='#888888')";
+	/*IE7*/        
+	filter: progid:DXImageTransform.Microsoft.Shadow(Strength=10 Direction=180, Color='#888888');
+	z-index:5;
+	font-weight: normal;
+}
+
+form.eucookie_prefs_form .helpText p, form.eucookie_prefs_form .helpText2 p {
+	font-weight:bold;
+}
+
+/*common styles - might already exist*/
+.floatLeft{
+	float:left !important;
+}
+
+.floatRight{
+	float:right !important;
+}
+
+.clearLeft{
+	clear:left;
+}
+
+.clearRight{
+	clear:right;
+}
+
+.clearBoth{
+	clear:both;
+}
+
+.noMargin{
+	margin:0px !important;
+}

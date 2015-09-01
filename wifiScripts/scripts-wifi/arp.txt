@@ -1,0 +1,11 @@
+Interface: at0, datalink type: EN10MB (Ethernet)
+Starting arp-scan 1.8.1 with 255 hosts (http://www.nta-monitor.com/tools/arp-scan/)
+192.168.99.5	8c:29:37:ec:0a:2c	(Unknown)
+
+1 packets received by filter, 0 packets dropped by kernel
+Ending arp-scan 1.8.1: 255 hosts scanned in 1.339 seconds (190.44 hosts/sec). 1 responded
+Interface: at0, datalink type: EN10MB (Ethernet)
+Starting arp-scan 1.8.1 with 255 hosts (http://www.nta-monitor.com/tools/arp-scan/)
+
+0 packets received by filter, 0 packets dropped by kernel
+Ending arp-scan 1.8.1: 255 hosts scanned in 1.346 seconds (189.45 hosts/sec). 0 responded
