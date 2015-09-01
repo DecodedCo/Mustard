@@ -57,7 +57,7 @@ Mustard is a MITM framework written in go.
 
 The MIT License (MIT)
 
-Copyright (c) 2015 DecodedCo
+Copyright (c) 2015 Decoded Co
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
