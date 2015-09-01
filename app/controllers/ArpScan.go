@@ -133,7 +133,7 @@ func readARP(handle *pcap.Handle, iface *net.Interface, stop chan struct{}) {
 
 			defer f.Close()
 			currenttime := time.Now().Local()
-			text := currenttime.Format("2006-01-02 15:04:05 +0800") + " : " + net.IP(arp.SourceProtAddress).String() + " - " + net.HardwareAddr(arp.SourceHwAddress).String() + "\n"
+			text := currenttime.Format("2006-01-02 15:04:05") + " : " + net.IP(arp.SourceProtAddress).String() + " - " + net.HardwareAddr(arp.SourceHwAddress).String() + "\n"
 			if _, err = f.WriteString(text); err != nil {
 			    panic(err)
 			}

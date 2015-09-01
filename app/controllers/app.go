@@ -106,6 +106,9 @@ func (c App) Login() revel.Result {
 	return c.Render()
 }
 
+func (c App) HarView() revel.Result {
+	return c.Render()
+}
 //
 func (c App) Index() revel.Result {
 	StartSimpleProxy()
