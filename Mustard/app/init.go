@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/revel/revel"
-	"Mustard/app/controllers"
+	"github.com/DecodedCo/Mustard/app/controllers"
 	// "mitm/app/listeners"	
 )
 

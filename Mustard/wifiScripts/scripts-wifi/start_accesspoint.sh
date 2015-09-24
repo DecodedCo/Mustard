@@ -18,15 +18,18 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-if [ $# -ne 3 ]; then #check that two arguments have been passed - the second is the image to display
-        echo "You need three arguments - route IP, internet interface, access point name"
-        exit 1
-fi
+# if [ $# -ne 3 ]; then #check that two arguments have been passed - the second is the image to display
+#         echo "You need three arguments - route IP, internet interface, access point name"
+#         exit 1
+# fi
 
 # SETUP
-GATEWAY=$1
-DEV_INET=$2
-AP_NAME=$3
+read -p "what is the gateway? (route -n)" -e GATEWAY
+echo "the gateway is $GATEWAY"
+read -p "What interface provides wifi?" -e DEV_INET
+echo "the interface set is $DEV_INET"
+read -p "What do you want to call the access point?" -e AP_NAME
+echo "the access point is set as $AP_NAME"
 
 
 AP_MAC=""
@@ -40,10 +43,14 @@ rfkill unblock wifi
 
 
 echo "Starting WLAN in Monitor mode"
-ifconfig $DEV_WLAN up
-sleep 1
+#craziness required in kali 2.0
 airmon-ng start $DEV_WLAN
-sleep 3
+sleep 1
+ifconfig $DEV_MON down
+sleep 1
+iwconfig $DEV_MON mode Monitor
+sleep 1
+ifconfig $DEV_MON up
 
 
 ######################################################################################
@@ -60,7 +67,7 @@ echo "AccessPoint up and running"
 # Make the accesspoint externally facing
 sleep 3; 
 ifconfig $DEV_AP up 192.168.99.1 netmask 255.255.255.0
-
+sleep 2
 
 
 # Start the DHCP server.

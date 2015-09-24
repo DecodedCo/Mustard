@@ -3,6 +3,12 @@
 * Mustard 9000 is a MITM framework written in go.
 * It is 9000 because this is the port I was developing on while building it, so my url was mustard:9000
 
+
+### Configuration on Device.
+
+* A few folders have to be setup before the device will work.
+* They default to `/var/mustard/`
+* The folders that need to be created are `/var/mustard/{pages,hars}
 ##### Transparent proxy
 
 * The basic proxy can only currenty allow http requests through. This is a reestriction because you have to define what to do if it is HTTPS.
