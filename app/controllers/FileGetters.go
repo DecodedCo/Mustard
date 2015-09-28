@@ -14,9 +14,9 @@ import (
 )
 
 const (
-	bannedUrl = "http://komodobank.com/_admin/mitm/blocked.json"
-	redirectUrl = "http://komodobank.com/_admin/mitm/redirect.json"
-	newsUrl = "http://komodobank.com/_admin/mitm/locations.json"
+	bannedUrl = "<somewhere hosting a url with the json of sites to block as an array>/blocked.json"
+	redirectUrl = "<somewhere hosting a url with the json of sites to block as an array>/redirect.json"
+	newsUrl = "<currently unused>"
 )
 var banned  []string
 var redirect []string
