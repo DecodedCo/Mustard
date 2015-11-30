@@ -98,6 +98,8 @@ echo 1 > /proc/sys/net/ipv4/ip_forward
 ######################################################################################
 ######################################################################################
 
+# You must run go get github.com/DecodedCo/Mustard before this will work
+
 revel run github.com/DecodedCo/Mustard &
 
 iceweasel 127.0.0.1:9000
