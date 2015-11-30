@@ -3,6 +3,11 @@
 * Mustard 9000 is a MITM framework written in go.
 * It is 9000 because this is the port I was developing on while building it, so my url was mustard:9000
 
+### Prerequisites
+
+* libpcap-dev
+* go
+* revel
 
 ### Configuration on Device.
 
