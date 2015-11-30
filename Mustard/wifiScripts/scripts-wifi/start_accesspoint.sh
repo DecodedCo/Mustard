@@ -7,7 +7,7 @@
 
 # INSTRUCTIONS:
 # call the scripts and pass it the gateway address, this machines internet access:
-# e.g ./start_accesspoint.sh 192.168.1.1 eth0 "F4ke access point"
+# e.g ./start_accesspoint.sh
 
 ######################################################################################
 ######################################################################################
@@ -18,39 +18,29 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-# if [ $# -ne 3 ]; then #check that two arguments have been passed - the second is the image to display
-#         echo "You need three arguments - route IP, internet interface, access point name"
-#         exit 1
-# fi
-
 # SETUP
-read -p "what is the gateway? (route -n)" -e GATEWAY
-echo "the gateway is $GATEWAY"
-read -p "What interface provides wifi?" -e DEV_INET
-echo "the interface set is $DEV_INET"
-read -p "What do you want to call the access point?" -e AP_NAME
-echo "the access point is set as $AP_NAME"
+read -p "what is the gateway (route -n)? " -e GATEWAY
+echo "The gateway is $GATEWAY"
+read -p "What interface provides internet? " -e DEV_INET
+echo "The internet interface set is $DEV_INET"
+read -p "What interface will provide the access point? " -e DEV_WLAN
+echo "The access point interface set is $DEV_WLAN"
+read -p "What do you want to call the access point? " -e AP_NAME
+echo "The access point is set as $AP_NAME"
 
 
 AP_MAC=""
-DEV_WLAN="wlan1"
-DEV_MON="wlan1mon"
 DEV_AP="at0"
-
 
 # Command to disable rfblocking.
 rfkill unblock wifi
 
-
-echo "Starting WLAN in Monitor mode"
-#craziness required in kali 2.0
-airmon-ng start $DEV_WLAN
+echo "Starting $DEV_WLAN in Monitor mode"
+ifconfig $DEV_WLAN down
 sleep 1
-ifconfig $DEV_MON down
+iwconfig $DEV_WLAN mode Monitor
 sleep 1
-iwconfig $DEV_MON mode Monitor
-sleep 1
-ifconfig $DEV_MON up
+ifconfig $DEV_WLAN up
 
 
 ######################################################################################
@@ -59,10 +49,9 @@ ifconfig $DEV_MON up
 
 # To setup an accesspoint we can use airbase-ng
 echo "Starting the rogue AccessPoint"
-airbase-ng --essid "$AP_NAME" -c 6 -y $DEV_MON -v &
+# Add -y to prevent probe requests
+airbase-ng --essid "$AP_NAME" $DEV_WLAN -v &
 echo "AccessPoint up and running"
-
-
 
 # Make the accesspoint externally facing
 sleep 3; 
