@@ -74,11 +74,14 @@ func InitiateProxy() {
 	//commented out arp scanner
 	//go arpScanner() //start the arpscanner in the background
 	// getRedirectUrls() //temporary
+	fetchdata();
 }
 
 func (c App) FetchAllData() revel.Result {
-
-    //get the redirect pages from server
+    return c.RenderJson("finished fetching")
+}
+func fetchdata() {
+	    //get the redirect pages from server
     log.Println("downloading files")
     // getPages()
     //get a list of urls to redirect
@@ -90,7 +93,6 @@ func (c App) FetchAllData() revel.Result {
     log.Println("get news sites")
     getNewsUrls()
     log.Println("completed getting files....")
-    return c.RenderJson("finished fetching")
 }
 func (c App) ArpScan() revel.Result {
 	return c.RenderJson(users)
