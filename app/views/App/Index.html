@@ -461,20 +461,20 @@ function captureKeyLogs() {
 
 function pingTest() {
   console.log("ping test")
-  $.get("/Pinger", function( ping ) {
-    console.log(ping)
-    if (ping.Response != "") {
-      $("#getdata").prop('disabled', false);
-      $("#getdata").removeClass("btn-danger")
-      $("#getdata").addClass("btn-success")
-      setTimeout(pingTest, 20000); //test if we have an internet connection
-    } else {
-      $("#getdata").prop('disabled', true);
-      $("#getdata").removeClass("btn-success")
-      $("#getdata").addClass("btn-danger")
-      setTimeout(pingTest, 5000); //test if we have an internet connection
-    }
-  })
+  // $.get("/Pinger", function( ping ) {
+  //   console.log(ping)
+  //   if (ping.Response != "") {
+  //     $("#getdata").prop('disabled', false);
+  //     $("#getdata").removeClass("btn-danger")
+  //     $("#getdata").addClass("btn-success")
+  //     setTimeout(pingTest, 20000); //test if we have an internet connection
+  //   } else {
+  //     $("#getdata").prop('disabled', true);
+  //     $("#getdata").removeClass("btn-success")
+  //     $("#getdata").addClass("btn-danger")
+  //     setTimeout(pingTest, 5000); //test if we have an internet connection
+  //   }
+  // })
   
 }
 

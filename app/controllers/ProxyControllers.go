@@ -2,13 +2,13 @@ package controllers
 
 import (
     "github.com/abourget/goproxy"
-    //"log"
+    // "log"
     "net/http"
     "strings"
     "bytes"
     "io/ioutil"
     "crypto/tls"
-    "time"
+    // "time"
 )
 
 const (
@@ -69,91 +69,99 @@ func StartSimpleProxy() {
         proxy.ServeHTTP(w, req)
     })
     // Check if we are BLOCKING this page.
-    if globalBlocks {
-        pageBlock := TriggerBlock()
-        //log.Printintln("blocking")
-        proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
-    } // end of blocks.
 
-    // Check if we are REDIRECTING away from this page.
-    if globalRedirects {
-        pageRedirect := TriggerRedirect()
-        proxy.HandleRequest( goproxy.RequestHostContains(redirect...)(pageRedirect) )
-    } // end of redirect.
+
+    // if globalBlocks {
+    //     pageBlock := TriggerBlock()
+    //     //log.Printintln("blocking")
+    //     proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
+    // } // end of blocks.
+
+    // // Check if we are REDIRECTING away from this page.
+    // if globalRedirects {
+    //     pageRedirect := TriggerRedirect()
+    //     proxy.HandleRequest( goproxy.RequestHostContains(redirect...)(pageRedirect) )
+    // } // end of redirect.
 
     // if globalWolfPack {
         // Catch HSTS and direct https:// (i.e it immediately puts an SNI header in place)
-        proxy.HandleConnectFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-            // Potentially best to REJECT so that MITM is not detected. detection of MITM could cause suspicion
-            if ctx.SNIHost() != "" {
-                //log.Printintln(" *** HTTPS Connection: ", ctx.SNIHost())
-                //return goproxy.MITM // This is failing...
-                return goproxy.NEXT
-            }
-            return goproxy.FORWARD
-        })
+        
+
+        // proxy.HandleConnectFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        //     // Potentially best to REJECT so that MITM is not detected. detection of MITM could cause suspicion
+        //     if ctx.SNIHost() != "" {
+        //         //log.Printintln(" *** HTTPS Connection: ", ctx.SNIHost())
+        //         //return goproxy.MITM // This is failing...
+        //         return goproxy.NEXT
+        //     }
+        //     return goproxy.FORWARD
+        // })
+
+
     // }
 
     // Handle the CLIENT-REQUEST.
-    proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-        // if globalStoreHAR {
-            // //log.Printintln(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
-            ctx.LogToHARFile(true)
-            t := time.Now().Local()
-            timestamp := t.Format("20060102150405")
-            if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
-            } else {
-                proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
-            }
+    // proxy.HandleRequestFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+    //     log.Println("HandleRequestFunc: ", ctx.Req.RemoteAddr)
+    //     // if globalStoreHAR {
+    //         // //log.Printintln(" --- CLIENT REQUEST: logging HAR to "+ctx.Host()+".har")
+    //         ctx.LogToHARFile(true)
+    //         t := time.Now().Local()
+    //         timestamp := t.Format("20060102150405")
+    //         if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
+    //         } else {
+    //             proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
+    //         }
             
-        // } 
-        // Check if this is HTTPS connection via MITM.
-        if ctx.IsThroughMITM {
-            ctx.Req.Host = ctx.Host()
-            //log.Printintln(" $$$ MITM: Connection is over HTTPS")
-            return goproxy.FORWARD // don't follow through other Request Handlers
-        }
-        ////log.Printintln("ctx.Req: ", ctx.Req.Host)
-        return goproxy.NEXT
-    })
+    //     // } 
+    //     // Check if this is HTTPS connection via MITM.
+    //     if ctx.IsThroughMITM {
+    //         ctx.Req.Host = ctx.Host()
+    //         //log.Printintln(" $$$ MITM: Connection is over HTTPS")
+    //         return goproxy.FORWARD // don't follow through other Request Handlers
+    //     }
+    //     ////log.Printintln("ctx.Req: ", ctx.Req.Host)
+    //     return goproxy.NEXT
+    // })
 
     // Wolf pack hack.
     // We want to make sure that if a page redirects to https using a 301 or 302 we mitm that connection.
     // Handle the SERVER-RESPONSE
-    if globalWolfPack {
-        
+    // if globalWolfPack {
+    //     log.Println("globalWolfPack")
         interceptResponse := TriggerWolfPack()
-        proxy.HandleResponse(interceptResponse)
+    //     proxy.HandleResponse(interceptResponse)
 
-    } else {
-        interceptResponse := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-            // Log HAR files.
-            if globalStoreHAR {
-                ////log.Printintln(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
-                ctx.LogToHARFile(true)
-                t := time.Now().Local()
-                timestamp := t.Format("20060102150405")
-                //dont catch hars that are to the proxy
-                if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
-                } else {
-                    proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
-                }
-            } else {
-                ////log.Printintln(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
-            }
-            bs, err := ioutil.ReadAll(ctx.Resp.Body)
-            if err != nil {
-               //log.Printintln("inject error: ", err)
-            }
-            //process whether to inject scripts
-            utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
-            body := utilsProcessInjectionScripts(ctx, string(bs))
+    // } else {
+        // interceptResponse := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        //     log.Println("HandlerFunc: ", ctx.Req.RemoteAddr)
+        //     // Log HAR files.
+        //     if globalStoreHAR {
+        //         ////log.Printintln(" --- SERVER RESPONSE: logging to "+ctx.Host()+".har")
+        //         ctx.LogToHARFile(true)
+        //         t := time.Now().Local()
+        //         timestamp := t.Format("20060102150405")
+        //         //dont catch hars that are to the proxy
+        //         if strings.Contains(strings.Split(ctx.Req.RemoteAddr, ":")[0], "192.168.99.1") {
+        //         } else {
+        //             proxy.FlushHARToDisk(harLocation+"/hars/req_"+strings.Split(ctx.Req.RemoteAddr, ":")[0]+"_"+ctx.Host()+"_"+ctx.Req.Method+"_"+timestamp+".har")    
+        //         }
+        //     } else {
+        //         ////log.Printintln(" --- SERVER REQUEST: NOT logging HAR for "+ctx.Host() )
+        //     }
+        //     bs, err := ioutil.ReadAll(ctx.Resp.Body)
+        //     if err != nil {
+        //        //log.Printintln("inject error: ", err)
+        //     }
+        //     //process whether to inject scripts
+        //     utilsModifyHeadersForInjection(ctx) //inject headers to make injection easy
+        //     body := utilsProcessInjectionScripts(ctx, string(bs))
             
-            ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
-            return goproxy.NEXT
-        })
+        //     ctx.Resp.Body = ioutil.NopCloser(bytes.NewBufferString(body))
+        //     return goproxy.NEXT
+        // })
         proxy.HandleResponse(interceptResponse)
-    }
+    // }
 
     go func() {
         wg.Add(1)
@@ -163,37 +171,37 @@ func StartSimpleProxy() {
 
 }
 
-//
-func TriggerRedirect() goproxy.HandlerFunc {
-    // Create a new pageRedirect handler function to pass back later on.
-    pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-        // Get the body for the redirect url.
-        body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
-        // Set the response-headers before responding.
-        client_response := utilsGetHTTPHeaders(body,"text/html")
-        ctx.Resp = client_response
-        ctx.DispatchResponseHandlers()
-        return goproxy.DONE
-    })
-    return pageRedirect
-}
+// //
+// func TriggerRedirect() goproxy.HandlerFunc {
+//     // Create a new pageRedirect handler function to pass back later on.
+//     pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+//         // Get the body for the redirect url.
+//         body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
+//         // Set the response-headers before responding.
+//         client_response := utilsGetHTTPHeaders(body,"text/html")
+//         ctx.Resp = client_response
+//         ctx.DispatchResponseHandlers()
+//         return goproxy.DONE
+//     })
+//     return pageRedirect
+// }
 
 
-//
-func TriggerBlock() goproxy.HandlerFunc {
-    //log.Printintln("blocker")
-    // Create a new pageBlocker handler function to pass back later on.
-    pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-        // Create the body, very naieve for now.
-        body := "<html><body><h1>This site is blocked</h1></body></html>"
-        // Set the response-headers before responding.
-        client_response := utilsGetHTTPHeaders(body,"text/html")
-        ctx.Resp = client_response
-        ctx.DispatchResponseHandlers()
-        return goproxy.DONE
-    })
-    return pageBlocker
-}
+// //
+// func TriggerBlock() goproxy.HandlerFunc {
+//     //log.Printintln("blocker")
+//     // Create a new pageBlocker handler function to pass back later on.
+//     pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+//         // Create the body, very naieve for now.
+//         body := "<html><body><h1>This site is blocked</h1></body></html>"
+//         // Set the response-headers before responding.
+//         client_response := utilsGetHTTPHeaders(body,"text/html")
+//         ctx.Resp = client_response
+//         ctx.DispatchResponseHandlers()
+//         return goproxy.DONE
+//     })
+//     return pageBlocker
+// }
 
 
 func TriggerWolfPack() goproxy.HandlerFunc {
