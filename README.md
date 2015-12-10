@@ -63,7 +63,33 @@
 * Connect to wifi for internet connection
 
 
-
+~~~
+# Mustard issues
+​
+1. Few USA banking websites work (with or without wolfpack). Many refuse to load at all:
+​
+Wells Fargo
+Bank of America
+Citibank
+Chase
+​
+2. Some websites can't load CSS without wolfpack:
+​
+www.aetna.com/employers-organizations.html
+​
+3. Some websites capture POST data but crash on submit:
+​
+www.aetna.com/employers-organizations.html
+​
+Log In
+​
+4. Example websites that currently work, albeit v. slow or flaky:
+​
+google.com
+bing.com including authentication
+aetna.com/employers-organizations.html 
+cnn.com
+~~~
 
 #### License
 
