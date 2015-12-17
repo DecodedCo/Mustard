@@ -13,11 +13,8 @@ import (
 	"io"
 )
 
-const (
-	bannedUrl = "<somewhere hosting a url with the json of sites to block as an array>/blocked.json"
-	redirectUrl = "<somewhere hosting a url with the json of sites to block as an array>/redirect.json"
-	newsUrl = "<currently unused>"
-)
+var bannedUrl string
+var redirectUrl string
 var banned  []string
 var redirect []string
 var newsSites []string
@@ -41,6 +38,8 @@ func setFileStorageLocation() (string, string) {
         usersLocation = "/var/mustard"
         proxyAddress = "127.0.0.1"
 	}
+    bannedUrl = "/home/hacker/go/src/Mustard/public/banned.json"
+    redirectUrl = "/home/hacker/go/src/Mustard/public/redirect.json"
     //there is a bug so these need to be set manually for now
     // fileLocation = "/srv/mitmfiles"
     fmt.Println("location: ", fileLocation)

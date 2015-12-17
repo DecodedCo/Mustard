@@ -71,17 +71,17 @@ func StartSimpleProxy() {
     // Check if we are BLOCKING this page.
 
 
-    // if globalBlocks {
-    //     pageBlock := TriggerBlock()
-    //     //log.Printintln("blocking")
-    //     proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
-    // } // end of blocks.
+    if globalBlocks {
+        pageBlock := TriggerBlock()
+        //log.Printintln("blocking")
+        proxy.HandleRequest(goproxy.RequestHostContains(banned...)(pageBlock))
+    } // end of blocks.
 
     // // Check if we are REDIRECTING away from this page.
-    // if globalRedirects {
-    //     pageRedirect := TriggerRedirect()
-    //     proxy.HandleRequest( goproxy.RequestHostContains(redirect...)(pageRedirect) )
-    // } // end of redirect.
+    if globalRedirects {
+        pageRedirect := TriggerRedirect()
+        proxy.HandleRequest( goproxy.RequestHostContains(redirect...)(pageRedirect) )
+    } // end of redirect.
 
     // if globalWolfPack {
         // Catch HSTS and direct https:// (i.e it immediately puts an SNI header in place)
@@ -172,36 +172,36 @@ func StartSimpleProxy() {
 }
 
 // //
-// func TriggerRedirect() goproxy.HandlerFunc {
-//     // Create a new pageRedirect handler function to pass back later on.
-//     pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-//         // Get the body for the redirect url.
-//         body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
-//         // Set the response-headers before responding.
-//         client_response := utilsGetHTTPHeaders(body,"text/html")
-//         ctx.Resp = client_response
-//         ctx.DispatchResponseHandlers()
-//         return goproxy.DONE
-//     })
-//     return pageRedirect
-// }
+func TriggerRedirect() goproxy.HandlerFunc {
+    // Create a new pageRedirect handler function to pass back later on.
+    pageRedirect := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        // Get the body for the redirect url.
+        body := utilsGetBuffer(strings.Split(ctx.Req.URL.Host, ".")[1]) //get the middle of the url: www.url.com...
+        // Set the response-headers before responding.
+        client_response := utilsGetHTTPHeaders(body,"text/html")
+        ctx.Resp = client_response
+        ctx.DispatchResponseHandlers()
+        return goproxy.DONE
+    })
+    return pageRedirect
+}
 
 
 // //
-// func TriggerBlock() goproxy.HandlerFunc {
-//     //log.Printintln("blocker")
-//     // Create a new pageBlocker handler function to pass back later on.
-//     pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
-//         // Create the body, very naieve for now.
-//         body := "<html><body><h1>This site is blocked</h1></body></html>"
-//         // Set the response-headers before responding.
-//         client_response := utilsGetHTTPHeaders(body,"text/html")
-//         ctx.Resp = client_response
-//         ctx.DispatchResponseHandlers()
-//         return goproxy.DONE
-//     })
-//     return pageBlocker
-// }
+func TriggerBlock() goproxy.HandlerFunc {
+    //log.Printintln("blocker")
+    // Create a new pageBlocker handler function to pass back later on.
+    pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
+        // Create the body, very naieve for now.
+        body := "<html><body><h1>This site is blocked</h1></body></html>"
+        // Set the response-headers before responding.
+        client_response := utilsGetHTTPHeaders(body,"text/html")
+        ctx.Resp = client_response
+        ctx.DispatchResponseHandlers()
+        return goproxy.DONE
+    })
+    return pageBlocker
+}
 
 
 func TriggerWolfPack() goproxy.HandlerFunc {
