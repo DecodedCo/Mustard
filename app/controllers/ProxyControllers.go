@@ -56,18 +56,18 @@ func StartSimpleProxy() {
     //useful for debugging
     proxy.Verbose = true
 
-    //transparency - turn on in live mode
-    // proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-    //     ////log.Printintln(req.URL.Scheme)
-    //     if req.Host == "" {
-    //         //log.Printintln(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
-    //         return
-    //     }
-    //         req.URL.Scheme = "http"    
+    transparency - turn on in live mode
+    proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+        ////log.Printintln(req.URL.Scheme)
+        if req.Host == "" {
+            //log.Printintln(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
+            return
+        }
+            req.URL.Scheme = "http"    
         
-    //     req.URL.Host = req.Host
-    //     proxy.ServeHTTP(w, req)
-    // })
+        req.URL.Host = req.Host
+        proxy.ServeHTTP(w, req)
+    })
     // Check if we are BLOCKING this page.
 
 
