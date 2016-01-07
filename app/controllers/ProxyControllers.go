@@ -40,8 +40,8 @@ func StartSimpleProxy() {
 
     //log.Printintln(" >>> STARTING PROXY SERVER")
     //log.Printintln("     --- OPTION storing HAR ", globalStoreHAR )
-    log.Println("     --- OPTION redirection ", globalRedirects )
-    log.Println("     --- OPTION blocking ", globalBlocks )
+    // log.Println("     --- OPTION redirection ", globalRedirects )
+    // log.Println("     --- OPTION blocking ", globalBlocks )
     //log.Printintln("     --- OPTION wolf-pack-hack ", globalWolfPack )
     //log.Printintln("     --- OPTION inject key logger ", globalInjectKeyLogger )
     //log.Printintln("     --- OPTION inject login ", globalInjectGetLogin )
@@ -54,7 +54,7 @@ func StartSimpleProxy() {
     proxy := goproxy.NewProxyHttpServer()
 
     //useful for debugging
-    proxy.Verbose = true
+    proxy.Verbose = false
 
     // transparency - turn on in live mode
     proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

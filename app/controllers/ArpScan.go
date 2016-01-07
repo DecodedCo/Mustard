@@ -18,7 +18,7 @@ import (
 var users map[string]string
 
 func arpScanner() {
-	log.Println("scanning...")
+	// log.Println("scanning...")
 	// Get a list of all interfaces.
 	ifaces, err := net.Interfaces()
 	if err != nil {

