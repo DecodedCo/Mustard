@@ -36,34 +36,32 @@ func setFileStorageLocation() (string, string) {
 		fileLocation = "/home/hacker/go/src/Mustard/public/pages"
         harLocation = "/var/mustard"
         usersLocation = "/var/mustard"
-        proxyAddress = "127.0.0.1"
+        proxyAddress = "localhost"
 	}
-    bannedUrl = "/home/hacker/go/src/Mustard/public/banned.json"
-    redirectUrl = "/home/hacker/go/src/Mustard/public/redirect.json"
+    pwd, err := os.Getwd()
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    
+    bannedUrl = pwd + "/public/banned.json"
+    redirectUrl = pwd + "/public/redirect.json"
+
     //there is a bug so these need to be set manually for now
     // fileLocation = "/srv/mitmfiles"
     fmt.Println("location: ", fileLocation)
-    proxyAddress = "192.168.99.1"
+    // proxyAddress = "192.168.99.1"
     
     logLocation = os.Getenv("HOME")
     return fileLocation, proxyAddress
 }
 //pulls the urls to redirect from the url
 func getRedirectUrls() {
-	if len(redirect) > 0 {
-		return
-	}
-
-	res, err := http.Get(redirectUrl)
-	if err != nil {
-        log.Println("Error: ", err.Error())
+   if len(redirect) > 0 {
         return
     }
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        log.Println("Error: ", err.Error())
-    }
-    err = json.Unmarshal(body, &redirect)
+    file, _ := ioutil.ReadFile(redirectUrl)
+    err := json.Unmarshal(file, &redirect)
     if err != nil {
         log.Println("Error: ", err.Error())
     }
@@ -73,37 +71,9 @@ func getBannedUrls() {
 	if len(banned) > 0 {
 		return
 	}
+    file, _ := ioutil.ReadFile(bannedUrl)
 
-	res, err := http.Get(bannedUrl)
-	if err != nil {
-        log.Println("Error: ", err.Error())
-        return
-    }
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        log.Println("Error: ", err.Error())
-    }
-    err = json.Unmarshal(body, &banned)
-    if err != nil {
-        log.Println("Error: ", err.Error())
-    }
-}
-//pulls the urls to block access to from the url
-func getNewsUrls() {
-	if len(newsSites) > 0 {
-		return
-	}
-
-	res, err := http.Get(newsUrl)
-	if err != nil {
-        log.Println("Error: ", err.Error())
-        return
-    }
-    body, err := ioutil.ReadAll(res.Body)
-    if err != nil {
-        log.Println("Error: ", err.Error())
-    }
-    err = json.Unmarshal(body, &newsSites)
+    err := json.Unmarshal(file, &banned)
     if err != nil {
         log.Println("Error: ", err.Error())
     }
