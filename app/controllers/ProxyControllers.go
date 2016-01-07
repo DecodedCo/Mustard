@@ -56,7 +56,7 @@ func StartSimpleProxy() {
     //useful for debugging
     proxy.Verbose = true
 
-    transparency - turn on in live mode
+    // transparency - turn on in live mode
     proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
         ////log.Printintln(req.URL.Scheme)
         if req.Host == "" {
