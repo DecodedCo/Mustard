@@ -1,5 +1,31 @@
 ### Mustard 9000
 
+
+# NOTES:
+
+To start it is best to run with two tabs open. One to kill it when necessary
+
+In tab one, navigate to:
+
+```
+go/src/github.com/DecodedCo/Mustard
+```
+
+and run
+
+```
+wifiScripts/scripts-wifi/start_accesspoint.sh
+```
+
+In the second tab to kill it run
+
+```
+go/src/github.com/DecodedCo/Mustard/wifiScripts/scripts-wifi/stop_accesspoint.sh
+```
+
+Remember to run as root
+
+
 * Mustard 9000 is a MITM framework written in go.
 * It is 9000 because this is the port I was developing on while building it, so my url was mustard:9000
 
