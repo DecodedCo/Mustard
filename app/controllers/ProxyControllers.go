@@ -47,15 +47,15 @@ func StartSimpleProxy() {
 	proxy.Verbose = false
 
 	// transparency - turn on in live mode
-	// proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-	//     if req.Host == "" {
-	//         return
-	//     }
-	//         req.URL.Scheme = "http"
+	proxy.NonProxyHandler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+	    if req.Host == "" {
+	        return
+	    }
+	        req.URL.Scheme = "http"
 
-	//     req.URL.Host = req.Host
-	//     proxy.ServeHTTP(w, req)
-	// })
+	    req.URL.Host = req.Host
+	    proxy.ServeHTTP(w, req)
+	})
 	// Check if we are BLOCKING this page.
 
 	if globalBlocks {
@@ -147,7 +147,6 @@ func TriggerWolfPack() goproxy.HandlerFunc {
                     return goproxy.FORWARD
                 }
 
-				log.Println(ctx.Resp.Header.Get("Location"), " ---- COOKIES ----", server_ssl_response.Cookies())
 				if err != nil {
 					log.Println(" help!: ", err)
 				}
