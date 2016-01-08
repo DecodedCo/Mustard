@@ -28,14 +28,8 @@ var logLocation string
 //this all needs work for productisation
 func setFileStorageLocation() (string, string) {
 	if os.Getenv("STATE") == "PRODUCTION" {
-		fileLocation = "/srv/mitmfiles"
-		harLocation = "/srv/mitmfiles"
-		usersLocation = "/srv/users"
 		proxyAddress = "192.168.99.1"
 	} else {
-		fileLocation = "/home/hacker/go/src/Mustard/public/pages"
-		harLocation = "/var/mustard"
-		usersLocation = "/var/mustard"
 		proxyAddress = "localhost"
 	}
 	pwd, err := os.Getwd()
@@ -45,10 +39,14 @@ func setFileStorageLocation() (string, string) {
 	}
 
 	bannedUrl = pwd + "/public/banned.json"
+	log.Println("banned url: ", bannedUrl)
+	log.Println("Proxy Address: ", proxyAddress)
+	
 	redirectUrl = pwd + "/public/redirect.json"
-
+	harLocation = "/var/mustard"
+	usersLocation = "/var/mustard"
 	//there is a bug so these need to be set manually for now
-	// fileLocation = "/srv/mitmfiles"
+	fileLocation = "/srv/mitmfiles"
 	fmt.Println("location: ", fileLocation)
 	// proxyAddress = "192.168.99.1"
 
