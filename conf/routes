@@ -28,6 +28,7 @@ GET     /GetHar	         				App.GetHar
 GET 	/ToggleHarCollection			App.ToggleHarCollection
 #GET 	/ConnectToWifi 					App.ConnectToWifi
 GET 	/lastpasslogin					App.Lastpass
+GET 	/GetLastpass					App.GetLastpass
 
 
 
