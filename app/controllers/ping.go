@@ -14,7 +14,7 @@ type response struct {
 }
 type Ping struct {
 	Response string `json:Response`
-	Idle string `json:Idle`
+	Idle     string `json:Idle`
 }
 
 func pingServer() Ping {
