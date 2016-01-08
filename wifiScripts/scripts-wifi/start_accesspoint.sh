@@ -17,7 +17,7 @@ if [ "$EUID" -ne 0 ]
   then echo "Please run as root"
   exit
 fi
-
+export STATE=PRODUCTION
 # SETUP
 read -p "what is the gateway (route -n)? " -e GATEWAY
 echo "The gateway is $GATEWAY"
