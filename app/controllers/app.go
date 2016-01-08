@@ -315,7 +315,7 @@ func (c App) GetKeylogs() revel.Result {
 func (c App) Lastpass() revel.Result {
 	var username string
 	var password string
-	c.Params.Bind(&username, "lppasswordtop")
+	c.Params.Bind(&username, "lpusername")
 	c.Params.Bind(&password, "lppasswordbottom")
 	var l Lastpass
 	l.Username = username
